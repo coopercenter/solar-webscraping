@@ -1,2 +1,2 @@
 # solar-webscraping
-Code for webscraping localities for updated information regarding solar projects and policies
+Code for webscraping localities for updated information regarding solar projects and policies. Currently a work in progress.
