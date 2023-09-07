@@ -137,6 +137,7 @@ novusagenda_dictionary = {
 "New Kent BOS":["https://newkent.novusagenda.com/agendapublic/meetingsgeneral.aspx","New Kent County"]
 }
 
+"Granicus localities"
 granicus_dictionary = {
 "Augusta":["https://augustava.granicus.com/ViewPublisher.php?view_id=1","Augusta County"],
 
@@ -212,6 +213,6 @@ escribe_dictionary = {
 
 "Legistar localities"
 legistar_dictionary = {
-    "Albemarle":[],
+    "Albemarle":["https://albemarle.legistar.com/Calendar.aspx","Albemarle County"],
     "Hampton CC":["https://hampton.legistar.com/Calendar.aspx","Hampton City"]
 }

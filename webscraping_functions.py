@@ -22,41 +22,41 @@ def check_meeting_date(meeting_time_string): #all_meetings[i].text should be set
         return False
 
 def search_agenda_for_keywords(agenda_content):
-    search_results = None
+    search_results = []
     for item in agenda_content:
         if 'Solar' in item.text:
-            search_results = True
-            break
+            search_results.append('Solar')
         elif 'solar' in item.text:
-            search_results = True
-            break
-        else:
-            search_results = False
+            search_results.append('solar')
+        if 'Zoning Ordinance' in item.text:
+            search_results.append("Zoning Ordinance")
+        elif 'zoning ordinance' in item.text:
+            search_results.append('zoning ordinance')
+        elif "Zoning ordinance" in item.text:
+            search_results.append("Zoning ordinance")
+        elif "zoning Ordinance" in item.text:
+            search_results.append("zoning Ordinance")
+        if 'Comprehensive Plan' in item.text:
+            search_results.append("Comprehensive Plan")
+        elif "comprehensive plan" in item.text:
+            search_results.append('comprehensive plan')
+        elif "Comprehensive plan" in item.text:
+            search_results.append("Comprehensive plan")
     return search_results
 
 def email_new_alerts(email_message):
-    dotenv.load_dotenv('.env')
-    password = os.getenv('solar_alert_app_pass')
-    sender_email = "egl6a@virginia.edu"  # Enter your address
-    receiver_email = "vasolsmart@virginia.edu"  # Enter receiver address
-    message = MIMEMultipart("alternative")
-    message["Subject"] = "New Solar Information Available for Review"
-    message["From"] = sender_email
-    message["To"] = receiver_email
-    # Create the plain-text and HTML version of your message
-    text = email_message
-    # Turn these into plain/html MIMEText objects
-    part1 = MIMEText(text, "plain")
-    # Add HTML/plain-text parts to MIMEMultipart message
-    # The email client will try to render the last part first
-    message.attach(part1)
-    # Create secure connection with server and send email
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        server.login(sender_email, password)
-        server.sendmail(
-            sender_email, receiver_email, message.as_string()
-        )
+    "Outlook Email Development"
+    #steps from https://www.makeuseof.com/send-outlook-emails-using-python/
+    import win32com.client
+    ol = win32com.client.Dispatch('Outlook.Application')
+    # size of the new email
+    olmailitem = 0x0
+    newmail = ol.CreateItem(olmailitem)
+    newmail.Subject = 'New Information for Review'
+    newmail.SentOnBehalfOfName = "Solar Alerts"
+    newmail.To = "egl6a@virginia.edu"
+    newmail.Body= email_message
+    newmail.Send()
 
 """BoardDocs"""
 def check_boarddocs_agendas(locality,meetings_page):
@@ -85,11 +85,10 @@ def check_boarddocs_agendas(locality,meetings_page):
                 time.sleep(2)
                 #Now to get ALL the agenda content
                 all_agenda_topics = driver.find_elements(By.CSS_SELECTOR, "span[class*='title'")
-                solar_update = search_agenda_for_keywords(all_agenda_topics)
-                if solar_update==True:
-                    #run the keyword search
-                    solar_upate_message = "New solar updates for " + locality + " in " + meeting_title
-                    update_messages.append(solar_upate_message)
+                #run the keyword search
+                agenda_search = search_agenda_for_keywords(all_agenda_topics)
+                if agenda_search !=[]:
+                    update_messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + " in " + meeting_title)
                 meetings_page.click()
                 time.sleep(2)
             else:
@@ -158,8 +157,8 @@ def civicclerk_version_1(url,locality):
                     empty_messages.append("No agenda text available in " + meeting_title + "\n")
                 else:
                     agenda_search=search_agenda_for_keywords(agenda_content)
-                    if agenda_search==True:
-                        messages.append("New solar updates for " + locality + " in " + meeting_title + "\n")
+                    if agenda_search != []:
+                        messages.append("Keyword(s) " + ", ".join(agenda_search) + ' found in upcoming meeting for ' + locality + " in " + meeting_title)
                 driver.close()
             driver.switch_to.window(main_window_handle)
         return messages
@@ -186,8 +185,8 @@ def civicclerk_version_2(url,locality):
                 driver.switch_to.frame(pdf_viewer_frame[0])
                 agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
                 agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search==True:
-                    messages.append("New solar information available for " + locality+" in " + meeting_title)
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + " in " + meeting_title)
             driver.switch_to.window(main_window)
             driver.back()
             time.sleep(5)
@@ -228,9 +227,8 @@ def novusagenda(url,locality):
                 #find the rest of the agenda content
                 agenda_content = driver.find_elements(By.CSS_SELECTOR, "td")
                 agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search == True:
-                    solar_update_message = "New solar updates available for " + locality + " in " + agenda_headings[1].text + " " + meeting_date
-                    messages.append(solar_update_message)
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + " in " + agenda_headings[1].text + " " + meeting_date)
             else:
                 break
             driver.close()
@@ -240,53 +238,7 @@ def novusagenda(url,locality):
         return url_test
 
 """AgendaCenter"""
-def agendacenter(url, locality):
-    url_test = verify_url(url)
-    if url_test==True:
-        driver.get(url)
-        time.sleep(5)
-        messages = []
-        #get all the links in the html
-        agenda_links = driver.find_elements(By.CSS_SELECTOR, "a[href*='AgendaCenter/ViewFile'")
-        #filter out the 'a' tags that don't actually have a link so that meeting PDFs and dates line up
-        agenda_links_nonblank = []
-        for item in agenda_links:
-            if item.text != '':
-                agenda_links_nonblank.append(item)
-        table_rows = driver.find_elements(By.CSS_SELECTOR, "tr[class*=catAgendaRow")
-        #set the main window handle so we can return to it later
-        main_window = driver.window_handles[0]
-        #go through each link and check the agenda contents
-        for i in range(0,len(table_rows)):
-            #check the meeting date first
-            if "\u2009" in table_rows[i].text:
-                future_date = check_meeting_date(table_rows[i].text.split("\u2009")[0])
-                meeting_title = agenda_links_nonblank[i].text + " " + table_rows[i].text.split("\u2009")[0]
-            else:
-                future_date = check_meeting_date(table_rows[i].text.split("\n")[0])
-                meeting_title = agenda_links_nonblank[i].text + " " + table_rows[i].text.split("\n")[0]
-            if future_date==True:
-                agenda_url = agenda_links_nonblank[i].get_attribute("href")
-                agenda_links_nonblank[i].click()
-                time.sleep(2)
-                #once we click, a new window handle appears
-                agenda_window = driver.window_handles[1]
-                #switch to the agenda window
-                driver.switch_to.window(agenda_window)
-                #get all the tags where the agenda content lives
-                agenda_content = driver.find_elements(By.CSS_SELECTOR, "div[class*=textLayer")
-                if agenda_content == []:
-                    agenda_content = driver.find_elements(By.CSS_SELECTOR, "div[id*='divInner'")
-                agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search==True:
-                    messages.append('New solar updates available for ' + locality + ' in ' + meeting_title + ". " + agenda_url)
-                driver.close()
-                driver.switch_to.window(main_window)  
-        return messages         
-    else:
-        return url_test
-    
-def agendacenter_alternate(url,locality):
+def agendacenter(url,locality):
     url_test = verify_url(url)
     if url_test==True:
         driver.get(url)
@@ -316,8 +268,8 @@ def agendacenter_alternate(url,locality):
                 if agenda_content == []:
                     agenda_content = driver.find_elements(By.CSS_SELECTOR, "div[id*='divInner'")
                 agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search == True:
-                    messages.append("New solar updates for " + locality + " in " + meeting_title)
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + " in " + meeting_title)
         return messages
     else:
         return url_test
@@ -365,8 +317,8 @@ def granicus(url,locality,search_string,split_string):
             driver.switch_to.window(agenda_window)
             agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
             agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search==True:
-                messages.append("New solar information available for " + locality + " in " + meeting_titles[i])
+            if agenda_search!=[]:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + "found in upcoming meeting for " + locality + " in " + meeting_titles[i])
             driver.close()
             driver.switch_to.window(main_window)
         return messages
@@ -394,8 +346,8 @@ def granicus_version_2(url, locality):
                     driver.switch_to.window(driver.window_handles[1])
                     agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
                     agenda_search = search_agenda_for_keywords(agenda_content)
-                    if agenda_search == True:
-                        messages.append("New solar information available for " + locality + " in " + meeting_titles[i])
+                    if agenda_search != []:
+                        messages.append("Keyword(s) " + ", ".join(agenda_search) +" found in upcoming meeting for " + locality + " in " + meeting_titles[i])
                     driver.close()
                     driver.switch_to.window(driver.window_handles[0])
                 except:
@@ -429,8 +381,8 @@ def granicus_b(url,locality):
                     driver.switch_to.window(driver.window_handles[1])
                     agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
                     agenda_search = search_agenda_for_keywords(agenda_content)
-                    if agenda_search==True:
-                        messages.append("New solar information available for " + locality + " in " + meeting_title + ". " + agenda_url)
+                    if agenda_search != []:
+                        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + " in " + meeting_title + ". " + agenda_url)
                     driver.close()
                     driver.switch_to.window(driver.window_handles[0])
                 except:
@@ -458,8 +410,8 @@ def civicweb(url,locality):
                 driver.switch_to.frame(agenda_frame)
                 agenda_content = driver.find_elements(By.CSS_SELECTOR,"html")
                 agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search == True:
-                    messages.append("New solar information available for " + locality + " in " + item.text)
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + " in " + item.text)
                 driver.switch_to.window(driver.window_handles[0])
     return messages
 
@@ -491,8 +443,8 @@ def meetings_table(url,locality):
             driver.switch_to.window(driver.window_handles[1])
             agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
             agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search == True:
-                messages.append("New solar information available for " + locality + " in " + meeting_titles[i])
+            if agenda_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + " in " + meeting_titles[i])
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
     return messages
@@ -538,8 +490,8 @@ def document_center(url,locality):
                 if future_meeting == True:
                     agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
                     agenda_search = search_agenda_for_keywords(agenda_content)
-                    if agenda_search ==True:
-                        messages.append("New solar information available for " + locality + " in " + meeting_title)
+                    if agenda_search != []:
+                        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for "+ locality + " in " + meeting_title)
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
     return messages
@@ -561,8 +513,8 @@ def escribe(url,locality):
             driver.switch_to.window(driver.window_handles[1])
             agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
             agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search == True:
-                messages.append("New solar information available for " + locality + " in "  +  meeting_title + ". " + agenda_url)
+            if agenda_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + " in "  +  meeting_title + ". " + agenda_url)
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
         except:
@@ -582,20 +534,22 @@ def legistar(url,locality):
             future_meeting = check_meeting_date(item.text.split("/2023")[0])
             if future_meeting==True:
                 future_meetings.append(item)
-        meeting_details = []
+        meeting_urls = []
         meeting_titles = []
         for item in future_meetings:
-            if "Meeting detail" in item.text:
-                meeting_details.append(item.find_element(By.CSS_SELECTOR,"a[id*=hypMeetingDetail").get_attribute('href'))
+            try:
+                meeting_urls.append(item.find_element(By.CSS_SELECTOR,"a[id*=hypMeetingDetail").get_attribute('href'))
                 meeting_titles.append(item.text)
-        for i in range(0,len(meeting_details)):
-            if meeting_details[i] != None:
-                driver.get(meeting_details[i])
+            except:
+                continue
+        for i in range(0,len(meeting_urls)):
+            if meeting_urls[i] != None:
+                driver.get(meeting_urls[i])
                 time.sleep(2)
                 agenda_content = driver.find_elements(By.CSS_SELECTOR,'tr[id*=ctl00')
                 agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search==True:
-                    messages.append("New solar information available for " + locality + " in " + meeting_titles[i] + ". " + meeting_details[i])
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + " in " + meeting_titles[i] + ". " + meeting_urls[i])
         return messages
     else:
         return url_test
@@ -603,37 +557,12 @@ def legistar(url,locality):
 """Locality Specific Functions"""
 
 """Albemarle County"""
-def albemarle_county(bos_url,pc_url):
-    url_test_bos = verify_url(bos_url)
-    url_test_pc = verify_url(pc_url)
+def albemarle_county_pc(url):
+    url_test = verify_url(url)
     messages=[]
     empty_messages = []
-    if url_test_bos==True:
-        driver.get(bos_url)
-        time.sleep(5)
-        all_meeting_dates = driver.find_elements(By.CSS_SELECTOR,"td[class*=rgSorted")
-        all_meeting_agendas = driver.find_elements(By.CSS_SELECTOR,"a[id*=hypAgenda")
-        meeting_titles = []
-        for i in range(0,len(all_meeting_dates)):
-            meeting_titles.append("Board of Supervisors "+all_meeting_dates[i].text)
-        main_window = driver.window_handles[0]
-        for i in range(0,len(all_meeting_agendas)):
-            future_date = check_meeting_date(all_meeting_dates[i].text)
-            if future_date==True and all_meeting_agendas[i].text =='Agenda':
-                all_meeting_agendas[i].click()
-                time.sleep(1)
-                agenda_window = driver.window_handles[1]
-                driver.switch_to.window(agenda_window)
-                agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
-                agenda_search=search_agenda_for_keywords(agenda_content)
-                if agenda_search==True:
-                    messages.append("New solar updates for Albemarle in " + meeting_titles[i] + "\n")
-                driver.close()
-                driver.switch_to.window(main_window)
-    if url_test_bos != True:
-        messages.append(url_test_bos)
-    if url_test_pc==True:
-        driver.get(pc_url)
+    if url_test==True:
+        driver.get(url)
         time.sleep(5)
         meeting_links = driver.find_elements(By.CSS_SELECTOR,"a[href*=Calendar")
         meeting_times = driver.find_elements(By.CSS_SELECTOR,"td[class*=event_datetime")
@@ -661,14 +590,14 @@ def albemarle_county(bos_url,pc_url):
                 agenda_search=search_agenda_for_keywords(agenda_content)
                 driver.close()
                 driver.switch_to.window(main_window)
-                driver.get(pc_url)
+                driver.get(url)
                 time.sleep(2)
-                if agenda_search==True:
-                    messages.append("New solar updates available for Albemarle in " + meeting_titles[i])
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Albemarle County Planning Commission in " + meeting_titles[i])
             except:
                 empty_messages.append("No agenda available for "+ meeting_titles[i])
-    if url_test_pc != True:
-        messages.append(url_test_pc)
+    if url_test != True:
+        messages.append(url_test)
     return messages
 
 """Alleghany County"""
@@ -688,8 +617,8 @@ def alleghany_county(bos_url):
                 time.sleep(2)
                 agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
                 agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search==True:
-                    messages.append("New solar information available for Alleghany County in " + item.text)
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Alleghany County Board of Supervisors in " + item.text)
                 driver.back()
                 time.sleep(2)
         return messages
@@ -716,8 +645,8 @@ def main_method_appomattox(url):
                 driver.switch_to.window(agenda_window)
                 agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
                 agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search==True:
-                    messages.append("New solar information available for Appomattox County in " + meeting_title)
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Appomattox County in " + meeting_title)
                 driver.close()
                 driver.switch_to.window(main_window)
     return messages
@@ -760,8 +689,8 @@ def main_method_arlington(url):
         time.sleep(2)
         agenda_content=driver.find_elements(By.CSS_SELECTOR, "body")
         agenda_search=search_agenda_for_keywords(agenda_content)
-        if agenda_search==True:
-            messages.append("New solar information available for Arlington County in " + meeting_titles[i])
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Arlington County in " + meeting_titles[i])
         driver.get(url)
         time.sleep(1)
     return messages   
@@ -814,8 +743,8 @@ def bath_county(url):
                     time.sleep(2)
                     content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
                     content_search = search_agenda_for_keywords(content)
-                    if content_search == True:
-                        messages.append("New solar information available for Bath County in " + meeting_title + ". " + item)
+                    if content_search != []:
+                        messages.append("Keyword(s) " + ", ".join(content_search) + " found in upcoming meeting for Bath County in " + meeting_title + ". " + item)
                     driver.back()
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
@@ -833,7 +762,7 @@ def bland_county(url):
     future_meeting = check_meeting_date(latest_meeting.text)
     if future_meeting == True:
         agenda_url = latest_meeting.find_element(By.CSS_SELECTOR,"a").get_attribute("href")
-        messages.append("New meeting agenda available for Bland County Board of Supervisors. Check for solar information. " + agenda_url)
+        messages.append("New meeting agenda available for Bland County Board of Supervisors. Check for new solar information. " + agenda_url)
     return messages
 
 """Buchanan County"""
@@ -856,8 +785,8 @@ def buchanan_county(url):
     time.sleep(1)
     agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
     agenda_search = search_agenda_for_keywords(agenda_content)
-    if agenda_search == True:
-        messages.append("New solar information available for Buchanan County in Board of Supervisors "  +  minutes_title + ". " + minutes_url)
+    if agenda_search != []:
+        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Buchanan County in Board of Supervisors "  +  minutes_title + ". " + minutes_url)
     return messages
 
 """Buckingham County"""
@@ -876,8 +805,8 @@ def buckingham_county(url):
         time.sleep(2)
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Buckingham County in " + meeting_title + ". " + agenda_url)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Buckingham County in " + meeting_title + ". " + agenda_url)
     return messages    
 
 """Buena Vista City Council"""
@@ -893,8 +822,8 @@ def buena_vista_city_council(url):
         time.sleep(1)
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information for Buena Vista City Council in " + meeting_title)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Buena Vista City Council in " + meeting_title)
     return messages
 
 """Carroll County"""
@@ -914,8 +843,8 @@ def carroll_county(url):
                 driver.switch_to.window(driver.window_handles[1])
                 agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
                 agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search == True:
-                    messages.append("New solar information available for Carroll County in " + meeting_header)
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Carroll County in " + meeting_header)
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
             except:
@@ -943,11 +872,11 @@ def charlotte_county(url):
             meeting_title = item.text
             #documents aren't readable, they're scans, need a different alert
             if " Solar " in meeting_title:
-                messages.append("New solar information available for Charlotte in " + meeting_title)
+                messages.append("New solar information available for Charlotte County in " + meeting_title)
             elif " solar " in meeting_title:
-                messages.append("New solar information available for Charlotte in " + meeting_title)
+                messages.append("New solar information available for Charlotte County in " + meeting_title)
             else:
-                messages.append("New meeting information available for Charlotte in " + meeting_title + ", check documents for solar information")
+                messages.append("New meeting information available for Charlotte County in " + meeting_title + ", check documents for solar information")
         else:
             break
     return messages
@@ -969,8 +898,8 @@ def clarke_county(url):
         time.sleep(2)
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Clarke County in " + meeting_title + ". " + agenda_url)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Clarke County in " + meeting_title + ". " + agenda_url)
     return messages  
 
 """Town of Clifton Forge"""
@@ -991,8 +920,8 @@ def clifton_forge(url):
             time.sleep(2)
             agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
             agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search == True:
-                messages.append("New solar information available for Clifton Forge in " + agenda_titles[i] + ". " + agenda_urls[i])
+            if agenda_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for the Town of Clifton Forge in " + agenda_titles[i] + ". " + agenda_urls[i])
         else:
             #since the most recent meeting is posted first, no need to keep looking
             break
@@ -1034,8 +963,8 @@ def emporia(url):
         driver.switch_to.window(driver.window_handles[1])
         agenda_content = driver.find_elements(By.CSS_SELECTOR, "div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for the Town of Emporia in " + meeting_title + ". " + meeting_url)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for the Town of Emporia in " + meeting_title + ". " + meeting_url)
     return messages
 
 """Fairfax County"""
@@ -1060,8 +989,8 @@ def fairfax_county_bos(url):
                 webdriver.common.action_chains.ActionChains(driver).send_keys(webdriver.common.keys.Keys.PAGE_DOWN).perform()
                 agenda_content = (driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer"))
                 agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search == True:
-                    messages.append("New solar information available for Fairfax County in " + meeting_titles[i] + ". " + meeting_urls[i])
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Fairfax County Board of Supervisors in " + meeting_titles[i] + ". " + meeting_urls[i])
                     break
         except:
             continue
@@ -1084,8 +1013,8 @@ def fairfax_county_pc(url,year):
         time.sleep(2)
         agenda_content = (driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer"))
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Fairfax County Planning Commission in " + item)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Fairfax County Planning Commission in " + item)
     return messages
 
 """Floyd County"""
@@ -1108,8 +1037,8 @@ def floyd_county(url):
         time.sleep(2)
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Floyd County in Board of Supervisors " + meeting_title + ". " + agenda_url)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Floyd County Board of Supervisors in " + meeting_title + ". " + agenda_url)
     return messages        
 
 """City of Franklin"""
@@ -1137,8 +1066,8 @@ def city_of_franklin(url):
         driver.switch_to.window(driver.window_handles[1])
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar available for the City of Franklin in " + meeting_title + ". " + meeting_url)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for the City of Franklin in " + meeting_title + ". " + meeting_url)
     return messages
 
 """City of Galax"""
@@ -1157,8 +1086,8 @@ def galax(url):
         driver.switch_to.window(driver.window_handles[1])
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information for the City of Galax in " + agenda_title + ". " + agenda_url)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for the City of Galax in " + agenda_title + ". " + agenda_url)
     return messages
 
 """Giles County Board of Supervisors"""
@@ -1172,8 +1101,8 @@ def giles_county(url):
     time.sleep(2)
     agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
     agenda_search = search_agenda_for_keywords(agenda_content)
-    if agenda_search == True:
-        messages.append("New solar information for Giles County in next agenda")
+    if agenda_search != []:
+        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Giles County in next agenda")
     return messages
 
 """Greensville County"""
@@ -1194,8 +1123,8 @@ def greensville_county(url,government_body):
             driver.switch_to.window(driver.window_handles[1])
             agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
             agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search == True:
-                messages.append("New solar information available for Greensville in " + government_body + ' ' + meeting_title)
+            if agenda_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) +  " found in upcoming meeting for Greensville in " + government_body + ' ' + meeting_title)
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
         else:
@@ -1218,8 +1147,8 @@ def henrico_county_bos(url):
         time.sleep(2)
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Henrico County in Board of Supervisors " + meeting_title + ". " + meeting_url)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Henrico County Board of Supervisors in " + meeting_title + ". " + meeting_url)
     return messages   
 
 def henrico_county_pc(url):
@@ -1236,8 +1165,8 @@ def henrico_county_pc(url):
         time.sleep(2)
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Henrico County in the latest Planning Commission/Board of Zoning Appeals agenda. " + item)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Henrico County in the latest Planning Commission/Board of Zoning Appeals agenda. " + item)
     return messages        
 
 """King and Queen County"""
@@ -1250,8 +1179,8 @@ def king_and_queen_county_bos(url):
     time.sleep(1)
     agenda_content = driver.find_elements(By.CSS_SELECTOR,"td")
     agenda_search = search_agenda_for_keywords(agenda_content)
-    if agenda_search == True:
-        messages.append("New solar information available for King and Queen County in current Board of Supervisors Agenda. " +  current_agenda)
+    if agenda_search != []:
+        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for King and Queen County Board of Supervisors in current agenda. " +  current_agenda)
     return messages
 
 def king_and_queen_county_pc(url):
@@ -1269,8 +1198,8 @@ def king_and_queen_county_pc(url):
         driver.switch_to.window(driver.window_handles[1])
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for King and Queen County in Planning Commission " + meeting_title + ". " +  agenda_link)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for King and Queen County Planning Commission in " + meeting_title + ". " +  agenda_link)
     return messages
 
 """Lee County"""
@@ -1297,8 +1226,8 @@ def lee_county(url):
         time.sleep(2)
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Lee County in Board of Supervisors " + agenda_titles[i] + ". " +  agenda_urls[i])
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Lee County Board of Supervisors in " + agenda_titles[i] + ". " +  agenda_urls[i])
     return messages
 
 """Lexington Planning Commission"""
@@ -1316,8 +1245,8 @@ def lexington_pc(url):
             driver.switch_to.window(driver.window_handles[1])
             agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
             agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search == True:
-                messages.append("New solar information available in " + meeting_title)
+            if agenda_search != []:
+                messages.append("Keyword(s) " ", ".join(agenda_search) + " found in upcoming meeting for the City of Lexington Planning Commission in " + meeting_title)
         else:
             break
     return messages
@@ -1337,8 +1266,8 @@ def lunenburg_county(url):
         time.sleep(5)
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Lunenburg County in " + meeting_title + ". " + agenda_url)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Lunenburg County in " + meeting_title + ". " + agenda_url)
     return messages  
 
 """Lynchburg Planning Commission"""
@@ -1362,8 +1291,8 @@ def lynchburg_pc(url):
         time.sleep(2)
         agenda_content = driver.find_elements(By.CSS_SELECTOR, "div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Lynchburg in Planning Commission " + agenda_title[i])
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for the City of Lynchburg Planning Commission in " + agenda_title[i])
     return messages
 
 """Manassas Park"""
@@ -1387,8 +1316,8 @@ def manassas_park(url,government_body):
         driver.switch_to.window(driver.window_handles[1])
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Manassas Park in " + government_body + ' ' + meeting_title)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Manassas Park in " + government_body + ' ' + meeting_title)
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
     return messages
@@ -1407,8 +1336,8 @@ def montgomery_pc(url):
             driver.switch_to.window(driver.window_handles[1])
             agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
             agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search == True:
-                messages.append("New solar information available for Montgomery in Planning Commission " + item.text)
+            if agenda_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Montgomery County Planning Commission in " + item.text)
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
     return messages
@@ -1442,8 +1371,8 @@ def nelson_county(url):
                 time.sleep(2)
                 agenda_content = (driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer"))
                 agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search == True:
-                    messages.append("New solar information available for Nelson County in " + meeting_titles[i] + ". " + meeting_urls[i])
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Nelson County in " + meeting_titles[i] + ". " + meeting_urls[i])
                     break
     return messages 
 
@@ -1463,8 +1392,8 @@ def new_kent_county_pc(url):
         time.sleep(2)
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for New Kent County in Planning Commission " + agenda_title + ". " +  agenda_url)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for New Kent County Planning Commission in " + agenda_title + ". " +  agenda_url)
     return messages
 
 """Norfolk Planning Commission"""
@@ -1492,8 +1421,8 @@ def norfolk_pc(url):
             driver.switch_to.window(agenda_window)
             agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
             agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search==True:
-                messages.append("New solar information available for Norfolk in Planning Commission " + meeting_titles[i])
+            if agenda_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Norfolk Planning Commission in " + meeting_titles[i])
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
         except:
@@ -1516,8 +1445,8 @@ def norton_city(url):
         time.sleep(1)
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information for City of Norton in City Council Meeting " + meeting_title + ". " + agenda_url)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for City of Norton City Council in " + meeting_title + ". " + agenda_url)
     return messages
 
 """Nottoway County"""
@@ -1540,8 +1469,8 @@ def nottoway_county(url):
         driver.switch_to.window(driver.window_handles[1])
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Nottoway in " + meeting_titles[i])
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Nottoway County in " + meeting_titles[i])
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
     return messages
@@ -1566,8 +1495,8 @@ def patrick_county_bos(url):
         driver.switch_to.window(driver.window_handles[1])
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Patrick County in Board of Supervisors "  +  agenda_title + ". " + agenda_url)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Patrick County Board of Supervisors in " + agenda_url)
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
     return messages
@@ -1591,8 +1520,8 @@ def pittsylvania_county(url):
                 time.sleep(2)
                 agenda_content = (driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer"))
                 agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search == True:
-                    messages.append("New solar information available for Pittsylvania in " + meeting_title)
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Pittsylvania County in " + meeting_title)
                     break
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
@@ -1629,8 +1558,8 @@ def prince_george_county_pc(url):
             time.sleep(1)
             agenda_content = (driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer"))
             agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search == True:
-                messages.append("New solar information available for Prince George County Planning Commission in " + meeting_title + ". " + agenda_url)
+            if agenda_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Prince George County Planning Commission in " + agenda_url)
             break
     return messages
 
@@ -1668,7 +1597,7 @@ def prince_william_pc(url):
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
         if agenda_search ==True:
-            messages.append("New solar information available in Prince William Planning Commission latest agenda")
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Prince William Planning Commission in the latest agenda")
     return messages
 
 """Richmond County"""
@@ -1698,8 +1627,8 @@ def roanoke_county_pc(url):
     driver.switch_to.window(driver.window_handles[1])
     agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
     agenda_search = search_agenda_for_keywords(agenda_content)
-    if agenda_search == True:
-        messages.append("New solar information available for Roanoke County in latest Planning Commission agenda. "  +  agenda_url)
+    if agenda_search != []:
+        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found for Roanoke County in latest Planning Commission agenda. "  +  agenda_url)
     return messages
 
 def roanoke_county_bos(url):
@@ -1713,8 +1642,8 @@ def roanoke_county_bos(url):
     driver.switch_to.window(driver.window_handles[1])
     agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
     agenda_search = search_agenda_for_keywords(agenda_content)
-    if agenda_search == True:
-        messages.append("New solar information available for Roanoke County in latest Board of Supervisors agenda. "  +  agenda_url)
+    if agenda_search != []:
+        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found for Roanoke County in latest Board of Supervisors agenda. "  +  agenda_url)
     return messages
 
 """Shenandoah County"""
@@ -1780,8 +1709,8 @@ def smyth_county_pc(url):
         time.sleep(5)
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Smyth County Planning Commission " + meeting_title + ". " + link)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Smyth County Planning Commission in " + meeting_title + ". " + link)
     return messages
 
 def smyth_county_bos(url):
@@ -1797,8 +1726,8 @@ def smyth_county_bos(url):
         time.sleep(5)
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Smyth County Planning Commission " + meeting_title + ". " + link)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Smyth County Planning Commission in " + meeting_title + ". " + link)
     return messages
 
 """Southampton County"""
@@ -1824,8 +1753,8 @@ def southampton_county(url,governing_body):
         time.sleep(2)
         agenda_content = driver.find_elements(By.CSS_SELECTOR,"section[class*='main-content-wrap'")
         agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search == True:
-            messages.append("New solar information available for Southampton County in " + meeting_title + ". " + meeting_url)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Southampton County in " + meeting_title + ". " + meeting_url)
     return messages
 
 """South Boston City Council"""
@@ -1858,8 +1787,8 @@ def staunton(url):
                 driver.switch_to.window(driver.window_handles[1])
                 agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
                 agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search == True:
-                    messages.append("New solar information available for Staunton in " + meeting_title)
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Staunton in " + meeting_title)
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
             except:
@@ -1888,8 +1817,8 @@ def sussex_county(url):
             driver.switch_to.window(driver.window_handles[1])
             agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
             agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search == True:
-                messages.append("New solar information available for Sussex County in " + event_titles[i] + ". " + event_links[i])
+            if agenda_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Sussex County in " + event_titles[i] + ". " + event_links[i])
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
         except:
@@ -1919,8 +1848,8 @@ def tazewell_county(url, government_body):
                 driver.switch_to.window(driver.window_handles[1])
                 agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
                 agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search == True:
-                    messages.append("New solar information for Tazewell County in " + meeting_title + ". " + agenda_url)
+                if agenda_search != []:
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Tazewell County in " + meeting_title + ". " + agenda_url)
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
             except:
@@ -1939,8 +1868,8 @@ def virginia_beach_cc(url):
     time.sleep(1)
     agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
     agenda_search = search_agenda_for_keywords(agenda_content)
-    if agenda_search == True:
-        messages.append("New solar information for Virginia Beach in latest City Council meeting agenda. " + agenda_url)
+    if agenda_search != []:
+        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Virginia Beach in latest City Council meeting agenda. " + agenda_url)
     return messages
 
 def virginia_beach_pc(url):
@@ -1960,8 +1889,8 @@ def virginia_beach_pc(url):
             time.sleep(1)
             agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
             agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search == True:
-                messages.append("New solar information for Virginia Beach in latest Planning Commission meeting agenda. " + agenda_url)
+            if agenda_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Virginia Beach in latest Planning Commission meeting agenda. " + agenda_url)
     return messages
 
 """Wythe County"""
@@ -1982,8 +1911,8 @@ def wythe_county(url):
                     if agenda_content == []:
                         agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
                     agenda_search = search_agenda_for_keywords(agenda_content)
-                    if agenda_search == True:
-                        messages.append("New solar information for Wythe County in " + meeting_title)
+                    if agenda_search != []:
+                        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Wythe County in " + meeting_title)
                     driver.close()
                     driver.switch_to.window(driver.window_handles[0])
             except:
