@@ -275,56 +275,6 @@ def agendacenter(url,locality):
         return url_test
 
 """Granicus"""
-def granicus(url,locality,search_string,split_string):
-    url_test=verify_url(url)
-    if url_test==True:
-        driver.get(url)
-        time.sleep(2)
-        messages=[]
-        main_window = driver.window_handles[0]
-        #gets all the table rows, including spacers and headers
-        table_rows=driver.find_elements(By.CSS_SELECTOR,"tr")
-        data_rows = []
-        #selecting just the rows that actually contain meeting data
-        for item in table_rows:
-            #will need to update this every year
-            if search_string in item.text:
-                data_rows.append(item)
-        future_meetings=[]
-        #narrowing down to just future dates
-        for item in data_rows:
-            #try:
-                #usually the date is in the first piece of text, also update this in the future
-            future_date = check_meeting_date(item.text.split(split_string)[0])
-            #except:
-                #sometimes the meeting title has a hyphen
-                #future_date = check_meeting_date(item.split('2023')[1])
-            if future_date == True:
-                future_meetings.append(item)
-            else:
-                break
-        available_agendas = []
-        meeting_titles = []
-        for item in future_meetings:
-            try:
-                available_agendas.append(item.find_element(By.CSS_SELECTOR,"a[href*=AgendaViewer"))
-                meeting_titles.append(item.text)
-            except:
-                continue
-        for i in range(0,len(available_agendas)):
-            available_agendas[i].click()
-            agenda_window=driver.window_handles[1]
-            driver.switch_to.window(agenda_window)
-            agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
-            agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search!=[]:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + "found in upcoming meeting for " + locality + " in " + meeting_titles[i])
-            driver.close()
-            driver.switch_to.window(main_window)
-        return messages
-    else:
-        return url_test
-
 def granicus_version_2(url, locality):
     driver.get(url)
     messages = []
@@ -358,8 +308,7 @@ def granicus_version_2(url, locality):
             break
     return messages
 
-#written for Manassas City and searches for the Agenda Packet instead of the Agenda, want to generalize and replace the original Granicus method since this is more streamlined
-def granicus_b(url,locality):
+def granicus(url,locality):
     driver.get(url)
     time.sleep(3)
     messages=[]

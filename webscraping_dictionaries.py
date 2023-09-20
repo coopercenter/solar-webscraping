@@ -1,3 +1,4 @@
+from webscraping_functions import *
 "Dictionaries for the localities that use the same type of document organization service"
 
 """BoardDocs localities"""
@@ -215,4 +216,152 @@ escribe_dictionary = {
 legistar_dictionary = {
     "Albemarle":["https://albemarle.legistar.com/Calendar.aspx","Albemarle County"],
     "Hampton CC":["https://hampton.legistar.com/Calendar.aspx","Hampton City"]
+}
+
+"Dictionaries for localities that need individual code"
+county_dictionary_single_variable = {
+    "Albemarle County Planning Commission":[albemarle_county_pc,"https://www.albemarle.org/government/community-development/boards-and-commissions/planning-commission"],
+
+    "Alleghany County":[alleghany_county,"https://www.co.alleghany.va.us/board-of-supervisors/agendas/"],
+
+    "Arlington County":[arlington_county,"https://arlington.granicus.com/ViewPublisher.php?view_id=44","https://arlington.granicus.com/ViewPublisher.php?view_id=2"],
+
+    "Bath County":[bath_county,"https://www.bathcountyva.gov/public_information/agendas_and_public_notices"],
+
+    "Bland County":[bland_county,"https://www.blandcountyva.gov/page/agendas-and-minutes/"],
+
+    "Buchanan County":[buchanan_county,"https://www.buchanancountyonline.com/index.htm"],
+
+    "Buckingham County Board of Supervisors":[buckingham_county,"https://www.buckinghamcountyva.org/administration/boards___commissions/board_of_supervisors/board_agenda_minutes_youtube.php"],
+
+    "Buckingham County Planning Commission":[buckingham_county,"https://www.buckinghamcountyva.org/administration/boards___commissions/planning_commission.php"],
+
+    "Carroll County":[carroll_county,"https://www.carrollcountyva.gov/government/bos_meeting_agendas.php"],
+
+    "Charlotte County Board of Supervisors":[charlotte_county,"https://www.charlottecountyva.gov/government/board_of_supervisors/agendas___minutes.php"],
+
+    "Charlotte County Planning Commission":[charlotte_county,"https://www.charlottecountyva.gov/departments/planning___zoning/agendas___minutes.php"],
+
+    "Clarke County Board of Supervisors":[clarke_county,"https://www.clarkecounty.gov/government/boards-commissions/board-of-supervisors/bos-agendas/-folder-1324"],
+
+    "Clarke County Planning Commission":[clarke_county,"https://www.clarkecounty.gov/government/boards-commissions/planning-commission/pc-agendas/-folder-1352"],
+
+    "Fairfax County Board of Supervisors":[fairfax_county_bos,"https://www.fairfaxcounty.gov/boardofsupervisors/"],
+
+    "Floyd County":[floyd_county,"https://www.floydcova.gov/agendas-minutes"],
+
+    "Giles County":[giles_county,"https://virginiasmtnplayground.com/bos/"],
+
+    "Henrico County Board of Supervisors":[henrico_county_bos,"https://henrico.us/supervisors/supervisors-agenda-o-gram/"],
+
+    "Henrico County Planning Commission":[henrico_county_pc,"https://henrico.us/planning/meetings/"],
+
+    "King and Queen County Board of Supervisors":[king_and_queen_county_bos,"http://www.kingandqueenco.net/html/Govt/board.html"],
+
+    "King and Queen County Planning Commission":[king_and_queen_county_pc,"http://www.kingandqueenco.net/html/Govt/bzoning.html"],
+
+    "Lee County":[lee_county,"http://www.leecova.org/AgendaandMinutes.htm"],
+
+    "Lunenberg County Board of Supervisors":[lunenburg_county,"https://www.lunenburgva.gov/government/board_of_supervisors/agendas___minutes.php"],
+
+    "Lunenburg County Planning Commission":[lunenburg_county,"https://www.lunenburgva.gov/government/planning_commission/agendas___minutes.php"],
+
+    "Montgomery County Planning Commission":[montgomery_pc,"https://www.montva.com/departments/Planning-GIS/planning--commission/meetings-1"],
+
+    #need to update the function to reflect this new link
+    "Nelson County":[nelson_county,"https://www.nelsoncounty-va.gov/county-calendar/"],
+
+    "New Kent County Planning Commission":[new_kent_county_pc,"https://www.co.new-kent.va.us/Archive.aspx?AMID=422"],
+
+    #monitor for PC updates and change code accordingly
+    "Nottoway County":[nottoway_county,"https://nottoway.org/administration/boards___commissions/board_of_supervisors_(bos)/board_agendas_minutes.php#outer-388"],
+
+    "Patrick County Board of Supervisors":[patrick_county_bos,"https://www.co.patrick.va.us/supervisors/meeting-agendas"],
+
+    "Pittsylvania County":[pittsylvania_county,"https://www.pittsylvaniacountyva.gov/government/agenda-center"],
+
+    "Prince George County Planning Commission":[prince_george_county_pc,"https://www.princegeorgecountyva.gov/residents/community_development_and_code_compliance/planning_commission/meetings.php#outer-2780"],
+
+    "Prince George County Board of Supervisors":[prince_george_county_bos,"https://www.princegeorgecountyva.gov/departments/board_of_supervisors/meetings_agendas_and_board_packets.php"],
+
+    "Prince William County Planning Commission":[prince_william_pc,"https://www.pwcva.gov/department/planning-office/planning-commission"],
+
+    "Richmond County":[richmond_county,"https://co.richmond.va.us/board-of-supervisors-agenda-packets"],
+
+    "Roanoke County Planning Commission":[roanoke_county_pc,"https://www.roanokecountyva.gov/278/Planning-Commission"],
+
+    "Roanoke County Board of Supervisors":[roanoke_county_bos,"https://www.roanokecountyva.gov/287/Agendas-Minutes"],
+
+    "Shenandoah County Board of Supervisors":[shenandoah_county_bos,"https://shenandoahcountyva.us/bos/meeting-schedule/"],
+
+    "Shenandoah County Planning Commission":[shenandoah_county_pc,"https://shenandoahcountyva.us/planning-committee/meeting-schedule/"],
+
+    "Smyth County Planning Commission":[smyth_county_pc,"http://www.smythcounty.org/planning_commission/planning_commission_agendas_minutes.htm"],
+
+    "Smyth County Board of Supervisors":[smyth_county_bos,"http://www.smythcounty.org/board_of_supervisors/agendas_minutes_videos.htm"],
+
+    "Southampton County board of Supervisors":[southampton_county,"https://www.southamptoncounty.org/departments/board_of_supervisors/bos_agendas_2023.php","Board of Supervisors"],
+
+    "Southamptom County Planning Commission":[southampton_county,"https://www.southamptoncounty.org/departments/planning/year_2023.php","Planning Commission"],
+
+    "Sussex County":[sussex_county,"https://www.sussexcountyva.gov/events/index/future/"],
+
+    "Wythe County Board of Supervisors":[wythe_county,"http://www.wytheco.org/index.php/resources/meeting-minutes/packages/bos-packages"],
+
+    "Wythe County Planning Commission":[wythe_county,"http://www.wytheco.org/index.php/resources/meeting-minutes/packages/planning-commission"],
+
+}
+
+county_dictionary_double_variable = {
+    "Appomattox County":[appomattox_county,"https://www.appomattoxcountyva.gov/government/local-boards-commissions/planning-commission/pc-agendas-minutes-new/-selyear-2023","https://www.appomattoxcountyva.gov/government/board-of-supervisors/bos-agendas-minutes-new"],
+
+    "Fairfax County Planning Commission":[fairfax_county_pc,"https://www.fairfaxcounty.gov/planningcommission/meetingcalendar","\'2023\'"],
+
+    "Greensville County Board of Supervisors":[greensville_county,"https://www.greensvillecountyva.gov/boards___commissions/board_of_supervisors/agendas___minutes/board_of_supervisors.php#outer-1174sub-1176","Board of Supervisors"],
+
+    "Greensville County Planning Commission":[greensville_county,"https://www.greensvillecountyva.gov/boards___commissions/board_of_supervisors/agendas___minutes/planning_commission.php#outer-1188sub-1189","Planning Commission"],
+
+    "Tazewell County Board of Supervisors":[tazewell_county,"https://tazewellcountyva.org/government/boards-and-commissions/board-of-supervisors/", "Board of Supervisors"],
+
+    "Tazewell County Planning Commission":[tazewell_county,"https://tazewellcountyva.org/government/boards-and-commissions/planning-commission/", "Planning Commission"]
+}
+
+city_dictionary_single_variable = {
+    "Buena Vista City Council":[buena_vista_city_council,"https://www.buenavistava.org/city-services/government/city-council/council-agenda-minutes/"],
+
+    "Clifton Forge":[clifton_forge,"https://www.cliftonforgeva.gov/council/council-agenda-and-minutes/"],
+
+    "Covington":[covington,"https://covington.va.us/agendas-minutes/"],
+
+    "Emporia City Council":[emporia,"https://www.ci.emporia.va.us/node/15/agenda/2023"],
+
+    "Emporia Planning Commission":[emporia,"https://www.ci.emporia.va.us/node/25/agenda/2023"],
+
+    "City of Franklin":[city_of_franklin,"https://www.franklinva.com/government/city-council-agendas/"],
+
+    "Town of Galax":[galax,"https://galaxva.com/2023-city-council-agendas/"],
+
+    "City of Lexington Planning Commission":[lexington_pc,"https://www.lexingtonva.gov/government/boards-and-commissions/planning-commission"],
+
+    "City of Lynchburg Planning Commission":[lynchburg_pc,"https://www.lynchburgva.gov/planning-commission-information-agendas-and-legal-notices"],
+
+    "City of Norfolk Planning Commission":[norfolk_pc,"https://norfolkcityva.iqm2.com/Citizens/Board/1018-Planning-Commission"],
+
+    "Norton City":[norton_city,"https://www.nortonva.gov/Archive.aspx?AMID=37"],
+
+    "South Boston":[south_boston,"https://www.southboston.com/departments/council/council_minutes_of_meetings.php"],
+
+    "Staunton Planning Commission":[staunton,"https://www.ci.staunton.va.us/government/city-council-/board-commissions/agendas-minutes-for-boards-commissions/-selmt-1078"],
+
+    "Staunton City Council":[staunton,"https://www.ci.staunton.va.us/agendas-minutes"],
+
+    "Virginia Beach City Council":[virginia_beach_cc,"https://virginiabeach.gov/city-hall/departments-offices/city-clerk/city-council"],
+
+    "Virginia Beach Planning Commission":[virginia_beach_pc,"https://planning.virginiabeach.gov/boards-commissions/planning-commission"]
+}
+
+city_dictionary_double_variable = {
+    "Manassas Park Planning Commission":[manassas_park,"https://www.manassasparkva.gov/government/governing_body/meetings_agendas___minutes/planning_commission_meeting_agendas.php","Planning Commission"],
+
+    "Manassas Park Governing Body":[manassas_park,"https://www.manassasparkva.gov/government/governing_body/meetings_agendas___minutes/index.php","Governing Body"]
 }
