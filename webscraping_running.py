@@ -126,6 +126,7 @@ for item in county_dictionary_single_variable:
     except:
         error_alert = "Error webscraping " + item
         New_Alerts.append(error_alert)
+        continue
 
 for item in county_dictionary_double_variable:
     try:
@@ -134,6 +135,7 @@ for item in county_dictionary_double_variable:
     except:
         error_alert = "Error webscraping " + item
         New_Alerts.append(error_alert)
+        continue
 
 for item in city_dictionary_single_variable:
     try:
@@ -142,6 +144,7 @@ for item in city_dictionary_single_variable:
     except:
         error_alert = "Error webscraping " + item
         New_Alerts.append(error_alert)
+        continue
 
 for item in city_dictionary_double_variable:
     try:
@@ -150,5 +153,6 @@ for item in city_dictionary_double_variable:
     except:
         error_alert = "Error webscraping " + item
         New_Alerts.append(error_alert)
+        continue
 
 print(New_Alerts)
