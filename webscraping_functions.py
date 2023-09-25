@@ -119,54 +119,9 @@ def boarddocs(url,locality,two_pages):
         return messages
     else:
         return url_test
-
-"""CivicClerk"""
-#this version has been based on the Amelia County site, CivicClerk has a few different formats
-def civicclerk_version_1(url,locality):
-    url_test  = verify_url(url)
-    if url_test ==True:
-        driver.get(url) 
-        time.sleep(10)
-        messages=[]
-        empty_messages = []
-        all_meeting_times = driver.find_elements(By.CSS_SELECTOR, "td[id*='_4'")[2:]
-        #select a link to an agenda and click on it
-        all_meeting_links= driver.find_elements(By.CSS_SELECTOR, "a[id*='_3'")
-        main_window_handle = driver.window_handles[0]
-        for i in range(0,len(all_meeting_links)):
-            future_meeting = check_meeting_date(all_meeting_times[i].text)
-            if future_meeting==True:
-                meeting_title = all_meeting_links[i].text + " " + all_meeting_times[i].text
-                all_meeting_links[i].click()
-                time.sleep(2)
-                agenda_window_handle = driver.window_handles[1]
-                driver.switch_to.window(agenda_window_handle)
-                agenda_window_frame = driver.find_element(By.CSS_SELECTOR, "iframe[name*=DocumentFrame")
-                driver.switch_to.frame(agenda_window_frame)
-                all_menu_buttons = driver.find_elements(By.CSS_SELECTOR, "div[id*=_MenuButton")
-                for item in all_menu_buttons:
-                    if item.text=="Agenda":
-                        agenda_button = item
-                agenda_button.click()
-                time.sleep(1)
-                agenda_inner_window_frame = driver.find_element(By.CSS_SELECTOR, "iframe[id*=docViewer")
-                driver.switch_to.frame(agenda_inner_window_frame)
-                try:
-                    agenda_content = driver.find_elements(By.CSS_SELECTOR, "div[class*='textLayer'")
-                except:
-                    empty_messages.append("No agenda text available in " + meeting_title + "\n")
-                else:
-                    agenda_search=search_agenda_for_keywords(agenda_content)
-                    if agenda_search != []:
-                        messages.append("Keyword(s) " + ", ".join(agenda_search) + ' found in upcoming meeting for ' + locality + " in " + meeting_title)
-                driver.close()
-            driver.switch_to.window(main_window_handle)
-        return messages
-    else:
-        return url_test
     
 #second version of CivicClerk's website. Rewrite to exclude meetings that don't have a download pdf link on their summary box to make it faster
-def civicclerk_version_2(url,locality):
+def civicclerk(url,locality):
     url_test = verify_url(url)
     if url_test==True:
         messages=[]
@@ -1296,33 +1251,32 @@ def nelson_county(url):
     driver.get(url)
     time.sleep(5)
     messages = []
-    all_announcements = driver.find_elements(By.CSS_SELECTOR,"a[title*='Permalink to:'")
-    meeting_document_links = []
-    for item in all_announcements:
-        if 'Packet' in item.text:
-            meeting_document_links.append(item)
-        elif 'Agenda' in item.text:
-            meeting_document_links.append(item)
-    meeting_titles = []
-    meeting_urls = []
-    for item in meeting_document_links:
-        meeting_titles.append(item.text)
+    pc_meetings = driver.find_elements(By.CSS_SELECTOR,"a[href*='planning-commission'")
+    meeting_urls= []
+    for item in pc_meetings:
         meeting_urls.append(item.get_attribute('href'))
-    for i in range(0,len(meeting_urls)):
-        future_meeting = check_meeting_date(meeting_titles[i])
-        if future_meeting == True:
-            driver.get(meeting_urls[i])
+    bos_links = driver.find_elements(By.CSS_SELECTOR,"a[href*='board-of-supervisors'")
+    for item in bos_links:
+        meeting_urls.append(item.get_attribute("href"))
+    solar_meetings = driver.find_elements(By.CSS_SELECTOR,"a[href*='solar'")
+    comp_plan_meetings = driver.find_elements(By.CSS_SELECTOR,"a[href*='comprehensive-plan-'")
+    zoning_ordinance_meetings = driver.find_elements(By.CSS_SELECTOR,"a[href*='zoning-ordinance'")
+    for item in solar_meetings:
+        if solar_meetings !=[]:
+            messages.append("Keyword 'solar' found in upcoming meeting title for Nelson County. " + item.get_attribute('href'))
+    for item in comp_plan_meetings:
+        if comp_plan_meetings !=[]:
+            messages.append("Keyword 'comprehensive plan' found in upcoming meeting title for Nelson County. " + item.get_attribute('href'))
+    for item in zoning_ordinance_meetings:
+        if zoning_ordinance_meetings !=[]:
+            messages.append("Keyword 'zoning ordinance' found in upcoming meeting title for Nelson County. " + item.get_attribute('href')) 
+    for item in meeting_urls:
+            driver.get(item)
             time.sleep(5)
-            agenda_link = driver.find_element(By.CSS_SELECTOR,"a[href*='.pdf")
-            agenda_link.click()
-            for j in range(0,100):
-                webdriver.common.action_chains.ActionChains(driver).send_keys(webdriver.common.keys.Keys.PAGE_DOWN).perform()
-                time.sleep(2)
-                agenda_content = (driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer"))
-                agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search != []:
-                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Nelson County in " + meeting_titles[i] + ". " + meeting_urls[i])
-                    break
+            agenda_content = driver.find_elements(By.CSS_SELECTOR,"p")
+            agenda_search = search_agenda_for_keywords(agenda_content)
+            if agenda_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Nelson County. " + item)
     return messages 
 
 """New Kent County Planning Commission"""

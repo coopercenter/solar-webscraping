@@ -89,20 +89,13 @@ agendacenter_dictionary = {
     "Waynesboro":["https://www.waynesboro.va.us/AgendaCenter/Search/?term=&CIDs=1,4,&startDate=&endDate=&dateRange=&dateSelector=","City of Waynesboro"]
     }
 
-"CivicClerk version 1 localities"
-civicclerk_1_dictionary = {
-"Mathews":["https://mathewscova.civicclerk.com/Web/Home.aspx","Mathews County"],
+"CivicClerk localities"
+civicclerk_dictionary = {
+"Amelia":["https://ameliacova.portal.civicclerk.com/?category_id=26,28","Amelia County"],
 
-"Surry":["https://surrycova.civicclerk.com/web/home.aspx","Surry County"]
-}
+"Amherst":["https://amherstcova.portal.civicclerk.com/?category_id=27,29,33,32","Amherst County"],
 
-"CivicClerk version 2 localities"
-civicclerk_2_dictionary = {
-"Amelia":["https://ameliacova.portal.civicclerk.com/","Amelia County"],
-
-"Amherst":["https://amherstcova.portal.civicclerk.com/","Amherst County"],
-
-"Charles City":["https://charlescitycova.portal.civicclerk.com/?category_id=26,29","Charles City County"],
+"Charles City":["https://charlescitycova.portal.civicclerk.com/?category_id=26,27,29","Charles City County"],
 
 "Chesterfield":["https://chesterfieldcova.portal.civicclerk.com/","Chesterfield County"],
 
@@ -110,11 +103,15 @@ civicclerk_2_dictionary = {
 
 "King William":["https://kingwilliamcova.portal.civicclerk.com/","King William County"],
 
+"Mathews":["https://mathewscova.portal.civicclerk.com/","Mathews County"],
+
 "Orange":["https://orangecova.portal.civicclerk.com/","Orange County"],
 
 "Spotsylvania":["https://spotsylvaniacova.portal.civicclerk.com/","Spotsylvania County"],
 
 "Stafford":["https://staffordcova.portal.civicclerk.com/?category_id=26,31","Stafford County"],
+
+"Surry":["https://surrycova.portal.civicclerk.com/","Surry County"],
 
 "Warren":["https://warrencountyva.portal.civicclerk.com/?category_id=26,27","Warren County"],
 
@@ -268,8 +265,7 @@ county_dictionary_single_variable = {
 
     "Montgomery County Planning Commission":[montgomery_pc,"https://www.montva.com/departments/Planning-GIS/planning--commission/meetings-1"],
 
-    #need to update the function to reflect this new link
-    "Nelson County":[nelson_county,"https://www.nelsoncounty-va.gov/county-calendar/"],
+    "Nelson County":[nelson_county,"https://www.nelsoncounty-va.gov/events/list/"],
 
     "New Kent County Planning Commission":[new_kent_county_pc,"https://www.co.new-kent.va.us/Archive.aspx?AMID=422"],
 
@@ -339,7 +335,7 @@ city_dictionary_single_variable = {
 
     "City of Franklin":[city_of_franklin,"https://www.franklinva.com/government/city-council-agendas/"],
 
-    "Town of Galax":[galax,"https://galaxva.com/2023-city-council-agendas/"],
+    "City of Galax":[galax,"https://galaxva.com/2023-city-council-agendas/"],
 
     "City of Lexington Planning Commission":[lexington_pc,"https://www.lexingtonva.gov/government/boards-and-commissions/planning-commission"],
 
