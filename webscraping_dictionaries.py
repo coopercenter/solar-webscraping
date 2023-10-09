@@ -221,8 +221,6 @@ county_dictionary_single_variable = {
 
     "Alleghany County":[alleghany_county,"https://www.co.alleghany.va.us/board-of-supervisors/agendas/"],
 
-    "Arlington County":[arlington_county,"https://arlington.granicus.com/ViewPublisher.php?view_id=44","https://arlington.granicus.com/ViewPublisher.php?view_id=2"],
-
     "Bath County":[bath_county,"https://www.bathcountyva.gov/public_information/agendas_and_public_notices"],
 
     "Bland County":[bland_county,"https://www.blandcountyva.gov/page/agendas-and-minutes/"],
@@ -309,6 +307,8 @@ county_dictionary_single_variable = {
 }
 
 county_dictionary_double_variable = {
+    "Arlington County":[arlington_county,"https://arlington.granicus.com/ViewPublisher.php?view_id=44","https://arlington.granicus.com/ViewPublisher.php?view_id=2"],
+
     "Appomattox County":[appomattox_county,"https://www.appomattoxcountyva.gov/government/local-boards-commissions/planning-commission/pc-agendas-minutes-new/-selyear-2023","https://www.appomattoxcountyva.gov/government/board-of-supervisors/bos-agendas-minutes-new"],
 
     "Fairfax County Planning Commission":[fairfax_county_pc,"https://www.fairfaxcounty.gov/planningcommission/meetingcalendar","\'2023\'"],
