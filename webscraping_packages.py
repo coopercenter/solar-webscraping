@@ -2,7 +2,7 @@
 
 """General"""
 import time
-import pandas as pd 
+import pandas as pd
 import dateutil
 from datetime import datetime
 from selenium import webdriver
@@ -12,8 +12,9 @@ import smtplib
 import dotenv
 import os
 import ssl
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+import win32com.client
+from PyPDF2 import PdfReader
+import tempfile
 
 """Firefox Options"""
 from selenium.webdriver import Firefox

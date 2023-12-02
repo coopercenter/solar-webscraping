@@ -3,17 +3,6 @@ from webscraping_functions import *
 New_Alerts = []
 
 """Run the repeated document management sites"""
-#run the boarddocs localities
-for item in boarddocs_dictionary:
-    try:
-        alert = boarddocs(boarddocs_dictionary[item][0],boarddocs_dictionary[item][1],boarddocs_dictionary[item][2])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert = "Error webscraping " + item + " using BoardDocs code."
-        New_Alerts.append("\n" + error_alert)
-        continue
-
 #run the agendacenter localities
 for item in agendacenter_dictionary:
     try:
@@ -23,26 +12,19 @@ for item in agendacenter_dictionary:
     except:
         error_alert = "Error webscraping " + item + " using AgendaCenter code."
         New_Alerts.append(error_alert)
-        continue   
-#run the granicus localities
-for item in granicus_dictionary:
+        continue  
+
+#run the boarddocs localities
+for item in boarddocs_dictionary:
     try:
-        alert = granicus(granicus_dictionary[item][0],granicus_dictionary[item][1])
+        alert = boarddocs(boarddocs_dictionary[item][0],boarddocs_dictionary[item][1],boarddocs_dictionary[item][2])
         if alert != []:
             New_Alerts.append(", \n ".join(alert))
     except:
-        error_alert = "Error webscraping " + item + " using Granicus code"
-        New_Alerts.append(error_alert)
-        continue
-for item in granicus_2_dictionary:
-    try:
-        alert = granicus_version_2(granicus_2_dictionary[item][0],granicus_2_dictionary[item][1])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert = "Error webscraping " + item + " using Granicus Version 2 code"
-        New_Alerts.append(error_alert)
-        continue
+        error_alert = "Error webscraping " + item + " using BoardDocs code."
+        New_Alerts.append("\n" + error_alert)
+        continue 
+
 #run the civicclerk localities
 for item in civicclerk_dictionary:
     try:
@@ -54,17 +36,6 @@ for item in civicclerk_dictionary:
         New_Alerts.append(error_alert)
         continue
 
-#run the novus agenda localities
-for item in novusagenda_dictionary:
-    try:
-        alert=novusagenda(novusagenda_dictionary[item][0],novusagenda_dictionary[item][1])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert="Error webscraping " + item + " using NovusAGENDA code"
-        New_Alerts.append(error_alert)
-        continue
-
 #run civicweb localities
 for item in civicweb_dictionary:
     try:
@@ -73,17 +44,6 @@ for item in civicweb_dictionary:
             New_Alerts.append(", \n ".join(alert))
     except:
         error_alert="Error webscraping " + item + " using CivicWeb code"
-        New_Alerts.append(error_alert)
-        continue
-
-#run meetingstable localities
-for item in meetingstable_dictionary:
-    try:
-        alert=meetings_table(meetingstable_dictionary[item][0],meetingstable_dictionary[item][1])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert="Error webscraping " + item + " using MeetingsTable code"
         New_Alerts.append(error_alert)
         continue
 
@@ -109,7 +69,49 @@ for item in escribe_dictionary:
         New_Alerts.append(error_alert)
         continue
 
-#run legistar localities
+#run the event list localities
+for item in event_list_dictionary:
+    try:
+        alert=event_list(event_list_dictionary[item][0],escribe_dictionary[item][1])
+        if alert != []:
+            New_Alerts.append(", \n ".join(alert))
+    except:
+        error_alert="Error webscraping " + item + " using Event List code"
+        New_Alerts.append(error_alert)
+        continue
+
+#run the granicus localities
+for item in granicus_dictionary:
+    try:
+        alert = granicus(granicus_dictionary[item][0],granicus_dictionary[item][1])
+        if alert != []:
+            New_Alerts.append(", \n ".join(alert))
+    except:
+        error_alert = "Error webscraping " + item + " using Granicus code"
+        New_Alerts.append(error_alert)
+        continue
+for item in granicus_2_dictionary:
+    try:
+        alert = granicus_version_2(granicus_2_dictionary[item][0],granicus_2_dictionary[item][1])
+        if alert != []:
+            New_Alerts.append(", \n ".join(alert))
+    except:
+        error_alert = "Error webscraping " + item + " using Granicus Version 2 code"
+        New_Alerts.append(error_alert)
+        continue
+
+#run LaserFiche localities
+for item in laserfiche_dictionary:
+    try:
+        alert=laserfiche(laserfiche_dictionary[item][0],laserfiche_dictionary[item][1])
+        if alert != []:
+            New_Alerts.append(", \n ".join(alert))
+    except:
+        error_alert="Error webscraping " + item + " using LaserFiche code"
+        New_Alerts.append(error_alert)
+        continue
+
+#run Legistar localities
 for item in legistar_dictionary:
     try:
         alert=legistar(legistar_dictionary[item][0],legistar_dictionary[item][1])
@@ -119,6 +121,40 @@ for item in legistar_dictionary:
         error_alert="Error webscraping " + item + " using Legistar code"
         New_Alerts.append(error_alert)
         continue
+
+#run meetingstable localities
+for item in meetingstable_dictionary:
+    try:
+        alert=meetings_table(meetingstable_dictionary[item][0],meetingstable_dictionary[item][1])
+        if alert != []:
+            New_Alerts.append(", \n ".join(alert))
+    except:
+        error_alert="Error webscraping " + item + " using MeetingsTable code"
+        New_Alerts.append(error_alert)
+        continue
+
+#run the novus agenda localities
+for item in novusagenda_dictionary:
+    try:
+        alert=novusagenda(novusagenda_dictionary[item][0],novusagenda_dictionary[item][1])
+        if alert != []:
+            New_Alerts.append(", \n ".join(alert))
+    except:
+        error_alert="Error webscraping " + item + " using NovusAGENDA code"
+        New_Alerts.append(error_alert)
+        continue
+
+#run PrimeGov localities
+for item in primegov_dictionary:
+    try:
+        alert=prime_gov(primegov_dictionary[item][0],primegov_dictionary[item][1])
+        if alert != []:
+            New_Alerts.append(", \n ".join(alert))
+    except:
+        error_alert="Error webscraping " + item + " using PrimeGov code"
+        New_Alerts.append(error_alert)
+        continue
+
 
 """Run the website-specific code"""
 for item in county_dictionary_single_variable:
