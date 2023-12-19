@@ -35,11 +35,11 @@ def check_readibility(agenda_content):
 def search_agenda_for_keywords(agenda_content):
     search_results = []
     for item in agenda_content:
-        if 'Solar' or 'solar' in item.text:
+        if 'Solar'in item.text or 'solar' in item.text:
             search_results.append('Solar')
-        if 'Zoning Ordinance' or 'Zoning ordinance' or 'zoning ordinance' in item.text:
+        if 'Zoning Ordinance' in item.text or 'Zoning ordinance' in item.text or 'zoning ordinance' in item.text:
             search_results.append("Zoning Ordinance")
-        if 'Comprehensive Plan' or 'Comprehensive plan' or 'comprehensive plan' in item.text:
+        if 'Comprehensive Plan' in item.text or 'Comprehensive plan' in item.text or 'comprehensive plan' in item.text:
             search_results.append("Comprehensive Plan")
     return search_results
 
@@ -412,11 +412,11 @@ def laserfiche(url,locality):
         agenda_content = "\n".join([item.extract_text() for item in agenda_pages])
         #Since this is a string not a webdriver item, this can't use the existing search_agenda_for_keywords function
         keywords=[]
-        if 'Solar' or 'solar' in agenda_content:
+        if 'Solar' in agenda_content or 'solar' in agenda_content:
             keywords.append('Solar')
-        if 'Comprehensive Plan' or 'Comprehensive plan' or 'comprehensive plan' in agenda_content:
+        if 'Comprehensive Plan' in agenda_content or 'Comprehensive plan' in agenda_content or 'comprehensive plan' in agenda_content:
             keywords.append('Comprehensive Plan')
-        if 'Zoning Ordinance' or 'Zoning ordinance' or 'zoning ordinance' in agenda_content:
+        if 'Zoning Ordinance' in agenda_content or 'Zoning ordinance' in agenda_content or 'zoning ordinance' in agenda_content:
             keywords.append('Zoning Ordinance')
         if keywords!=[]:
             messages.append('Keyword(s) ' + ", ".join(keywords)+' found in upcoming meeting for ' + locality + '. ' + agenda_link)
@@ -641,48 +641,6 @@ def alleghany_county(bos_url):
     else:
         return url_test
 
-"""Appomattox County"""
-#PC link exists but nothing is posted yet.
-def main_method_appomattox(url):
-    messages=[]
-    driver.get(url)
-    time.sleep(2)
-    main_window=driver.window_handles[0]
-    meeting_dates = driver.find_elements(By.CSS_SELECTOR,"td[data-th*='Meeting Date'")
-    agenda_links = driver.find_elements(By.CSS_SELECTOR,"a[class*=pdf_icon")
-    table_rows = driver.find_elements(By.CSS_SELECTOR,"tr[class*=meeting_widget_item")
-    if len(meeting_dates) > 0:
-        for i in range(0,len(meeting_dates)):
-            meeting_title = table_rows[i].text.split("\n")[0]
-            future_date = check_meeting_date(meeting_dates[i].text)
-            if future_date==True:
-                agenda_links[i].click()
-                agenda_window=driver.window_handles[1]
-                driver.switch_to.window(agenda_window)
-                agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
-                agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search != []:
-                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Appomattox County in " + meeting_title)
-                driver.close()
-                driver.switch_to.window(main_window)
-    return messages
-    
-def appomattox_county(pc_url,bos_url):
-    messages=[]
-    url_test_pc = verify_url(pc_url)
-    url_test_bos = verify_url(bos_url)
-    if url_test_bos==True:
-        bos_messages = main_method_appomattox(bos_url)
-        messages += bos_messages
-    if url_test_bos!=True:
-        messages.append(url_test_bos)
-    if url_test_pc==True:
-        pc_messages=main_method_appomattox(pc_url)
-        messages += pc_messages
-    if url_test_pc!=True:
-        messages.append(url_test_pc)
-    return messages
-
 """Arlington County"""
 def main_method_arlington(url):
     messages=[]
@@ -806,23 +764,17 @@ def buchanan_county(url):
     driver.get(url)
     time.sleep(5)
     messages = []
-    all_tabs = driver.find_elements(By.CSS_SELECTOR,"div[class*='fil ")
-    for item in all_tabs:
-        if "Minutes" in item.text:
-            minutes_tab = item
-            break
-    #minutes won't show up in the code until the minutes tab has been moused over
-    webdriver.common.action_chains.ActionChains(driver).move_to_element(minutes_tab).perform()
-    all_minutes = driver.find_elements(By.CSS_SELECTOR,"a[title*=Minutes")
-    latest_minutes = all_minutes[-1]
+    pdf_links = driver.find_elements(By.CSS_SELECTOR,"a[href*='.pdf")
+    visible_documents = [item for item in pdf_links if item.text != '']
+    latest_minutes = [item for item in visible_documents if "Minutes" in item.text][0]
+    #since they're only posting minutes not agendas, and minutes are posted long after the fact, we'll skip the date checking
     minutes_url = latest_minutes.get_attribute("href")
-    minutes_title = latest_minutes.text
     driver.get(minutes_url)
     time.sleep(1)
     agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
     agenda_search = search_agenda_for_keywords(agenda_content)
     if agenda_search != []:
-        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Buchanan County in Board of Supervisors "  +  minutes_title + ". " + minutes_url)
+        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Buchanan County. " + minutes_url)
     return messages
 
 """Buckingham County"""
@@ -986,6 +938,18 @@ def covington(url):
         agenda_search = search_agenda_for_keywords(agenda_content)
         if agenda_search != []:
             messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for the Town of Covington. " + agenda_url)
+    return messages
+
+"Craig County"
+def craig_county(url):
+    messages = []
+    driver.get(url)
+    time.sleep(2)
+    #Find the link and check the date. That's as far as we go because the PDFs are scans.
+    latest_agenda = driver.find_element(By.CSS_SELECTOR,"a[href*=Agenda")
+    future_meeting = check_meeting_date(latest_agenda.text)
+    if future_meeting==True:
+        messages.append("New meeting agenda available for Craig County Board of Supervisors. Check for solar. " + latest_agenda.get_attribute('href'))
     return messages
 
 """Town of Emporia"""
@@ -1569,32 +1533,6 @@ def nottoway_county(url):
         driver.switch_to.window(driver.window_handles[0])
     return messages
 
-"""Patrick County"""
-def patrick_county_bos(url):
-    driver.get(url)
-    time.sleep(5)
-    messages = []
-    all_agendas = driver.find_elements(By.CSS_SELECTOR,"a[href*='.pdf'")
-    upcoming_agendas = []
-    for item in all_agendas:
-        if item.text != '':
-            future_meeting = check_meeting_date(item.text)
-            if future_meeting == True:
-                upcoming_agendas.append(item)
-    for item in upcoming_agendas:
-        agenda_title = item.text
-        agenda_url = item.get_attribute("href")
-        item.click()
-        time.sleep(1)
-        driver.switch_to.window(driver.window_handles[1])
-        agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
-        agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search != []:
-            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Patrick County Board of Supervisors in " + agenda_url)
-        driver.close()
-        driver.switch_to.window(driver.window_handles[0])
-    return messages
-
 """Pittsylvania County, All Boards and Commissions"""
 def pittsylvania_county(url):
     driver.get(url)
@@ -1664,51 +1602,6 @@ def prince_edward_bos(url):
                     messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Prince Edward County Board of Supervisors. " + agenda_link) 
     return messages
 
-"""Prince George County"""
-def prince_george_county_pc(url):
-    driver.get(url)
-    time.sleep(3)
-    messages = []
-    agenda_packets = driver.find_elements(By.CSS_SELECTOR,"a[href*='Packet'")
-    packets_this_year = []
-    for item in agenda_packets:
-        if '-23.pdf' in item.get_attribute('href'):
-            packets_this_year.append(item.get_attribute('href'))
-    future_meetings = []
-    for item in packets_this_year:
-        future = check_meeting_date(item.split('%20')[-1].split('.')[0])
-        if future==True:
-            future_meetings.append(item)
-    for item in future_meetings:
-        driver.get(item)
-        time.sleep(1)
-        for i in range(0,100):
-            webdriver.common.action_chains.ActionChains(driver).send_keys(webdriver.common.keys.Keys.PAGE_DOWN).perform()
-            time.sleep(1)
-            agenda_content = (driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer"))
-            agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search != []:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Prince George County Planning Commission in " + item)
-            break
-    return messages
-
-def prince_george_county_bos(url):
-    driver.get(url)
-    time.sleep(3)
-    messages = []
-    table_rows = driver.find_elements(By.CSS_SELECTOR,"tr")
-    latest_meeting = table_rows[0]
-    future_meeting = check_meeting_date(latest_meeting.text.split(" ")[0])
-    if future_meeting == True:
-        try:
-            meeting_title = latest_meeting.text.split("Agenda")[0]
-            meeting_agenda = latest_meeting.find_element(By.CSS_SELECTOR,"a[href*='.pdf'")
-            agenda_url = meeting_agenda.get_attribute("href")
-            messages.append("New meeting information for Prince George County in " + meeting_title + ". Check for solar updates. " + agenda_url)
-        except:
-            next
-    return messages
-
 """Prince William County Planning Commission"""
 def prince_william_pc(url):
     driver.get(url)
@@ -1742,36 +1635,6 @@ def richmond_county(url):
                 messages.append("New Board of Supervisors Meeting Agenda posted for Richmond County. Check for Solar")
             else:
                 break
-    return messages
-
-"""Roanoke County"""
-def roanoke_county_pc(url):
-    driver.get(url)
-    time.sleep(5)
-    messages = []
-    agenda_packet = driver.find_element(By.CSS_SELECTOR,"a[aria-label*='Packet'").get_attribute('href')
-    agenda = driver.find_element(By.CSS_SELECTOR,"a[aria-label*='Agenda ONLY'").get_attribute('href')
-    driver.get(agenda)
-    time.sleep(3)
-    agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
-    agenda_search = search_agenda_for_keywords(agenda_content)
-    if agenda_search != []:
-        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found for Roanoke County in latest Planning Commission agenda. "  +  agenda_packet)
-    return messages
-
-def roanoke_county_bos(url):
-    driver.get(url)
-    time.sleep(5)
-    messages = []
-    latest_agenda = driver.find_element(By.CSS_SELECTOR,"a[aria-label*='Agenda Only'")
-    agenda_url = latest_agenda.get_attribute("href")
-    latest_agenda.click()
-    time.sleep(2)
-    driver.switch_to.window(driver.window_handles[1])
-    agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
-    agenda_search = search_agenda_for_keywords(agenda_content)
-    if agenda_search != []:
-        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found for Roanoke County in latest Board of Supervisors agenda. "  +  agenda_url)
     return messages
 
 """Shenandoah County"""

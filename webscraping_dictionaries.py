@@ -28,10 +28,12 @@ agendacenter_dictionary = {
     "Middlesex":["https://www.co.middlesex.va.us/AgendaCenter/Search/?term=&CIDs=4,2,&startDate=&endDate=&dateRange=&dateSelector=","Middlesex County"],
 
     "Page":["https://www.pagecounty.virginia.gov/AgendaCenter/Search/?term=&CIDs=2,5,&startDate=&endDate=&dateRange=&dateSelector=","Page County"],
+
+    "Patrick":["https://www.co.patrick.va.us/AgendaCenter/Search/?term=&CIDs=3,4,&startDate=&endDate=&dateRange=&dateSelector=", "Patrick County"],
     
     "Powhatan":["http://www.powhatanva.gov/AgendaCenter/Search/?term=&CIDs=2,7,&startDate=&endDate=&dateRange=&dateSelector=","Powhatan County"],
 
-    "Rockbridge":["https://va-rockbridgecounty.civicplus.com/AgendaCenter/Planning-Commission-6","Rockbridge County"],
+    "Rockbridge":["https://va-rockbridgecounty.civicplus.com/AgendaCenter/Planning-Commission-6","Rockbridge County Planning Commission"],
 
     "Rockingham":["https://www.rockinghamcountyva.gov/AgendaCenter/Search/?term=&CIDs=1,2,&startDate=&endDate=&dateRange=&dateSelector=","Rockingham County"],
 
@@ -49,7 +51,7 @@ agendacenter_dictionary = {
 
     "Fredricksburg":["https://www.fredericksburgva.gov/AgendaCenter/Search/?term=&CIDs=1,9,&startDate=&endDate=&dateRange=&dateSelector=","City of Fredericksburg"],
 
-    "Hampton":["https://hampton.gov/AgendaCenter/Search/?term=&CIDs=6,&startDate=&endDate=&dateRange=&dateSelector=","Hampton City"],
+    "Hampton":["https://hampton.gov/AgendaCenter/Search/?term=&CIDs=1,6,&startDate=&endDate=&dateRange=&dateSelector=","Hampton City"],
 
     "Hopewell":["https://hopewellva.gov/AgendaCenter","City of Hopewell"],
 
@@ -84,11 +86,13 @@ boarddocs_dictionary = {
 
     "Northumberland":["https://go.boarddocs.com/va/nuc/Board.nsf/vpublic?open","Northumberland County",False],
 
+    "Prince George":["https://go.boarddocs.com/va/princegeorge/Board.nsf/Public","Prince George County",False],
+
     "Pulaski":["https://go.boarddocs.com/va/copva/Board.nsf/Public#","Pulaski County",True],
 
     "Rappahannock":["https://go.boarddocs.com/va/corva/Board.nsf/Public","Rappahannock County",True],
 
-    "Rockbridge":["https://go.boarddocs.com/va/rcva/Board.nsf/Public","Rockbridge County",False],
+    "Rockbridge":["https://go.boarddocs.com/va/rcva/Board.nsf/Public","Rockbridge County Board of Supervisors",False],
 }
 
 "CivicClerk localities"
@@ -97,17 +101,23 @@ civicclerk_dictionary = {
 
 "Amherst":["https://amherstcova.portal.civicclerk.com/?category_id=27,29,33,32","Amherst County"],
 
+"Appomattox":["https://appomattoxcova.portal.civicclerk.com/","Appomattox County"],
+
 "Charles City":["https://charlescitycova.portal.civicclerk.com/?category_id=26,27,29","Charles City County"],
 
 "Chesterfield":["https://chesterfieldcova.portal.civicclerk.com/","Chesterfield County"],
 
 "Hanover":["https://hanovercova.portal.civicclerk.com/?category_id=26,27","Hanover County"],
 
+"James City":["https://jamescitycova.portal.civicclerk.com/","James City County"],
+
 "King William":["https://kingwilliamcova.portal.civicclerk.com/","King William County"],
 
 "Mathews":["https://mathewscova.portal.civicclerk.com/","Mathews County"],
 
 "Orange":["https://orangecova.portal.civicclerk.com/","Orange County"],
+
+"City of Roanoke":['https://roanokeva.portal.civicclerk.com/',"City of Roanoke"],
 
 "Spotsylvania":["https://spotsylvaniacova.portal.civicclerk.com/","Spotsylvania County"],
 
@@ -191,6 +201,10 @@ granicus_dictionary = {
 granicus_2_dictionary = {
 "Goochland":["https://goochlandcountyva.iqm2.com/Citizens/Default.aspx","Goochland County"],
 
+"Louisa":["https://louisacountyva.iqm2.com/Citizens/Calendar.aspx","Louisa County"],
+
+"Roanoke":['https://roanokecountyva.iqm2.com/Citizens/default.aspx',"Roanoke County"],
+
 "Washington":["https://washingtoncountyva.iqm2.com/citizens/default.aspx?frame=no","Washington County"]
 }
 
@@ -202,7 +216,11 @@ laserfiche_dictionary = {
 "Legistar localities"
 legistar_dictionary = {
     "Albemarle":["https://albemarle.legistar.com/Calendar.aspx","Albemarle County"],
+
     "Hampton CC":["https://hampton.legistar.com/Calendar.aspx","Hampton City"],
+
+    "City of Harrisonburg":["https://harrisonburg-va.legistar.com/Calendar.aspx","City of Harrisonburg"],
+
     'City of Richmond':['https://richmondva.legistar.com/Calendar.aspx','City of Richmond']
 }
 
@@ -223,9 +241,11 @@ novusagenda_dictionary = {
 
 "Isle of Wight BOS":["https://isleofwight.novusagenda.com/agendapublic/meetingsgeneral.aspx?MeetingType=1","Isle of Wight County"],
 
-"James City":["https://jamescity.novusagenda.com/AgendaPublic/MeetingsGeneral.aspx","James City County"],
+"New Kent BOS":["https://newkent.novusagenda.com/agendapublic/meetingsgeneral.aspx","New Kent County"],
 
-"New Kent BOS":["https://newkent.novusagenda.com/agendapublic/meetingsgeneral.aspx","New Kent County"]
+"Salem CC":["https://salemcity.novusagenda.com/AgendaPublic/MeetingsResponsive.aspx?MeetingType=1&Date=6ms", "Salem City Council"],
+
+"Salem PC":["https://salemcity.novusagenda.com/agendapublic/meetingsresponsive.aspx?MeetingType=3","Salem Planning Commission"]
 }
 
 "PrimeGov localities"
@@ -261,6 +281,8 @@ county_dictionary_single_variable = {
 
     "Clarke County Planning Commission":[clarke_county,"https://www.clarkecounty.gov/government/boards-commissions/planning-commission/pc-agendas/-folder-1352"],
 
+    "Craig County":[craig_county,"https://craigcountyva.gov/government/board-of-supervisors/"],
+    
     "Fairfax County Board of Supervisors":[fairfax_county_bos,"https://www.fairfaxcounty.gov/boardofsupervisors/"],
 
     "Floyd County":[floyd_county,"https://www.floydcova.gov/agendas-minutes"],
@@ -273,9 +295,11 @@ county_dictionary_single_variable = {
 
     "Henrico County Planning Commission":[henrico_county_pc,"https://henrico.us/planning/meetings/"],
 
-    "King and Queen County Board of Supervisors":[king_and_queen_county_bos,"http://www.kingandqueenco.net/html/Govt/board.html"],
+    #DEFUNCT
+    "King and Queen County Board of Supervisors":[king_and_queen_county_bos,"https://kingandqueenco.net/board-of-supervisors-meetings/"],
 
-    "King and Queen County Planning Commission":[king_and_queen_county_pc,"http://www.kingandqueenco.net/html/Govt/bzoning.html"],
+    #DEFUNCT
+    "King and Queen County Planning Commission":[king_and_queen_county_pc,"https://kingandqueenco.net/planning-commission-meetings/"],
 
     "Lee County":[lee_county,"http://www.leecova.org/AgendaandMinutes.htm"],
 
@@ -292,25 +316,15 @@ county_dictionary_single_variable = {
     #monitor for PC updates and change code accordingly
     "Nottoway County":[nottoway_county,"https://nottoway.org/administration/boards___commissions/board_of_supervisors_(bos)/board_agendas_minutes.php#outer-388"],
 
-    "Patrick County Board of Supervisors":[patrick_county_bos,"https://www.co.patrick.va.us/supervisors/meeting-agendas"],
-
     "Pittsylvania County":[pittsylvania_county,"https://www.pittsylvaniacountyva.gov/government/agenda-center"],
 
     'Prince Edward County Planning Commission':[prince_edward_pc,"https://www.co.prince-edward.va.us/departments/planning-zoning/planning-commission-meetings"],
 
     'Prince Edward County Board of Supervisors':[prince_edward_bos,"https://www.co.prince-edward.va.us/government/board-of-supervisors/board-meeting-agendas-and-meeting-minutes"],
 
-    "Prince George County Planning Commission":[prince_george_county_pc,"https://www.princegeorgecountyva.gov/residents/community_development_and_code_compliance/planning_commission/meetings.php#outer-2780"],
-
-    "Prince George County Board of Supervisors":[prince_george_county_bos,"https://www.princegeorgecountyva.gov/departments/board_of_supervisors/meetings_agendas_and_board_packets.php"],
-
     "Prince William County Planning Commission":[prince_william_pc,"https://www.pwcva.gov/department/planning-office/planning-commission"],
 
     "Richmond County":[richmond_county,"https://co.richmond.va.us/board-of-supervisors-agenda-packets"],
-
-    "Roanoke County Planning Commission":[roanoke_county_pc,"https://www.roanokecountyva.gov/278/Planning-Commission"],
-
-    "Roanoke County Board of Supervisors":[roanoke_county_bos,"https://www.roanokecountyva.gov/287/Agendas-Minutes"],
 
     "Shenandoah County Board of Supervisors":[shenandoah_county_bos,"https://shenandoahcountyva.us/bos/meeting-schedule/"],
 
@@ -330,8 +344,6 @@ county_dictionary_single_variable = {
 
 county_dictionary_double_variable = {
     "Arlington County":[arlington_county,"https://arlington.granicus.com/ViewPublisher.php?view_id=44","https://arlington.granicus.com/ViewPublisher.php?view_id=2"],
-
-    "Appomattox County":[appomattox_county,"https://www.appomattoxcountyva.gov/government/local-boards-commissions/planning-commission/pc-agendas-minutes-new/-selyear-2023","https://www.appomattoxcountyva.gov/government/board-of-supervisors/bos-agendas-minutes-new"],
 
     "Fairfax County Planning Commission":[fairfax_county_pc,"https://www.fairfaxcounty.gov/planningcommission/meetingcalendar","\'2023\'"],
 
