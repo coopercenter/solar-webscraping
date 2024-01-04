@@ -56,6 +56,8 @@ def email_new_alerts(email_message):
     newmail.Body= email_message
     newmail.Send()
 
+"""Webscraping Functions"""
+
 """AgendaCenter"""
 def agendacenter(url,locality):
     url_test = verify_url(url)
