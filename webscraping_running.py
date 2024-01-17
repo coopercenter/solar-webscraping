@@ -200,9 +200,6 @@ for item in city_dictionary_double_variable:
 New_Alerts_String = ", \n".join(New_Alerts)
 
 
-
-
-
 meeting_agenda = ['Keyword(s) Zoning Ordinance found in upcoming meeting for Rockingham County in This is the agenda packet for the January 2, 2024 Planning Commission regular meeting. Jan 2, 2024 . https://www.rockinghamcountyva.gov/AgendaCenter/ViewFile/Agenda/_01022024-775',
  'Keyword(s) Zoning Ordinance, Comprehensive Plan found in upcoming meeting for City of Petersburg in January 2, 2024 - Petersburg City Council Work Session Agenda Jan 2, 2024 . http://www.petersburg-va.org/AgendaCenter/ViewFile/Agenda/_01022024-825',
  'Keyword(s) Comprehensive Plan, Comprehensive Plan found in upcoming meeting for City of Portsmouth in Planning Commission January 2024 Meeting Agenda Jan 2, 2024 . https://www.portsmouthva.gov/AgendaCenter/ViewFile/Agenda/_01022024-1065',
@@ -274,6 +271,9 @@ for messages in meeting_agenda:
     elif any(keyword in messages for keyword in Solar_Keyword):
         Solar_Alerts.append(messages)
 
+        
+        
+        
 # Convert categorized alerts to strings
 solar_alerts_str = ", \n".join(Solar_Alerts)
 ordinance_alerts_str = ", \n".join(Ordinance_Alerts)
