@@ -29,6 +29,7 @@ agendacenter_dictionary = {
 
     "Page":["https://www.pagecounty.virginia.gov/AgendaCenter/Search/?term=&CIDs=2,5,&startDate=&endDate=&dateRange=&dateSelector=","Page County"],
 
+    #doesn't always do PDF's, often it's document downloads
     "Patrick":["https://www.co.patrick.va.us/AgendaCenter/Search/?term=&CIDs=3,4,&startDate=&endDate=&dateRange=&dateSelector=", "Patrick County"],
     
     "Powhatan":["http://www.powhatanva.gov/AgendaCenter/Search/?term=&CIDs=2,7,&startDate=&endDate=&dateRange=&dateSelector=","Powhatan County"],
@@ -265,7 +266,8 @@ county_dictionary_single_variable = {
 
     "Brunswick County":[brunswick_county,"https://www.brunswickco.com/government/board_of_supervisors/agendas___minutes"],
 
-    "Buchanan County":[buchanan_county,"https://www.buchanancountyonline.com/index.htm"],
+    #website is currently being updated, not worth running. Check back periodically to see if they're done. Last checked 01/11/24
+    #"Buchanan County":[buchanan_county,"https://buchanancountyvirginia.gov/board-of-supervisors/"],
 
     "Buckingham County Board of Supervisors":[buckingham_county,"https://www.buckinghamcountyva.org/administration/boards___commissions/board_of_supervisors/board_agenda_minutes_youtube.php"],
 
@@ -295,11 +297,9 @@ county_dictionary_single_variable = {
 
     "Henrico County Planning Commission":[henrico_county_pc,"https://henrico.us/planning/meetings/"],
 
-    #DEFUNCT
-    "King and Queen County Board of Supervisors":[king_and_queen_county_bos,"https://kingandqueenco.net/board-of-supervisors-meetings/"],
+    "King and Queen County Board of Supervisors":[king_and_queen_county,"https://kingandqueenco.net/board-of-supervisors-meetings/", "Board of Supervisors"],
 
-    #DEFUNCT
-    "King and Queen County Planning Commission":[king_and_queen_county_pc,"https://kingandqueenco.net/planning-commission-meetings/"],
+    "King and Queen County Planning Commission":[king_and_queen_county,"https://kingandqueenco.net/planning-commission-meetings/","Planning Commission"],
 
     "Lee County":[lee_county,"http://www.leecova.org/AgendaandMinutes.htm"],
 
@@ -389,7 +389,7 @@ city_dictionary_single_variable = {
 
     "Staunton City Council":[staunton,"https://www.ci.staunton.va.us/agendas-minutes"],
 
-    "Virginia Beach City Council":[virginia_beach_cc,"https://virginiabeach.gov/city-hall/departments-offices/city-clerk/city-council"],
+    "Virginia Beach City Council":[virginia_beach_cc,"https://clerk.virginiabeach.gov/city-council"],
 
     "Virginia Beach Planning Commission":[virginia_beach_pc,"https://planning.virginiabeach.gov/boards-commissions/planning-commission"]
 }
