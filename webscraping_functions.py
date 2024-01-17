@@ -724,15 +724,25 @@ def bath_county(url):
 
 """Bland County"""
 def bland_county(url):
-    driver.get(url)
-    time.sleep(2)
-    messages = []
-    table_rows = driver.find_elements(By.CSS_SELECTOR,"tr")
-    latest_meeting = table_rows[-1]
-    future_meeting = check_meeting_date(latest_meeting.text)
-    if future_meeting == True:
-        agenda_url = latest_meeting.find_element(By.CSS_SELECTOR,"a").get_attribute("href")
-        messages.append("New meeting agenda available for Bland County Board of Supervisors. Check for new solar information. " + agenda_url)
+    url_check = verify_url(url)
+    if url_check == True:
+        driver.get(url)
+        time.sleep(2)
+        messages = []
+        #get all the table rows
+        table_rows = driver.find_elements(By.CSS_SELECTOR,"tr")
+        #filter for just the ones where agendas are posted
+        posted_agendas = [item for item in table_rows if "AGENDA" in item.text]
+        #latest meeting will be the last one in the list
+        latest_meeting = posted_agendas[-1]
+        #check the date for the last posted meeting
+        future_meeting = check_meeting_date(latest_meeting.text)
+        if future_meeting == True:
+            agenda_url = latest_meeting.find_element(By.CSS_SELECTOR,"a").get_attribute("href")
+            #as of 01/17/24, Bland County still posts scanned documents that are not yet readable by this webscraper
+            messages.append("New meeting agenda available for Bland County Board of Supervisors. Check for new solar information. " + agenda_url)
+    else:
+        messages.append(url_check)
     return messages
 
 "Brunswick County"
