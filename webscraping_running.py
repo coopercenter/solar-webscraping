@@ -196,54 +196,6 @@ for item in city_dictionary_double_variable:
         error_alert = "Error webscraping " + item
         New_Alerts.append(error_alert)
         continue
-    
-New_Alerts_String = ", \n".join(New_Alerts)
-
-
-
-
-
-meeting_agenda = ['Keyword(s) Zoning Ordinance found in upcoming meeting for Rockingham County in This is the agenda packet for the January 2, 2024 Planning Commission regular meeting. Jan 2, 2024 . https://www.rockinghamcountyva.gov/AgendaCenter/ViewFile/Agenda/_01022024-775',
- 'Keyword(s) Zoning Ordinance, Comprehensive Plan found in upcoming meeting for City of Petersburg in January 2, 2024 - Petersburg City Council Work Session Agenda Jan 2, 2024 . http://www.petersburg-va.org/AgendaCenter/ViewFile/Agenda/_01022024-825',
- 'Keyword(s) Comprehensive Plan, Comprehensive Plan found in upcoming meeting for City of Portsmouth in Planning Commission January 2024 Meeting Agenda Jan 2, 2024 . https://www.portsmouthva.gov/AgendaCenter/ViewFile/Agenda/_01022024-1065',
- '\nError webscraping Accomack using BoardDocs code.',
- '\nError webscraping Culpeper using BoardDocs code.',
- '\nError webscraping Essex using BoardDocs code.',
- '\nError webscraping Montgomery using BoardDocs code.',
- '\nError webscraping Northampton using BoardDocs code.',
- '\nError webscraping Northumberland using BoardDocs code.',
- '\nError webscraping Prince George using BoardDocs code.',
- '\nError webscraping Pulaski using BoardDocs code.',
- '\nError webscraping Rappahannock using BoardDocs code.',
- 'Error webscraping Amherst using CivicClerk code',
- 'Error webscraping Stafford using CivicClerk code',
- 'Error webscraping Warren using CivicClerk code',
- 'Error webscraping Amherst using CivicClerk code',
- 'Error webscraping Warren using CivicClerk code',
- 'Error webscraping Dickenson using Document Center code',
- 'Error webscraping Nelson County using Event List code',
- 'Error webscraping Westmoreland County using Event List code',
- 'Error webscraping City of Richmond using Legistar code',
- 'Error webscraping Isle of Wight BOS using NovusAGENDA code',
- 'Error webscraping Salem CC using NovusAGENDA code',
- 'Error webscraping Salem PC using NovusAGENDA code',
- 'https://www.albemarle.org/government/community-development/boards-and-commissions/planning-commission: is Not reachable, status_code: 503',
- 'Error webscraping Bland County',
- 'Error webscraping Buchanan County',
- 'New meeting information available for Charlotte County in 01/01/24 Organizational Meeting Agenda       Packet      , check documents for solar information',
- 'New meeting agenda available for Craig County Board of Supervisors. Check for solar. https://craigcountyva.gov/wp-content/uploads/2023/12/January-4th-2024-Agenda-and-Packet.pdf',
- 'Keyword(s) Comprehensive Plan, Zoning Ordinance, Comprehensive Plan found in upcoming meeting for Henrico County in the latest Planning Commission/Board of Zoning Appeals agenda. https://henrico.us/pdfs/planning/meetnext.pdf',
- 'Error webscraping King and Queen County Board of Supervisors',
- 'Error webscraping King and Queen County Planning Commission',
- 'Error webscraping Lee County',
- 'Error webscraping Loudoun County',
- 'Keyword(s) Solar found in upcoming meeting for Lunenburg County in 01/04/24 January 4, 2024 Planning Commission Mtg . https://www.lunenburgva.gov/PC%20agenda%201.4.24.pdf',
- 'New agenda available for Buena Vista City Council. PDF cannot be read, check for solar updates. https://cityofbuenavista-my.sharepoint.com/:b:/g/personal/sarah_burch_bvcity_org/EevfRFf9uOVEldzkatCiS7sBpllj1jNxGvuvqKlP2WOIZA?e=ZAufcm',
- 'Error webscraping Covington',
- 'Error webscraping Emporia Planning Commission',
- 'Error webscraping Virginia Beach City Council',
- 'Error webscraping Virginia Beach Planning Commission']
-
 
 #empty list 
 Solar_Alerts = []
@@ -252,7 +204,7 @@ Comprehensive_Plan_Alerts = []
 Error_Alerts = []
 Unreadable_File_Alerts = []
 
-    #categorizing keywords
+#categorizing keywords
 Solar_Keyword = ['Solar', 'solar']
 Ordinance_Keyword = ['Zoning Ordinance', 'Zoning ordinance', 'zoning ordinance']
 Comprehensive_Plan_Keyword = ['Comprehensive Plan', 'Comprehensive plan', 'comprehensive plan']
@@ -260,9 +212,7 @@ Error_Keyword = ['Error', 'Not Reachable']
 Unread_Keyword = ["New", "cannot"]
 
 #loop that checks if the word in the meeting agenda is in the list of keywords...if that happens, append to empty list
-for messages in meeting_agenda:
-    # if any(keyword in messages for keyword in Solar_Keyword):
-    #     Solar_Alerts.append(messages)
+for messages in New_Alerts:
     if any(keyword in messages for keyword in Ordinance_Keyword):
         Ordinance_Alerts.append(messages)
     if any(keyword in messages for keyword in Comprehensive_Plan_Keyword):
@@ -281,17 +231,9 @@ comprehensive_plan_alerts_str = ", \n".join(Comprehensive_Plan_Alerts)
 error_alerts_str = ", \n".join(Error_Alerts)
 unread_alerts_str = ", \n".join(Unreadable_File_Alerts)
 
-# Print or use the categorized alerts
-print("Ordinance Alerts:\n" + ordinance_alerts_str)
-print("\nComprehensive Plan Alerts:\n" + comprehensive_plan_alerts_str)
-print("\nError Alerts:\n" + error_alerts_str)
-print("\nSolar Alerts:\n" + solar_alerts_str)
-print("\nUnreadable Alerts: \n" + unread_alerts_str)
-
-
-
-
-email_new_alerts(New_Alerts_String + "Solar Alerts:\n" + solar_alerts_str + 
+#email results
+email_new_alerts("Solar Alerts:\n" + solar_alerts_str + 
+                 "\n\nUnreadable Alerts: \n" + unread_alerts_str +
                  "\n\nOrdinance Alerts:\n" + ordinance_alerts_str +
                  "\n\nComprehensive Plan Alerts:\n" + comprehensive_plan_alerts_str +
                  "\n\nError Alerts:\n" + error_alerts_str)
