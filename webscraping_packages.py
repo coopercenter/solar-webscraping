@@ -9,7 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By  
 import requests
 import smtplib
-import dotenv
+#import dotenv
 import os
 import ssl
 import win32com.client

@@ -1,6 +1,35 @@
 from webscraping_dictionaries import *
 from webscraping_functions import *
 New_Alerts = []
+from webscraping_driver import *
+from webscraping_packages import *
+
+
+def check_internet_connection():
+    Options = ()
+    firefox_service = Service(GeckoDriverManager().install())
+    for timeout in [1,5,15]:
+        try:
+            driver = webdriver.Firefox(options=options, service=firefox_service)
+            driver.get("https://www.google.com")
+            
+            driver.implicitly_wait(5)
+            if driver.title == "":
+                print("Page title is empty. Waiting for page to load...")
+                continue
+            title = driver.title
+            print("Current page title:", title)
+            if "Google" in title:
+                print("Internet connection is working.")
+                return True
+            else:
+                print("Internet connection is not working.")
+                return False
+        except Exception as e:
+            print("Internet connection is not working")
+        finally:
+            if 'driver' in locals():
+                driver.quit
 
 """Run the repeated document management sites"""
 #run the agendacenter localities
