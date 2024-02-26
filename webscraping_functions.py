@@ -1381,31 +1381,6 @@ def lunenburg_county(url):
             messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Lunenburg County in " + meeting_title + ". " + agenda_url)
     return messages  
 
-"""Lynchburg Planning Commission"""
-#will hopefully be moved to civic clerk version 2 soon
-def lynchburg_pc(url):
-    driver.get(url)
-    time.sleep(2)
-    messages = []
-    agenda_links = driver.find_elements(By.CSS_SELECTOR,"a[href*='Agenda.pdf'")
-    agenda_href = []
-    agenda_title = []
-    for item in agenda_links:
-        future_meeting = check_meeting_date(item.text)
-        if future_meeting == True:
-            agenda_href.append(item.get_attribute('href'))
-            agenda_title.append(item.text)
-        else:
-            break
-    for i in range(0,len(agenda_href)):
-        driver.get(agenda_href[i])
-        time.sleep(2)
-        agenda_content = driver.find_elements(By.CSS_SELECTOR, "div[class*=textLayer")
-        agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search != []:
-            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for the City of Lynchburg Planning Commission in " + agenda_title[i])
-    return messages
-
 """Manassas Park"""
 def manassas_park(url,government_body):
     driver.get(url)

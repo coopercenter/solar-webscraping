@@ -42,9 +42,6 @@ agendacenter_dictionary = {
 
     "Russell":["https://va-russellcounty.civicplus.com/AgendaCenter/Search/?term=&CIDs=5,3,&startDate=&endDate=&dateRange=&dateSelector=","Russell County"],
 
-    #UPDATE: Move to CivicClerk https://scottcova.portal.civicclerk.com/
-    "Scott":["https://www.scottcountyva.com/agendacenter","Scott County"],
-
     "Wise":["https://www.wisecounty.org/AgendaCenter/Search/?term=&CIDs=3,6,&startDate=&endDate=&dateRange=&dateSelector=","Wise County"],
 
     "York":["https://www.yorkcounty.gov/AgendaCenter/Search/?term=&CIDs=4,3,&startDate=&endDate=&dateRange=&dateSelector=","York County"],
@@ -52,6 +49,8 @@ agendacenter_dictionary = {
     "Bedford":["https://www.bedfordva.gov/AgendaCenter/Search/?term=&CIDs=3,2,&startDate=&endDate=&dateRange=&dateSelector=","Town of Bedford"],
 
     "Colonial Heights":["https://www.colonialheightsva.gov/AgendaCenter/Search/?term=&CIDs=1,4,&startDate=&endDate=&dateRange=&dateSelector=","City of Colonial Heights"],
+
+    "Emporia":["https://www.ci.emporia.va.us/AgendaCenter/Search/?term=&CIDs=all&startDate=&endDate=&dateRange=&dateSelector=","City of Emporia"],
 
     "Fredricksburg":["https://www.fredericksburgva.gov/AgendaCenter/Search/?term=&CIDs=1,9,&startDate=&endDate=&dateRange=&dateSelector=","City of Fredericksburg"],
 
@@ -109,7 +108,11 @@ civicclerk_dictionary = {
 
 "Charles City":["https://charlescitycova.portal.civicclerk.com/?category_id=26,27,29","Charles City County"],
 
+"Charlottesville":["https://charlottesvilleva.portal.civicclerk.com/","City of Charlottesville"],
+
 "Chesterfield":["https://chesterfieldcova.portal.civicclerk.com/","Chesterfield County"],
+
+"Danville":["https://danvilleva.portal.civicclerk.com/","City of Danville"],
 
 "Hanover":["https://hanovercova.portal.civicclerk.com/?category_id=26,27","Hanover County"],
 
@@ -117,11 +120,17 @@ civicclerk_dictionary = {
 
 "King William":["https://kingwilliamcova.portal.civicclerk.com/","King William County"],
 
+"Louisa":["https://louisacova.portal.civicclerk.com/", "Louisa County"],
+
+"Lynchburg":["https://lynchburgva.portal.civicclerk.com/","City of Lynchburg"],
+
 "Mathews":["https://mathewscova.portal.civicclerk.com/","Mathews County"],
 
 "Orange":["https://orangecova.portal.civicclerk.com/","Orange County"],
-#UPDATE: Don't need this twice
-#"City of Roanoke":['https://roanokeva.portal.civicclerk.com/',"City of Roanoke"],
+
+"Roanoke":["https://roanokeva.portal.civicclerk.com/","City of Roanoke"],
+
+"Scott":["https://scottcova.portal.civicclerk.com/","Scott County"],
 
 "Spotsylvania":["https://spotsylvaniacova.portal.civicclerk.com/","Spotsylvania County"],
 
@@ -130,14 +139,6 @@ civicclerk_dictionary = {
 "Surry":["https://surrycova.portal.civicclerk.com/","Surry County"],
 
 "Warren":["https://warrencountyva.portal.civicclerk.com/?category_id=26,27","Warren County"],
-
-"Charlottesville":["https://charlottesvilleva.portal.civicclerk.com/","City of Charlottesville"],
-
-"Danville":["https://danvilleva.portal.civicclerk.com/","City of Danville"],
-
-"Lynchburg":["https://lynchburgva.portal.civicclerk.com/","City of Lynchburg"],
-
-"Roanoke":["https://roanokeva.portal.civicclerk.com/","City of Roanoke"]
 }
 
 """CivicWeb localities"""
@@ -206,9 +207,6 @@ granicus_dictionary = {
 """Granicus version 2 localities"""
 granicus_2_dictionary = {
 "Goochland":["https://goochlandcountyva.iqm2.com/Citizens/Default.aspx","Goochland County"],
-
-#UPDATE: Move to CivicClerk
-"Louisa":["https://louisacountyva.iqm2.com/Citizens/Calendar.aspx","Louisa County"],
 
 "Roanoke":['https://roanokecountyva.iqm2.com/Citizens/default.aspx',"Roanoke County"],
 
@@ -384,19 +382,11 @@ city_dictionary_single_variable = {
 
     "Covington":[covington,"https://covington.va.us/agendas-minutes/"],
 
-    #MOVED TO AGENDACENTER
-    #"Emporia City Council":[emporia,"https://www.ci.emporia.va.us/node/15/agenda/2023"],
-
-    #"Emporia Planning Commission":[emporia,"https://www.ci.emporia.va.us/node/25/agenda/2023"],
-
     "City of Franklin":[city_of_franklin,"https://www.franklinva.com/government/city-council-agendas/"],
 
     "City of Galax":[galax,"https://galaxva.com/2024-city-council-agendas/"],
 
     "City of Lexington Planning Commission":[lexington_pc,"https://www.lexingtonva.gov/government/boards-and-commissions/planning-commission"],
-
-    #UPDATE: Defunct, all meetings moved to CivicClerk link, remove entry and function
-    #"City of Lynchburg Planning Commission":[lynchburg_pc,"https://www.lynchburgva.gov/#planning-commission-information-agendas-and-legal-notices"],
 
     "City of Norfolk Planning Commission":[norfolk_pc,"https://norfolkcityva.iqm2.com/Citizens/Board/1018-Planning-Commission"],
 
