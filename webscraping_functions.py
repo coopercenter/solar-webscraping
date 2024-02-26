@@ -1,4 +1,15 @@
 from webscraping_driver import *
+"""Driver Setup"""
+#download geckodriver https://stackoverflow.com/questions/41190989/how-do-i-install-geckodriver
+#download Mozilla Firefox https://www.mozilla.org/en-US/firefox/new/
+"""Firefox Version"""  
+def get_webdriver():
+    options = webdriver.FirefoxOptions()
+    options.headless = True #it's more scalable to work in headless mode (this means a simulation window won't appear) 
+    options.page_load_strategy = 'none' 
+    firefox_path = GeckoDriverManager().install() 
+    firefox_service = Service(firefox_path)
+    return webdriver.Firefox(options=options, service=firefox_service)
 
 def verify_url(url):
     try:
@@ -53,6 +64,14 @@ def email_new_alerts(email_message):
     newmail.To = "egl6a@virginia.edu; emm2t@virginia.edu"
     newmail.Body= email_message
     newmail.Send()
+
+
+def is_internet_active(timeout):
+    try:
+        requests.head("http://www.google.com/", timeout=timeout)
+        return True
+    except requests.ConnectionError:
+        return False
 
 """Webscraping Functions"""
 

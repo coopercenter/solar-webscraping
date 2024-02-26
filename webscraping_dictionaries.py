@@ -1,6 +1,8 @@
 from webscraping_functions import *
 "Dictionaries for the localities that use the same type of document organization service"
 
+#ADD HIGHLAND COUNTY, THEY'RE UPDATING FINALLY
+
 "AgendaCenter localities"
 agendacenter_dictionary = {
     "Botetourt":["https://www.botetourtva.gov/AgendaCenter/Search/?term=&CIDs=3,6,&startDate=&endDate=&dateRange=&dateSelector=","Botetourt County"],
@@ -40,6 +42,7 @@ agendacenter_dictionary = {
 
     "Russell":["https://va-russellcounty.civicplus.com/AgendaCenter/Search/?term=&CIDs=5,3,&startDate=&endDate=&dateRange=&dateSelector=","Russell County"],
 
+    #UPDATE: Move to CivicClerk https://scottcova.portal.civicclerk.com/
     "Scott":["https://www.scottcountyva.com/agendacenter","Scott County"],
 
     "Wise":["https://www.wisecounty.org/AgendaCenter/Search/?term=&CIDs=3,6,&startDate=&endDate=&dateRange=&dateSelector=","Wise County"],
@@ -117,8 +120,8 @@ civicclerk_dictionary = {
 "Mathews":["https://mathewscova.portal.civicclerk.com/","Mathews County"],
 
 "Orange":["https://orangecova.portal.civicclerk.com/","Orange County"],
-
-"City of Roanoke":['https://roanokeva.portal.civicclerk.com/',"City of Roanoke"],
+#UPDATE: Don't need this twice
+#"City of Roanoke":['https://roanokeva.portal.civicclerk.com/',"City of Roanoke"],
 
 "Spotsylvania":["https://spotsylvaniacova.portal.civicclerk.com/","Spotsylvania County"],
 
@@ -139,6 +142,7 @@ civicclerk_dictionary = {
 
 """CivicWeb localities"""
 civicweb_dictionary = {
+#REDO CIVICWEB CODE, GETS STUCK ON WHATEVER MEETING WAS SELECTED AT TIME OF LINK COPY
 "Lancaster PC":["https://lancova.civicweb.net/Portal/MeetingInformation.aspx?Id=133","Lancaster County"],
 
 "Lancaster BOS":["https://lancova.civicweb.net/Portal/MeetingInformation.aspx?Id=135","Lancaster County"],
@@ -168,6 +172,7 @@ escribe_dictionary = {
 event_list_dictionary = {
     "Nelson County":["https://www.nelsoncounty-va.gov/events/list/","Nelson County"],
 
+    #UPDATE: New site layout https://www.westmoreland-county.org/index.php/full-calendar
     "Westmoreland County":["https://www.westmoreland-county.org/events/list/","Westmoreland County"]
 }
 
@@ -202,6 +207,7 @@ granicus_dictionary = {
 granicus_2_dictionary = {
 "Goochland":["https://goochlandcountyva.iqm2.com/Citizens/Default.aspx","Goochland County"],
 
+#UPDATE: Move to CivicClerk
 "Louisa":["https://louisacountyva.iqm2.com/Citizens/Calendar.aspx","Louisa County"],
 
 "Roanoke":['https://roanokecountyva.iqm2.com/Citizens/default.aspx',"Roanoke County"],
@@ -266,7 +272,7 @@ county_dictionary_single_variable = {
 
     "Brunswick County":[brunswick_county,"https://www.brunswickco.com/government/board_of_supervisors/agendas___minutes"],
 
-    #website is currently being updated, not worth running. Check back periodically to see if they're done. Last checked 01/11/24
+    #URGENT update this to reflect website changes!! No Agendas posted ahead of time, only past meeting minutes so far!
     #"Buchanan County":[buchanan_county,"https://buchanancountyvirginia.gov/board-of-supervisors/"],
 
     "Buckingham County Board of Supervisors":[buckingham_county,"https://www.buckinghamcountyva.org/administration/boards___commissions/board_of_supervisors/board_agenda_minutes_youtube.php"],
@@ -275,8 +281,10 @@ county_dictionary_single_variable = {
 
     "Carroll County":[carroll_county,"https://www.carrollcountyva.gov/government/bos_meeting_agendas.php"],
 
+    #Update to read Minutes instead of agenda since minutes can be read with HTML
     "Charlotte County Board of Supervisors":[charlotte_county,"https://www.charlottecountyva.gov/government/board_of_supervisors/agendas___minutes.php"],
 
+    #Update to read Minutes instead of agenda since minutes can be read with HTML
     "Charlotte County Planning Commission":[charlotte_county,"https://www.charlottecountyva.gov/departments/planning___zoning/agendas___minutes.php"],
 
     "Clarke County Board of Supervisors":[clarke_county,"https://www.clarkecounty.gov/government/boards-commissions/board-of-supervisors/bos-agendas/-folder-1324"],
@@ -309,8 +317,10 @@ county_dictionary_single_variable = {
 
     "Lunenburg County Planning Commission":[lunenburg_county,"https://www.lunenburgva.gov/government/planning_commission/agendas___minutes.php"],
 
+    #UPDATE: New Link https://weblink.montva.com/WebLink/Browse.aspx?id=802&dbid=4&repo=PIO&cr=1
     "Montgomery County Planning Commission":[montgomery_pc,"https://www.montva.com/departments/Planning-GIS/planning--commission/meetings-1"],
 
+    #UPDATE: New link for better generalization https://www.co.new-kent.va.us/843/Meeting-Agendas
     "New Kent County Planning Commission":[new_kent_county_pc,"https://www.co.new-kent.va.us/Archive.aspx?AMID=422"],
 
     #monitor for PC updates and change code accordingly
@@ -329,11 +339,13 @@ county_dictionary_single_variable = {
     "Shenandoah County Board of Supervisors":[shenandoah_county_bos,"https://shenandoahcountyva.us/bos/meeting-schedule/"],
 
     "Shenandoah County Planning Commission":[shenandoah_county_pc,"https://shenandoahcountyva.us/planning-committee/meeting-schedule/"],
-
+    
+    #UPDATE: New website https://smythcounty.org/government/agendas___minutes/planning_commission_agendas___minutes.php
     "Smyth County Planning Commission":[smyth_county_pc,"http://www.smythcounty.org/planning_commission/planning_commission_agendas_minutes.htm"],
-
+    #UPDATE: New Website https://smythcounty.org/government/agendas___minutes/board_of_supervisors_agendas___minutes.php
     "Smyth County Board of Supervisors":[smyth_county_bos,"http://www.smythcounty.org/board_of_supervisors/agendas_minutes_videos.htm"],
 
+    #UPDATE: Better link https://www.sussexcountyva.gov/page/agendas-and-minutes/
     "Sussex County":[sussex_county,"https://www.sussexcountyva.gov/events/index/future/"],
 
     "Wythe County Board of Supervisors":[wythe_county,"http://www.wytheco.org/index.php/resources/meeting-minutes/packages/bos-packages"],
@@ -347,12 +359,16 @@ county_dictionary_double_variable = {
 
     "Fairfax County Planning Commission":[fairfax_county_pc,"https://www.fairfaxcounty.gov/planningcommission/meetingcalendar","\'2023\'"],
 
+    #switch to reading minutes, can actually get text
     "Greensville County Board of Supervisors":[greensville_county,"https://www.greensvillecountyva.gov/boards___commissions/board_of_supervisors/agendas___minutes/board_of_supervisors.php#outer-1174sub-1176","Board of Supervisors"],
-
+    
+    #switch to reading minutes, can actually get text
     "Greensville County Planning Commission":[greensville_county,"https://www.greensvillecountyva.gov/boards___commissions/board_of_supervisors/agendas___minutes/planning_commission.php#outer-1188sub-1189","Planning Commission"],
 
+    #Update to 2024 or generalized link
     "Southampton County board of Supervisors":[southampton_county,"https://www.southamptoncounty.org/departments/board_of_supervisors/bos_agendas_2023.php","Board of Supervisors"],
 
+    #Update to 2024 or generalized link
     "Southamptom County Planning Commission":[southampton_county,"https://www.southamptoncounty.org/departments/planning/year_2023.php","Planning Commission"],
 
     "Tazewell County Board of Supervisors":[tazewell_county,"https://tazewellcountyva.org/government/boards-and-commissions/board-of-supervisors/", "Board of Supervisors"],
@@ -361,23 +377,26 @@ county_dictionary_double_variable = {
 }
 
 city_dictionary_single_variable = {
+    #URGENT: Website looks different, check if code needs to be updated
     "Buena Vista City Council":[buena_vista_city_council,"https://www.buenavistava.org/city-services/government/city-council/council-agenda-minutes/"],
 
     "Clifton Forge":[clifton_forge,"https://www.cliftonforgeva.gov/council/council-agenda-and-minutes/"],
 
     "Covington":[covington,"https://covington.va.us/agendas-minutes/"],
 
-    "Emporia City Council":[emporia,"https://www.ci.emporia.va.us/node/15/agenda/2023"],
+    #MOVED TO AGENDACENTER
+    #"Emporia City Council":[emporia,"https://www.ci.emporia.va.us/node/15/agenda/2023"],
 
-    "Emporia Planning Commission":[emporia,"https://www.ci.emporia.va.us/node/25/agenda/2023"],
+    #"Emporia Planning Commission":[emporia,"https://www.ci.emporia.va.us/node/25/agenda/2023"],
 
     "City of Franklin":[city_of_franklin,"https://www.franklinva.com/government/city-council-agendas/"],
 
-    "City of Galax":[galax,"https://galaxva.com/2023-city-council-agendas/"],
+    "City of Galax":[galax,"https://galaxva.com/2024-city-council-agendas/"],
 
     "City of Lexington Planning Commission":[lexington_pc,"https://www.lexingtonva.gov/government/boards-and-commissions/planning-commission"],
 
-    "City of Lynchburg Planning Commission":[lynchburg_pc,"https://www.lynchburgva.gov/planning-commission-information-agendas-and-legal-notices"],
+    #UPDATE: Defunct, all meetings moved to CivicClerk link, remove entry and function
+    #"City of Lynchburg Planning Commission":[lynchburg_pc,"https://www.lynchburgva.gov/#planning-commission-information-agendas-and-legal-notices"],
 
     "City of Norfolk Planning Commission":[norfolk_pc,"https://norfolkcityva.iqm2.com/Citizens/Board/1018-Planning-Commission"],
 
