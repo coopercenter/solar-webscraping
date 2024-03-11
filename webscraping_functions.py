@@ -50,7 +50,8 @@ def search_agenda_for_keywords(agenda_content):
             search_results.append("Zoning Ordinance")
         if 'Comprehensive Plan' in item.text or 'Comprehensive plan' in item.text or 'comprehensive plan' in item.text:
             search_results.append("Comprehensive Plan")
-    return search_results
+    search_results_unique = list(set(search_results))
+    return search_results_unique
 
 def email_new_alerts(email_message):
     "Outlook Email Development"
@@ -1241,6 +1242,29 @@ def henrico_county_pc(url):
             messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Henrico County in the latest Planning Commission/Board of Zoning Appeals agenda. " + item)
     return messages        
 
+"Highland County"
+def highland_county_bos(url):
+    messages = []
+    driver.get(url)
+    time.sleep(2)
+    folders = driver.find_elements(By.CSS_SELECTOR,"a[href*=agenda")
+    current_year = [item for item in folders if item.text==str(datetime.now().year)]
+    driver.get(current_year[0].get_attribute('href'))
+    time.sleep(2)
+    meetings = driver.find_elements(By.CSS_SELECTOR,"div[class*='views-row'")
+    future_meetings = [item.find_element(By.CSS_SELECTOR,"a").get_attribute("href") for item in meetings if check_meeting_date(item.text) == True]
+    for item in future_meetings:
+        driver.get(item)
+        time.sleep(2)
+        agenda_link = driver.find_element(By.CSS_SELECTOR,"a[href*='.pdf'").get_attribute('href')
+        driver.get(agenda_link)
+        time.sleep(2)
+        agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
+        agenda_search = search_agenda_for_keywords(agenda_content)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Highland County Board of Supervisors. " + agenda_link)
+    return messages
+
 """King and Queen County"""
 def king_and_queen_county(url,governing_body):
     driver.get(url)
@@ -1876,6 +1900,26 @@ def virginia_beach_pc(url):
             agenda_search = search_agenda_for_keywords(agenda_content)
             if agenda_search != []:
                 messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Virginia Beach in latest Planning Commission meeting agenda. " + agenda_url)
+    return messages
+
+"Westmoreland County"
+def westmoreland_county(url,governing_body):
+    messages = []
+    driver.get(url)
+    time.sleep(2)
+    #selected URLs only show upcoming meetings, no need for a date check. Just check the nearest meeting since it's unlikely that agendas will be posted too far out
+    next_meeting = driver.find_element(By.CSS_SELECTOR,"h3").find_element(By.CSS_SELECTOR,"a").get_attribute('href')
+    driver.get(next_meeting)
+    time.sleep(2)
+    pdfs = driver.find_elements(By.CSS_SELECTOR,"a[href*='.pdf'")
+    agenda_links =[item.get_attribute('href') for item in pdfs if "Agenda" in item.text or "agenda" in item.text]
+    for item in agenda_links:
+        driver.get(item)
+        time.sleep(2)
+        agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
+        agenda_search = search_agenda_for_keywords(agenda_content)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Westmoreland County " + governing_body + ". " + item)
     return messages
 
 "City of Williamsburg"

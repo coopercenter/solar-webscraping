@@ -1,8 +1,6 @@
 from webscraping_functions import *
 "Dictionaries for the localities that use the same type of document organization service"
 
-#ADD HIGHLAND COUNTY, THEY'RE UPDATING FINALLY
-
 "AgendaCenter localities"
 agendacenter_dictionary = {
     "Botetourt":["https://www.botetourtva.gov/AgendaCenter/Search/?term=&CIDs=3,6,&startDate=&endDate=&dateRange=&dateSelector=","Botetourt County"],
@@ -172,9 +170,6 @@ escribe_dictionary = {
 "Event List localities"
 event_list_dictionary = {
     "Nelson County":["https://www.nelsoncounty-va.gov/events/list/","Nelson County"],
-
-    #UPDATE: New site layout https://www.westmoreland-county.org/index.php/full-calendar
-    "Westmoreland County":["https://www.westmoreland-county.org/events/list/","Westmoreland County"]
 }
 
 "Granicus localities"
@@ -303,6 +298,8 @@ county_dictionary_single_variable = {
 
     "Henrico County Planning Commission":[henrico_county_pc,"https://henrico.us/planning/meetings/"],
 
+    "Highland County Board of Supervisors":[highland_county_bos,"https://www.highlandcova.org/node/666/agenda"],
+
     "King and Queen County Board of Supervisors":[king_and_queen_county,"https://kingandqueenco.net/board-of-supervisors-meetings/", "Board of Supervisors"],
 
     "King and Queen County Planning Commission":[king_and_queen_county,"https://kingandqueenco.net/planning-commission-meetings/","Planning Commission"],
@@ -371,7 +368,11 @@ county_dictionary_double_variable = {
 
     "Tazewell County Board of Supervisors":[tazewell_county,"https://tazewellcountyva.org/government/boards-and-commissions/board-of-supervisors/", "Board of Supervisors"],
 
-    "Tazewell County Planning Commission":[tazewell_county,"https://tazewellcountyva.org/government/boards-and-commissions/planning-commission/", "Planning Commission"]
+    "Tazewell County Planning Commission":[tazewell_county,"https://tazewellcountyva.org/government/boards-and-commissions/planning-commission/", "Planning Commission"],
+
+    "Westmoreland County Board of Supervisors":[westmoreland_county,"https://www.westmoreland-county.org/bos","Board of Supervisors"],
+
+    "Westmoreland County Planning Commission":[westmoreland_county,"https://www.westmoreland-county.org/pc","Planning Commission"]
 }
 
 city_dictionary_single_variable = {

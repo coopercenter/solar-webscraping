@@ -64,7 +64,8 @@ def search_agenda_for_keywords(agenda_content):
             search_results.append("Zoning Ordinance")
         if 'Comprehensive Plan' in item.text or 'Comprehensive plan' in item.text or 'comprehensive plan' in item.text:
             search_results.append("Comprehensive Plan")
-    return search_results
+    search_results_unique = list(set(search_results))
+    return search_results_unique
 
 #email the results of the agenda search
 def email_new_alerts(email_message):
