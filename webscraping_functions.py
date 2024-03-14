@@ -26,7 +26,7 @@ def verify_url(url):
 
 def check_meeting_date(meeting_time_string): 
     #all_meetings[i].text should be set as the meeting title for boarddocs sites
-    if datetime.now() < dateutil.parser.parse(meeting_time_string, fuzzy=True) or datetime.now() == dateutil.parser.parse(meeting_time_string, fuzzy=True):
+    if datetime.date(datetime.now()) < datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)) or datetime.date(datetime.now()) == datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)):
         return True
     else:
         return False
@@ -788,8 +788,7 @@ def buchanan_county(url):
     time.sleep(5)
     messages = []
     pdf_links = driver.find_elements(By.CSS_SELECTOR,"a[href*='.pdf")
-    visible_documents = [item for item in pdf_links if item.text != '']
-    latest_minutes = [item for item in visible_documents if "Minutes" in item.text][0]
+    latest_minutes = [item for item in pdf_links if "Minutes" in item.text][0]
     #since they're only posting minutes not agendas, and minutes are posted long after the fact, we'll skip the date checking
     minutes_url = latest_minutes.get_attribute("href")
     driver.get(minutes_url)
@@ -797,7 +796,7 @@ def buchanan_county(url):
     agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
     agenda_search = search_agenda_for_keywords(agenda_content)
     if agenda_search != []:
-        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Buchanan County. " + minutes_url)
+        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Buchanan County Board of Supervisors. " + minutes_url)
     return messages
 
 """Buckingham County"""

@@ -265,8 +265,7 @@ county_dictionary_single_variable = {
 
     "Brunswick County":[brunswick_county,"https://www.brunswickco.com/government/board_of_supervisors/agendas___minutes"],
 
-    #URGENT update this to reflect website changes!! No Agendas posted ahead of time, only past meeting minutes so far!
-    #"Buchanan County":[buchanan_county,"https://buchanancountyvirginia.gov/board-of-supervisors/"],
+    "Buchanan County":[buchanan_county,"https://buchanancountyvirginia.gov/board-of-supervisors/"],
 
     "Buckingham County Board of Supervisors":[buckingham_county,"https://www.buckinghamcountyva.org/administration/boards___commissions/board_of_supervisors/board_agenda_minutes_youtube.php"],
 
