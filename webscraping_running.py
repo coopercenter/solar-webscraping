@@ -5,36 +5,51 @@ New_Alerts = []
 """Run the repeated document management sites"""
 #run the agendacenter localities
 for item in agendacenter_dictionary:
-    try:
-        alert = agendacenter(agendacenter_dictionary[item][0],agendacenter_dictionary[item][1])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert = "Error webscraping " + item + " using AgendaCenter code."
-        New_Alerts.append(error_alert)
-        continue  
+    while True:
+        if is_internet_active(30) is True:
+            try:
+                alert = agendacenter(agendacenter_dictionary[item][0],agendacenter_dictionary[item][1])
+                if alert != []:
+                    New_Alerts.append(", \n ".join(alert))
+            except:
+                error_alert = "Error webscraping " + item + " using AgendaCenter code."
+                New_Alerts.append(error_alert)
+                continue
+            break
+        else:
+            pass 
 
 #run the boarddocs localities
 for item in boarddocs_dictionary:
-    try:
-        alert = boarddocs(boarddocs_dictionary[item][0],boarddocs_dictionary[item][1],boarddocs_dictionary[item][2])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert = "Error webscraping " + item + " using BoardDocs code"
-        New_Alerts.append(error_alert)
-        continue 
+    while True:
+        if is_internet_active(30) is True:
+            try:
+                alert = boarddocs(boarddocs_dictionary[item][0],boarddocs_dictionary[item][1],boarddocs_dictionary[item][2])
+                if alert != []:
+                    New_Alerts.append(", \n ".join(alert))
+            except:
+                error_alert = "Error webscraping " + item + " using BoardDocs code."
+                New_Alerts.append("\n" + error_alert)
+                continue
+            break
+        else:
+            pass 
 
 #run the civicclerk localities
 for item in civicclerk_dictionary:
-    try:
-        alert=civicclerk(civicclerk_dictionary[item][0],civicclerk_dictionary[item][1])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert="Error webscraping " + item + " using CivicClerk code"
-        New_Alerts.append(error_alert)
-        continue
+    while True:
+        if is_internet_active(30) is True:
+            try:
+                alert=civicclerk(civicclerk_dictionary[item][0],civicclerk_dictionary[item][1])
+                if alert != []:
+                    New_Alerts.append(", \n ".join(alert))
+            except:
+                error_alert="Error webscraping " + item + " using CivicClerk code"
+                New_Alerts.append(error_alert)
+                continue
+            break
+        else:
+            pass
 
 #run civicweb localities
 for item in civicweb_dictionary:

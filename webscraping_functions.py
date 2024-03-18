@@ -255,7 +255,7 @@ def document_center(url,locality):
     year_folders = driver.find_elements(By.CSS_SELECTOR,"span")
     time.sleep(1)
     for item in year_folders:
-        if item.text == "2023":
+        if item.text == "2024":
             item.click()
             break
     time.sleep(2)
@@ -445,7 +445,7 @@ def legistar(url,locality):
         driver.get(url)
         time.sleep(2)
         table_rows = driver.find_elements(By.CSS_SELECTOR,'tr[id*=ctl00_')
-        future_meetings = [item for item in table_rows if check_meeting_date(item.text.split("/2023")[0])==True]
+        future_meetings = [item for item in table_rows if check_meeting_date(item.text.split("/2024")[0])==True]
         meeting_urls = [item.find_element(By.CSS_SELECTOR,"a[id*=hypMeetingDetail").get_attribute('href') for item in future_meetings]
         meeting_titles = [item.text for item in future_meetings]
         for i in range(0,len(meeting_urls)):
@@ -861,32 +861,49 @@ def carroll_county(url):
             break
     return messages
 
-"""Charlotte County"""
-#Documents must be read individually for now, since they're scans of physical documents
-def charlotte_county(url):
+"Charlotte County"
+def charlotte_county(url,governing_body):
+    messages=[]
     driver.get(url)
-    time.sleep(5)
-    messages = []
-    table_rows = driver.find_elements(By.CSS_SELECTOR,"div[class*='table-responsive'")
-    meetings_with_agendas = []
-    for item in table_rows:
-        if "Agenda" in item.text:
-            meetings_with_agendas.append(item)
-        elif "Packet" in item.text:
-            meetings_with_agendas.append(item)
-    for item in meetings_with_agendas:
-        future_meeting = check_meeting_date(item.text.split(" ")[0])
-        if future_meeting == True:
-            meeting_title = item.text
-            #documents aren't readable, they're scans, need a different alert
-            if " Solar " in meeting_title:
-                messages.append("New solar information available for Charlotte County in " + meeting_title)
-            elif " solar " in meeting_title:
-                messages.append("New solar information available for Charlotte County in " + meeting_title)
+    time.sleep(2)
+    table_rows = driver.find_elements(By.CSS_SELECTOR,"tr")
+    if "Solar" in table_rows[0].text:
+        messages.append("Solar Public Hearing posted for Charlotte County. " + url)
+    future_meetings = []
+    for item in table_rows[1:]:
+        try:
+            if check_meeting_date(item.text.split(" ")[0]) == True:
+                future_meetings.append(item)
             else:
-                messages.append("New meeting information available for Charlotte County in " + meeting_title + ", check documents for solar information")
+                break
+        except:
+            continue
+    agendas = [item for item in future_meetings if "Agenda" in item.text]
+    packets = [item for item in future_meetings if "Packet" in item.text and "Agenda" not in item.text]
+    agenda_links = [item.find_element(By.CSS_SELECTOR,"a").get_attribute("href") for item in agendas]
+    packet_links=[item.find_element(By.CSS_SELECTOR,"a").get_attribute("href") for item in packets]
+    for item in agenda_links:
+        driver.get(item)
+        time.sleep(2)
+        agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
+        readibility = check_readibility(agenda_content)
+        if readibility == False:
+            messages.append("New agenda available for Charlotte County " + governing_body + ". Document cannot be scanned for keywords, please check manually. " + item)
         else:
-            break
+            agenda_search = search_agenda_for_keywords(agenda_content)
+            if agenda_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Charlotte County " + governing_body + ". " + item)
+    for item in packet_links:
+        driver.get(item)
+        time.sleep(2)
+        packet_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
+        packet_readibility = check_readibility(packet_content)
+        if packet_readibility == False:
+            messages.append("New agenda available for Charlotte County " + governing_body + ". Document cannot be scanned for keywords, please check manually. " + item)
+        else:
+            packet_search = search_agenda_for_keywords(packet_content)
+            if packet_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Charlotte County " + governing_body + ". " + item)
     return messages
 
 """Clarke County"""
@@ -1747,10 +1764,10 @@ def southampton_county(url,governing_body):
     if governing_body == "Board of Supervisors":
         agenda_links = driver.find_elements(By.CSS_SELECTOR,"a[href*='regular_session.php'")
     elif governing_body == "Planning Commission":
-        links = driver.find_elements(By.CSS_SELECTOR,"a[href*='2023.php'")
+        links = driver.find_elements(By.CSS_SELECTOR,"a[href*='2024.php'")
         agenda_links = []
         for item in links:
-            if '2023' in item.text:
+            if '2024' in item.text:
                 agenda_links.append(item)
     latest_agenda = agenda_links[-1]
     future_meeting = check_meeting_date(latest_agenda.text)
@@ -1841,7 +1858,7 @@ def tazewell_county(url, government_body):
     all_rows = driver.find_elements(By.CSS_SELECTOR,"li")
     meeting_rows = []
     for item in all_rows:
-        if "2023" in item.text:
+        if "2024" in item.text:
             meeting_rows.append(item)
     for item in meeting_rows:
         future_meeting = check_meeting_date(item.text)
