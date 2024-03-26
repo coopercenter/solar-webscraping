@@ -1453,19 +1453,34 @@ def montgomery_pc(url):
     driver.get(url)
     time.sleep(5)
     messages = []
-    agenda_links = driver.find_elements(By.CSS_SELECTOR,'a[href*="agenda.pdf')
+    links = driver.find_elements(By.CSS_SELECTOR,"a")
+    archive_link = [item.get_attribute('href') for item in links if item.text=="Current agendas and minutes"]
+    driver.get(archive_link[0])
+    time.sleep(2)
+    years = driver.find_elements(By.CSS_SELECTOR, "span[class*='EntryNameColumn'")
+    latest_year = [item for item in years if item.text == str(datetime.date(datetime.now()).year)]
+    driver.get(latest_year[0].find_element(By.CSS_SELECTOR,"a").get_attribute("href"))
+    time.sleep(2)
+    document_folders = driver.find_elements(By.CSS_SELECTOR, "span[class*='EntryNameColumn'")
+    agenda_folder = [item for item in document_folders if item.text == "Agendas"]
+    driver.get(agenda_folder[0].find_element(By.CSS_SELECTOR, "a").get_attribute("href"))
+    time.sleep(2)
+    agendas = driver.find_elements(By.CSS_SELECTOR, "span[class*='EntryNameColumn'")
+    future_meetings = [item for item in agendas if check_meeting_date(item.text)==True]
+    agenda_links = [item.find_element(By.CSS_SELECTOR,"a").get_attribute("href") for item in future_meetings]
     for item in agenda_links:
-        future_meeting = check_meeting_date(item.text)
-        if future_meeting==True:
-            item.click()
-            time.sleep(2)
-            driver.switch_to.window(driver.window_handles[1])
-            agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
+        driver.get(item)
+        time.sleep(2)
+        pdf_frame = driver.find_element(By.CSS_SELECTOR,"iframe")
+        driver.switch_to.frame(pdf_frame)
+        agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
+        readable = check_readibility(agenda_content)
+        if readable==True:
             agenda_search = search_agenda_for_keywords(agenda_content)
             if agenda_search != []:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Montgomery County Planning Commission in " + item.text)
-            driver.close()
-            driver.switch_to.window(driver.window_handles[0])
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Montgomery County Planning Commission. " + item)
+        elif readable==False:
+            messages.append("New meeting document available for Montgomery County Planning Commission. PDF cannot be read, check for keyword updates. " + item)
     return messages
 
 """New Kent County Planning Commission"""

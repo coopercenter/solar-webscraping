@@ -53,36 +53,51 @@ for item in civicclerk_dictionary:
 
 #run civicweb localities
 for item in civicweb_dictionary:
-    try:
-        alert=civicweb(civicweb_dictionary[item][0],civicweb_dictionary[item][1])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert="Error webscraping " + item + " using CivicWeb code"
-        New_Alerts.append(error_alert)
-        continue
+    while True:
+        if is_internet_active(30) is True:
+            try:
+                alert=civicweb(civicweb_dictionary[item][0],civicweb_dictionary[item][1])
+                if alert != []:
+                    New_Alerts.append(", \n ".join(alert))
+            except:
+                error_alert="Error webscraping " + item + " using CivicWeb code"
+                New_Alerts.append(error_alert)
+                continue
+            break
+        else:
+            pass
 
 #run document center localities
 for item in document_center_dictionary:
-    try:
-        alert=document_center(document_center_dictionary[item][0],document_center_dictionary[item][1])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert="Error webscraping " + item + " using Document Center code"
-        New_Alerts.append(error_alert)
-        continue
+    while True:
+        if is_internet_active(30) is True:
+            try:
+                alert=document_center(document_center_dictionary[item][0],document_center_dictionary[item][1])
+                if alert != []:
+                    New_Alerts.append(", \n ".join(alert))
+            except:
+                error_alert="Error webscraping " + item + " using Document Center code"
+                New_Alerts.append(error_alert)
+                continue
+            break
+        else:
+            pass
 
 #run escribe localities
 for item in escribe_dictionary:
-    try:
-        alert=escribe(escribe_dictionary[item][0],escribe_dictionary[item][1])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert="Error webscraping " + item + " using EScribe code"
-        New_Alerts.append(error_alert)
-        continue
+    while True:
+        if is_internet_active(30) is True:
+            try:
+                alert=escribe(escribe_dictionary[item][0],escribe_dictionary[item][1])
+                if alert != []:
+                    New_Alerts.append(", \n ".join(alert))
+            except:
+                error_alert="Error webscraping " + item + " using EScribe code"
+                New_Alerts.append(error_alert)
+                continue
+            break
+        else:
+            pass
 
 #run the event list localities
 for item in event_list_dictionary:

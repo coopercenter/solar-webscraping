@@ -305,7 +305,6 @@ county_dictionary_single_variable = {
 
     "Lunenburg County Planning Commission":[lunenburg_county,"https://www.lunenburgva.gov/government/planning_commission/agendas___minutes.php"],
 
-    #UPDATE: New Link https://weblink.montva.com/WebLink/Browse.aspx?id=802&dbid=4&repo=PIO&cr=1
     "Montgomery County Planning Commission":[montgomery_pc,"https://www.montva.com/departments/Planning-GIS/planning--commission/meetings-1"],
 
     #UPDATE: New link for better generalization https://www.co.new-kent.va.us/843/Meeting-Agendas
