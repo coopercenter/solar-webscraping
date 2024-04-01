@@ -248,6 +248,19 @@ novusagenda_dictionary = {
 "Salem PC":["https://salemcity.novusagenda.com/agendapublic/meetingsresponsive.aspx?MeetingType=3","Salem Planning Commission"]
 }
 
+"php table localities"
+php_table_dictionary = {
+    "Buckingham BOS":["https://www.buckinghamcountyva.org/administration/boards___commissions/board_of_supervisors/board_agenda_minutes_youtube.php","Buckingham County Board of Supervisors"],
+
+    "Buckingham PC":["https://www.buckinghamcountyva.org/administration/boards___commissions/planning_commission.php","Buckingham County Planning Commission"],
+
+    "Carroll County":["https://www.carrollcountyva.gov/government/bos_meeting_agendas.php","Carroll County Board of Supervisors"],
+
+    "Smyth County BOS":["https://smythcounty.org/government/agendas___minutes_/board_of_supervisors_agendas___minutes.php","Smyth County Board of Supervisors"],
+
+    "Smyth County PC":["https://smythcounty.org/government/agendas___minutes_/planning_commission_agendas___minutes.php","Smyth County Planning Commission"]
+}
+
 "PrimeGov localities"
 primegov_dictionary = {
     "Bedford":["https://bedfordcounty.primegov.com/public/portal","Bedford County"]
@@ -266,12 +279,6 @@ county_dictionary_single_variable = {
     "Brunswick County":[brunswick_county,"https://www.brunswickco.com/government/board_of_supervisors/agendas___minutes"],
 
     "Buchanan County":[buchanan_county,"https://buchanancountyvirginia.gov/board-of-supervisors/"],
-
-    "Buckingham County Board of Supervisors":[buckingham_county,"https://www.buckinghamcountyva.org/administration/boards___commissions/board_of_supervisors/board_agenda_minutes_youtube.php"],
-
-    "Buckingham County Planning Commission":[buckingham_county,"https://www.buckinghamcountyva.org/administration/boards___commissions/planning_commission.php"],
-
-    "Carroll County":[carroll_county,"https://www.carrollcountyva.gov/government/bos_meeting_agendas.php"],
 
     "Clarke County Board of Supervisors":[clarke_county,"https://www.clarkecounty.gov/government/boards-commissions/board-of-supervisors/bos-agendas/-folder-1324"],
 
@@ -307,8 +314,7 @@ county_dictionary_single_variable = {
 
     "Montgomery County Planning Commission":[montgomery_pc,"https://www.montva.com/departments/Planning-GIS/planning--commission/meetings-1"],
 
-    #UPDATE: New link for better generalization https://www.co.new-kent.va.us/843/Meeting-Agendas
-    "New Kent County Planning Commission":[new_kent_county_pc,"https://www.co.new-kent.va.us/Archive.aspx?AMID=422"],
+    "New Kent County Planning Commission":[new_kent_county_pc,"https://www.co.new-kent.va.us/843/Meeting-Agendas"],
 
     #monitor for PC updates and change code accordingly
     "Nottoway County":[nottoway_county,"https://nottoway.org/administration/boards___commissions/board_of_supervisors_(bos)/board_agendas_minutes.php#outer-388"],
@@ -326,11 +332,6 @@ county_dictionary_single_variable = {
     "Shenandoah County Board of Supervisors":[shenandoah_county_bos,"https://shenandoahcountyva.us/bos/meeting-schedule/"],
 
     "Shenandoah County Planning Commission":[shenandoah_county_pc,"https://shenandoahcountyva.us/planning-committee/meeting-schedule/"],
-    
-    #UPDATE: New website https://smythcounty.org/government/agendas___minutes/planning_commission_agendas___minutes.php
-    "Smyth County Planning Commission":[smyth_county_pc,"http://www.smythcounty.org/planning_commission/planning_commission_agendas_minutes.htm"],
-    #UPDATE: New Website https://smythcounty.org/government/agendas___minutes/board_of_supervisors_agendas___minutes.php
-    "Smyth County Board of Supervisors":[smyth_county_bos,"http://www.smythcounty.org/board_of_supervisors/agendas_minutes_videos.htm"],
 
     #UPDATE: Better link https://www.sussexcountyva.gov/page/agendas-and-minutes/
     "Sussex County":[sussex_county,"https://www.sussexcountyva.gov/events/index/future/"],

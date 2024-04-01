@@ -101,45 +101,66 @@ for item in escribe_dictionary:
 
 #run the event list localities
 for item in event_list_dictionary:
-    try:
-        alert=event_list(event_list_dictionary[item][0],escribe_dictionary[item][1])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert="Error webscraping " + item + " using Event List code"
-        New_Alerts.append(error_alert)
-        continue
+    while True:
+        if is_internet_active(30) is True:
+            try:
+                alert=event_list(event_list_dictionary[item][0],escribe_dictionary[item][1])
+                if alert != []:
+                    New_Alerts.append(", \n ".join(alert))
+            except:
+                error_alert="Error webscraping " + item + " using Event List code"
+                New_Alerts.append(error_alert)
+                continue
+            break
+        else:
+            pass
 
 #run the granicus localities
 for item in granicus_dictionary:
-    try:
-        alert = granicus(granicus_dictionary[item][0],granicus_dictionary[item][1])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert = "Error webscraping " + item + " using Granicus code"
-        New_Alerts.append(error_alert)
-        continue
+    while True:
+        if is_internet_active(30) is True:
+            try:
+                alert = granicus(granicus_dictionary[item][0],granicus_dictionary[item][1])
+                if alert != []:
+                    New_Alerts.append(", \n ".join(alert))
+            except:
+                error_alert = "Error webscraping " + item + " using Granicus code"
+                New_Alerts.append(error_alert)
+                continue
+            break
+        else:
+            pass
+
 for item in granicus_2_dictionary:
-    try:
-        alert = granicus_version_2(granicus_2_dictionary[item][0],granicus_2_dictionary[item][1])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert = "Error webscraping " + item + " using Granicus Version 2 code"
-        New_Alerts.append(error_alert)
-        continue
+    while True:
+        if is_internet_active(30) is True:
+            try:
+                alert = granicus_version_2(granicus_2_dictionary[item][0],granicus_2_dictionary[item][1])
+                if alert != []:
+                    New_Alerts.append(", \n ".join(alert))
+            except:
+                error_alert = "Error webscraping " + item + " using Granicus Version 2 code"
+                New_Alerts.append(error_alert)
+                continue
+            break
+        else:
+            pass
 
 #run LaserFiche localities
 for item in laserfiche_dictionary:
-    try:
-        alert=laserfiche(laserfiche_dictionary[item][0],laserfiche_dictionary[item][1])
-        if alert != []:
-            New_Alerts.append(", \n ".join(alert))
-    except:
-        error_alert="Error webscraping " + item + " using LaserFiche code"
-        New_Alerts.append(error_alert)
-        continue
+    while True:
+        if is_internet_active(30) is True:
+            try:
+                alert=laserfiche(laserfiche_dictionary[item][0],laserfiche_dictionary[item][1])
+                if alert != []:
+                    New_Alerts.append(", \n ".join(alert))
+            except:
+                error_alert="Error webscraping " + item + " using LaserFiche code"
+                New_Alerts.append(error_alert)
+                continue
+            break
+        else:
+            pass
 
 #run Legistar localities
 for item in legistar_dictionary:
@@ -185,6 +206,21 @@ for item in primegov_dictionary:
         New_Alerts.append(error_alert)
         continue
 
+#run PHP Table localities
+for item in php_table_dictionary:
+    while True:
+        if is_internet_active(30) is True:
+            try:
+                alert=php_table(php_table_dictionary[item][0],php_table_dictionary[item][1])
+                if alert != []:
+                    New_Alerts.append(", \n ".join(alert))
+            except:
+                error_alert="Error webscraping " + item + " using PHP Table code"
+                New_Alerts.append(error_alert)
+                continue
+            break
+        else:
+            pass
 
 """Run the website-specific code"""
 for item in county_dictionary_single_variable:
