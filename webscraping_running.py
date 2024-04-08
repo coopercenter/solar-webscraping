@@ -101,19 +101,15 @@ for item in escribe_dictionary:
 
 #run the event list localities
 for item in event_list_dictionary:
-    while True:
-        if is_internet_active(30) is True:
-            try:
-                alert=event_list(event_list_dictionary[item][0],escribe_dictionary[item][1])
-                if alert != []:
-                    New_Alerts.append(", \n ".join(alert))
-            except:
-                error_alert="Error webscraping " + item + " using Event List code"
-                New_Alerts.append(error_alert)
-                continue
-            break
-        else:
-            pass
+    try:
+        alert=event_list(event_list_dictionary[item][0],escribe_dictionary[item][1])
+        if alert != []:
+            New_Alerts.append(", \n ".join(alert))
+    except:
+        error_alert="Error webscraping " + item + " using Event List code"
+        New_Alerts.append(error_alert)
+        continue
+    break
 
 #run the granicus localities
 for item in granicus_dictionary:
