@@ -83,32 +83,29 @@ def agendacenter(url,locality):
         driver.get(url)
         time.sleep(5)
         messages = []
-        agenda_links = driver.find_elements(By.CSS_SELECTOR, "a[href*='AgendaCenter/ViewFile'")
         table_rows = driver.find_elements(By.CSS_SELECTOR, "tr[class*=catAgendaRow")
-        agenda_links_href = []
-        agenda_dates = []
-        agenda_titles = []
-        for item in agenda_links:
-            if item.text !='':
-                agenda_links_href.append(item.get_attribute("href"))
-                agenda_titles.append(item.text)
+        future_meetings = []
         for item in table_rows:
-            if "\u2009" in item.text:
-                agenda_dates.append(item.text.split("\u2009")[0])
-            else:
-                agenda_dates.append(item.text.split("\n")[0])
-        for i in range(0,len(agenda_links_href)):
-            future_date = check_meeting_date(agenda_dates[i])
-            if future_date == True:
-                meeting_title = agenda_titles[i] + " " + agenda_dates[i]
-                driver.get(agenda_links_href[i])
-                time.sleep(5)
-                agenda_content = driver.find_elements(By.CSS_SELECTOR, "div[class*=textLayer")
-                if agenda_content == []:
-                    agenda_content = driver.find_elements(By.CSS_SELECTOR, "div[id*='divInner'")
+            try:
+                if check_meeting_date(item.text.split("\u2009")[0]) ==True:
+                    future_meetings.append(item)
+            except:
+                if check_meeting_date(item.text.split("\n")[0])==True:
+                    future_meetings.append(item)
+        agenda_links = [item.find_elements(By.CSS_SELECTOR,"a")[1].get_attribute("href") for item in future_meetings]
+        for item in agenda_links:
+            driver.get(item)
+            time.sleep(5)
+            agenda_content = driver.find_elements(By.CSS_SELECTOR, "div[class*=textLayer")
+            if agenda_content == []:
+                agenda_content = driver.find_elements(By.CSS_SELECTOR, "div[id*='divInner'")
+            readable = check_readability(agenda_content)
+            if readable==True:
                 agenda_search = search_agenda_for_keywords(agenda_content)
                 if agenda_search != []:
-                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + " in " + meeting_title  + ". " + agenda_links_href[i])
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + ". " + item)
+            elif readable==False:
+                messages.append("New meeting document available for " + locality + ". Document cannot be checked for keywords. " + item)
         return messages
     else:
         return url_test
