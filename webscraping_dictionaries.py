@@ -40,6 +40,8 @@ agendacenter_dictionary = {
 
     "Russell":["https://va-russellcounty.civicplus.com/AgendaCenter/Search/?term=&CIDs=5,3,&startDate=&endDate=&dateRange=&dateSelector=","Russell County"],
 
+    "Shenandoah":["https://shenandoahcountyva.us/AgendaCenter/Search/?term=&CIDs=4,3,&startDate=&endDate=&dateRange=&dateSelector=","Shenandoah County"],
+
     "Wise":["https://www.wisecounty.org/AgendaCenter/Search/?term=&CIDs=3,6,&startDate=&endDate=&dateRange=&dateSelector=","Wise County"],
 
     "York":["https://www.yorkcounty.gov/AgendaCenter/Search/?term=&CIDs=4,3,&startDate=&endDate=&dateRange=&dateSelector=","York County"],
@@ -141,20 +143,13 @@ civicclerk_dictionary = {
 
 """CivicWeb localities"""
 civicweb_dictionary = {
-#REDO CIVICWEB CODE, GETS STUCK ON WHATEVER MEETING WAS SELECTED AT TIME OF LINK COPY
-"Lancaster PC":["https://lancova.civicweb.net/Portal/MeetingInformation.aspx?Id=133","Lancaster County"],
+"Lancaster":["https://lancova.civicweb.net/Portal/MeetingTypeList.aspx","Lancaster County"],
 
-"Lancaster BOS":["https://lancova.civicweb.net/Portal/MeetingInformation.aspx?Id=135","Lancaster County"],
+"Lexington":["https://lexingtonva.civicweb.net/Portal/MeetingTypeList.aspx","City of Lexington"],
 
-"Lexington CC":["https://lexingtonva.civicweb.net/Portal/MeetingInformation.aspx?Id=224","City of Lexington"],
+"Newport News":["https://nngov.civicweb.net/Portal/MeetingTypeList.aspx","City of Newport News"],
 
-"Newport News CC":["https://nngov.civicweb.net/Portal/MeetingInformation.aspx?Id=942","City of Newport News"],
-
-"Newport News PC":["https://nngov.civicweb.net/Portal/MeetingInformation.aspx?Id=962","City of Newport News"],
-
-"Winchester CC":["https://winchesterva.civicweb.net/Portal/MeetingInformation.aspx?Id=3826","City of Winchester"],
-
-"Winchester PC":["https://winchesterva.civicweb.net/Portal/MeetingInformation.aspx?Id=4285","City of Winchester"]
+"Winchester":["https://winchesterva.civicweb.net/Portal/MeetingTypeList.aspx","City of Winchester"]
 }
 
 """Document Center localities"""
@@ -300,10 +295,6 @@ county_dictionary_single_variable = {
 
     "Highland County Board of Supervisors":[highland_county_bos,"https://www.highlandcova.org/node/666/agenda"],
 
-    "King and Queen County Board of Supervisors":[king_and_queen_county,"https://kingandqueenco.net/board-of-supervisors-meetings/", "Board of Supervisors"],
-
-    "King and Queen County Planning Commission":[king_and_queen_county,"https://kingandqueenco.net/planning-commission-meetings/","Planning Commission"],
-
     "Lee County":[lee_county,"http://www.leecova.org/AgendaandMinutes.htm"],
 
     "Loudoun County":[loudoun_pc,"https://lfportal.loudoun.gov/LFPortalInternet/Browse.aspx?startid=305808&row=1&dbid=0"],
@@ -316,9 +307,6 @@ county_dictionary_single_variable = {
 
     "New Kent County Planning Commission":[new_kent_county_pc,"https://www.co.new-kent.va.us/843/Meeting-Agendas"],
 
-    #monitor for PC updates and change code accordingly
-    "Nottoway County":[nottoway_county,"https://nottoway.org/administration/boards___commissions/board_of_supervisors_(bos)/board_agendas_minutes.php#outer-388"],
-
     "Pittsylvania County":[pittsylvania_county,"https://www.pittsylvaniacountyva.gov/government/agenda-center"],
 
     'Prince Edward County Planning Commission':[prince_edward_pc,"https://www.co.prince-edward.va.us/departments/planning-zoning/planning-commission-meetings"],
@@ -328,13 +316,8 @@ county_dictionary_single_variable = {
     "Prince William County Planning Commission":[prince_william_pc,"https://www.pwcva.gov/department/planning-office/planning-commission"],
 
     "Richmond County":[richmond_county,"https://co.richmond.va.us/board-of-supervisors-agenda-packets"],
-
-    "Shenandoah County Board of Supervisors":[shenandoah_county_bos,"https://shenandoahcountyva.us/bos/meeting-schedule/"],
-
-    "Shenandoah County Planning Commission":[shenandoah_county_pc,"https://shenandoahcountyva.us/planning-committee/meeting-schedule/"],
-
-    #UPDATE: Better link https://www.sussexcountyva.gov/page/agendas-and-minutes/
-    "Sussex County":[sussex_county,"https://www.sussexcountyva.gov/events/index/future/"],
+ 
+    "Sussex County":[sussex_county,"https://www.sussexcountyva.gov/page/agendas-and-minutes/"],
 
     "Wythe County Board of Supervisors":[wythe_county,"http://www.wytheco.org/index.php/resources/meeting-minutes/packages/bos-packages"],
 
@@ -357,11 +340,17 @@ county_dictionary_double_variable = {
     #switch to reading minutes, can actually get text
     "Greensville County Planning Commission":[greensville_county,"https://www.greensvillecountyva.gov/boards___commissions/board_of_supervisors/agendas___minutes/planning_commission.php#outer-1188sub-1189","Planning Commission"],
 
-    #Update to 2024 or generalized link
-    "Southampton County board of Supervisors":[southampton_county,"https://www.southamptoncounty.org/departments/board_of_supervisors/bos_agendas_2023.php","Board of Supervisors"],
+    "King and Queen County Board of Supervisors":[king_and_queen_county,"https://kingandqueenco.net/board-of-supervisors-meetings/", "Board of Supervisors"],
 
-    #Update to 2024 or generalized link
-    "Southamptom County Planning Commission":[southampton_county,"https://www.southamptoncounty.org/departments/planning/year_2023.php","Planning Commission"],
+    "King and Queen County Planning Commission":[king_and_queen_county,"https://kingandqueenco.net/planning-commission-meetings/","Planning Commission"],
+
+    "Nottoway County Board of Supervisors":[nottoway_county,"https://nottoway.org/administration/boards___commissions/board_of_supervisors_(bos)/board_agendas_minutes.php","Board of Supervisors"],
+
+    "Nottoway County Planning Commission":[nottoway_county,"https://nottoway.org/administration/boards___commissions/agenda_packets_minutes.php","Planning Commission"],
+
+    "Southampton County Board of Supervisors":[southampton_county,"https://www.southamptoncounty.org/departments/board_of_supervisors/bos_meeting_agendas.php","Board of Supervisors"],
+
+    "Southampton County Planning Commission":[southampton_county,"https://www.southamptoncounty.org/departments/planning/archived_planning_agendas.php","Planning Commission"],
 
     "Tazewell County Board of Supervisors":[tazewell_county,"https://tazewellcountyva.org/government/boards-and-commissions/board-of-supervisors/", "Board of Supervisors"],
 
@@ -373,7 +362,6 @@ county_dictionary_double_variable = {
 }
 
 city_dictionary_single_variable = {
-    #URGENT: Website looks different, check if code needs to be updated
     "Buena Vista City Council":[buena_vista_city_council,"https://www.buenavistava.org/city-services/government/city-council/council-agenda-minutes/"],
 
     "Clifton Forge":[clifton_forge,"https://www.cliftonforgeva.gov/council/council-agenda-and-minutes/"],
