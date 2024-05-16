@@ -220,8 +220,6 @@ legistar_dictionary = {
 
 """MeetingsTable localities"""
 meetingstable_dictionary = {
-"Essex PC":["https://www.essex-virginia.org/meetings?date_filter%5Bvalue%5D%5Bmonth%5D=1&date_filter%5Bvalue%5D%5Bday%5D=1&date_filter%5Bvalue%5D%5Byear%5D=2023&date_filter_1%5Bvalue%5D%5Bmonth%5D=12&date_filter_1%5Bvalue%5D%5Bday%5D=31&date_filter_1%5Bvalue%5D%5Byear%5D=2023&field_microsite_tid=All&field_microsite_tid_1=28","Essex County"],
-
 "Fluvanna PC":["https://www.fluvannacounty.org/meetings?field_microsite_tid_1=28","Fluvanna County"],
 
 "Fluvanna BOS":["https://www.fluvannacounty.org/meetings?field_microsite_tid_1=27","Fluvanna County"],
@@ -279,6 +277,8 @@ county_dictionary_single_variable = {
     "Clarke County Planning Commission":[clarke_county,"https://www.clarkecounty.gov/government/boards-commissions/planning-commission/pc-agendas/-folder-1352"],
 
     "Craig County":[craig_county,"https://craigcountyva.gov/government/board-of-supervisors/"],
+
+    "Essex County Planning Commission":[essex_pc,"https://www.essex-virginia.org/meetings?date_filter%5Bvalue%5D%5Bmonth%5D=1&date_filter%5Bvalue%5D%5Bday%5D=1&date_filter%5Bvalue%5D%5Byear%5D=2023&date_filter_1%5Bvalue%5D%5Bmonth%5D=12&date_filter_1%5Bvalue%5D%5Bday%5D=31&date_filter_1%5Bvalue%5D%5Byear%5D=2023&field_microsite_tid=All&field_microsite_tid_1=28"],
     
     "Fairfax County Board of Supervisors":[fairfax_county_bos,"https://www.fairfaxcounty.gov/boardofsupervisors/"],
 
