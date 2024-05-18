@@ -488,35 +488,36 @@ def novusagenda(url,locality):
         #fetch the URL and give it a few seconds to load the scripts
         driver.get(url) 
         time.sleep(10)
-        #find the links to the ONLINE agendas (not the download pdf buttons)
-        all_agenda_links = driver.find_elements(By.CSS_SELECTOR, "a[style*='cursor:pointer'")
         main_window = driver.window_handles[0]
         messages=[]
-        for i in range(0,len(all_agenda_links)):
-            agenda_links = driver.find_elements(By.CSS_SELECTOR, "a[style*='cursor:pointer'")
-            agenda_links[i].click()
+        table_rows = driver.find_elements(By.CSS_SELECTOR,"tr")
+        future_meetings = []
+        for item in table_rows:
+            try:
+                future=check_meeting_date(item.text)
+                if future==True:
+                    future_meetings.append(item)
+            except:
+                continue
+        #find the links to the ONLINE agendas (not the download pdf buttons)
+        agenda_links = []
+        for item in future_meetings:
+            try:
+                agenda_links.append(item.find_element(By.CSS_SELECTOR, "a[style*='cursor:pointer'"))
+            except:
+                continue
+        for item in agenda_links:
+            item.click()
             time.sleep(5)
             #switch to the new window
             agenda_window = driver.window_handles[1]
             driver.switch_to.window(agenda_window)
-            #find the date from the information in the agenda
-            agenda_headings = driver.find_elements(By.CSS_SELECTOR, "span[style*='font'")
-            for item in agenda_headings:
-                try:
-                    future_date=check_meeting_date(item.text)
-                    meeting_date = item.text
-                except:
-                    continue
-                else:
-                    break
-            if future_date==True:
-                #find the rest of the agenda content
-                agenda_content = driver.find_elements(By.CSS_SELECTOR, "td")
-                agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search != []:
-                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + " in " + agenda_headings[1].text + " " + meeting_date)
-            else:
-                break
+            #find the rest of the agenda content
+            agenda_content = driver.find_elements(By.CSS_SELECTOR, "td")
+            agenda_search = search_agenda_for_keywords(agenda_content)
+            if agenda_search != []:
+                agenda_url = driver.current_url
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + ". " + agenda_url)
             driver.close()
             driver.switch_to.window(main_window)
         return messages
