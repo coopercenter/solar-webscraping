@@ -135,6 +135,16 @@ while True:
                 New_Alerts.append(error_alert)
                 continue
 
+        for item in onbase_dictionary:
+            try:
+                alert=onbase(onbase_dictionary[item][0],onbase_dictionary[item][1])
+                if alert != []:
+                    New_Alerts.append(", \n ".join(alert))
+            except:
+                error_alert="Error webscraping " + item + " using OnBase code"
+                New_Alerts.append(error_alert)
+                continue
+
         for item in primegov_dictionary:
             try:
                 alert=prime_gov(primegov_dictionary[item][0],primegov_dictionary[item][1])

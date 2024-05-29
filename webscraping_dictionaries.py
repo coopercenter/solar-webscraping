@@ -240,6 +240,13 @@ novusagenda_dictionary = {
 "Salem PC":["https://salemcity.novusagenda.com/agendapublic/meetingsresponsive.aspx?MeetingType=3","Salem Planning Commission"]
 }
 
+"""OnBase localities"""
+onbase_dictionary = {
+    "Arlington County Board":["https://meetings.arlingtonva.us/CountyBoard","Arlington County Board"],
+    
+    "Arlington County PC":["https://meetings.arlingtonva.us/Planning","Arlington County Planning Commission"]
+}
+
 "php table localities"
 php_table_dictionary = {
     "Buckingham BOS":["https://www.buckinghamcountyva.org/administration/boards___commissions/board_of_supervisors/board_agenda_minutes_youtube.php","Buckingham County Board of Supervisors"],
@@ -260,7 +267,7 @@ primegov_dictionary = {
 
 "Dictionaries for localities that need individual code"
 county_dictionary_single_variable = {
-    "Albemarle County Planning Commission":[albemarle_county_pc,"https://www.albemarle.org/government/community-development/boards-and-commissions/planning-commission"],
+    "Albemarle County Planning Commission":[albemarle_county_pc,"https://www.albemarle.org/government/community-development/boards-and-commissions/planning-commission/-toggle-next30days"],
 
     "Alleghany County":[alleghany_county,"https://www.co.alleghany.va.us/board-of-supervisors/agendas/"],
 
@@ -282,11 +289,13 @@ county_dictionary_single_variable = {
     
     "Fairfax County Board of Supervisors":[fairfax_county_bos,"https://www.fairfaxcounty.gov/boardofsupervisors/"],
 
+    "Fairfax County Planning Commission":[fairfax_county_pc,"https://www.fairfaxcounty.gov/planningcommission/meetingcalendar"],
+
     "Floyd County":[floyd_county,"https://www.floydcova.gov/agendas-minutes"],
 
     "Giles County":[giles_county,"https://virginiasmtnplayground.com/bos/"],
 
-    "Grayson County":[grayson_county,"https://www.graysoncountyva.gov/2021-board-of-supervisors/"],
+    "Grayson County":[grayson_county,"https://www.graysoncountyva.gov/board-agendas-and-minutes/"],
 
     "Henrico County Board of Supervisors":[henrico_county_bos,"https://henrico.us/supervisors/supervisors-agenda-o-gram/"],
 
@@ -302,7 +311,8 @@ county_dictionary_single_variable = {
 
     "Lunenburg County Planning Commission":[lunenburg_county,"https://www.lunenburgva.gov/government/planning_commission/agendas___minutes.php"],
 
-    "Montgomery County Planning Commission":[montgomery_pc,"https://www.montva.com/departments/Planning-GIS/planning--commission/meetings-1"],
+    #new page under construction, check back on the main page https://www.montva.com/1/government/meeting-agendas-minutes
+    #"Montgomery County Planning Commission":[montgomery_pc,"https://www.montva.com/departments/#Planning-GIS/planning--commission/meetings-1"],
 
     "New Kent County Planning Commission":[new_kent_county_pc,"https://www.co.new-kent.va.us/843/Meeting-Agendas"],
 
@@ -325,19 +335,13 @@ county_dictionary_single_variable = {
 }
 
 county_dictionary_double_variable = {
-    "Arlington County":[arlington_county,"https://arlington.granicus.com/ViewPublisher.php?view_id=44","https://arlington.granicus.com/ViewPublisher.php?view_id=2"],
-
     "Charlotte County Board of Supervisors":[charlotte_county,"https://www.charlottecountyva.gov/government/board_of_supervisors/agendas___minutes.php","Board of Supervisors"],
 
     "Charlotte County Planning Commission":[charlotte_county,"https://www.charlottecountyva.gov/departments/planning___zoning/agendas___minutes.php","Planning Commission"],
 
-    "Fairfax County Planning Commission":[fairfax_county_pc,"https://www.fairfaxcounty.gov/planningcommission/meetingcalendar","\'2023\'"],
-
-    #switch to reading minutes, can actually get text
-    "Greensville County Board of Supervisors":[greensville_county,"https://www.greensvillecountyva.gov/boards___commissions/board_of_supervisors/agendas___minutes/board_of_supervisors.php#outer-1174sub-1176","Board of Supervisors"],
+    "Greensville County Board of Supervisors":[greensville_county,"https://www.greensvillecountyva.gov/boards___commissions/board_of_supervisors/agendas___minutes/board_of_supervisors.php","Board of Supervisors"],
     
-    #switch to reading minutes, can actually get text
-    "Greensville County Planning Commission":[greensville_county,"https://www.greensvillecountyva.gov/boards___commissions/board_of_supervisors/agendas___minutes/planning_commission.php#outer-1188sub-1189","Planning Commission"],
+    "Greensville County Planning Commission":[greensville_county,"https://www.greensvillecountyva.gov/boards___commissions/board_of_supervisors/agendas___minutes/planning_commission.php","Planning Commission"],
 
     "King and Queen County Board of Supervisors":[king_and_queen_county,"https://kingandqueenco.net/board-of-supervisors-meetings/", "Board of Supervisors"],
 
