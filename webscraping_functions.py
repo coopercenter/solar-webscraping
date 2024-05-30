@@ -1070,7 +1070,7 @@ def floyd_county(url):
 """City of Franklin"""
 def city_of_franklin(url):
     driver.get(url)
-    time.sleep(5)
+    time.sleep(10)
     messages=[]
     #this website requires several steps to get to the right data, as it automatically lands on the 2013 agendas page
     years = driver.find_elements(By.CSS_SELECTOR,'li[class*="top-tab"')
@@ -1521,7 +1521,7 @@ def nottoway_county(url, governing_body):
     current_year[0].click()
     table_rows = driver.find_elements(By.CSS_SELECTOR,"tr")
     meetings = [item for item in table_rows if item.text != ""]
-    future_meetings = [item for item in meetings if check_meeting_date(item.text)==True]
+    future_meetings = [item for item in meetings if check_meeting_date(item.text.split("\n")[0])==True]
     agenda_links=[item.find_element(By.CSS_SELECTOR,"a[href*=Agenda").get_attribute("href") for item in future_meetings if 'Agenda' in item.text]
     for item in agenda_links:
         driver.get(item)
