@@ -82,7 +82,7 @@ boarddocs_dictionary = {
 
     "Essex":["https://go.boarddocs.com/va/essexco/Board.nsf/Public","Essex County",False],
 
-    "Montgomery":["https://go.boarddocs.com/va/montva/Board.nsf/Public","Montgomery County",False],
+    "Montgomery":["https://go.boarddocs.com/va/montva/Board.nsf/Public","Montgomery County",True],
 
     "Northampton":["https://go.boarddocs.com/va/northco/Board.nsf/Public","Northampton County",True],
 
@@ -196,6 +196,8 @@ granicus_dictionary = {
 """Granicus version 2 localities"""
 granicus_2_dictionary = {
 "Goochland":["https://goochlandcountyva.iqm2.com/Citizens/Default.aspx","Goochland County"],
+
+"Norfolk Planning Commission":["https://norfolkcityva.iqm2.com/Citizens/Board/1018-Planning-Commission","City of Norfolk Planning Commission"],
 
 "Roanoke":['https://roanokecountyva.iqm2.com/Citizens/default.aspx',"Roanoke County"],
 
@@ -311,9 +313,6 @@ county_dictionary_single_variable = {
 
     "Lunenburg County Planning Commission":[lunenburg_county,"https://www.lunenburgva.gov/government/planning_commission/agendas___minutes.php"],
 
-    #new page under construction, check back on the main page https://www.montva.com/1/government/meeting-agendas-minutes
-    #"Montgomery County Planning Commission":[montgomery_pc,"https://www.montva.com/departments/#Planning-GIS/planning--commission/meetings-1"],
-
     "New Kent County Planning Commission":[new_kent_county_pc,"https://www.co.new-kent.va.us/843/Meeting-Agendas"],
 
     "Pittsylvania County":[pittsylvania_county,"https://www.pittsylvaniacountyva.gov/government/agenda-center"],
@@ -376,8 +375,6 @@ city_dictionary_single_variable = {
     "City of Galax":[galax,"https://galaxva.com/2024-city-council-agendas/"],
 
     "City of Lexington Planning Commission":[lexington_pc,"https://www.lexingtonva.gov/government/boards-and-commissions/planning-commission"],
-
-    "City of Norfolk Planning Commission":[norfolk_pc,"https://norfolkcityva.iqm2.com/Citizens/Board/1018-Planning-Commission"],
 
     "Norton City":[norton_city,"https://www.nortonva.gov/Archive.aspx?AMID=37"],
 
