@@ -11,4 +11,4 @@ firefox_path = GeckoDriverManager().install()
 firefox_service = Service(firefox_path)
 driver = Firefox(options=options, service=firefox_service)
 #globally, wait up to two minutes to throw an error if an element can't be found
-driver.implicitly_wait(120)
+#driver.implicitly_wait(120)
