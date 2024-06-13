@@ -301,34 +301,6 @@ def escribe(url,locality):
             continue
     return messages
 
-"""Event List"""
-def event_list(url,locality):
-    driver.get(url)
-    time.sleep(10)
-    messages = []
-    pc_meetings = driver.find_elements(By.CSS_SELECTOR,"a[href*='planning-commission'")
-    meeting_urls= []
-    for item in pc_meetings:
-        if item.text !='':
-            meeting_urls.append(item.get_attribute('href'))
-    bos_links = driver.find_elements(By.CSS_SELECTOR,"a[href*='board-of-supervisors'")
-    for item in bos_links:
-        if item.text !='':
-            meeting_urls.append(item.get_attribute("href"))
-    solar_meetings = driver.find_elements(By.CSS_SELECTOR,"a[href*='solar'")
-    comp_plan_meetings = driver.find_elements(By.CSS_SELECTOR,"a[href*='comprehensive-plan-'")
-    zoning_ordinance_meetings = driver.find_elements(By.CSS_SELECTOR,"a[href*='zoning-ordinance'")
-    for item in solar_meetings:
-        if solar_meetings !=[]:
-            messages.append("Keyword 'Solar' found in upcoming meeting title for " + locality + '. ' + item.get_attribute('href'))
-    for item in comp_plan_meetings:
-        if comp_plan_meetings !=[]:
-            messages.append("Keyword 'Comprehensive Plan' found in upcoming meeting title for " +locality + ". " + item.get_attribute('href'))
-    for item in zoning_ordinance_meetings:
-        if zoning_ordinance_meetings !=[]:
-            messages.append("Keyword 'Zoning Ordinance' found in upcoming meeting title for " + locality + ". " + item.get_attribute('href'))
-    return messages
-
 """Granicus"""
 def granicus_version_2(url, locality):
     driver.get(url)
@@ -1384,6 +1356,27 @@ def manassas_park(url,government_body):
             messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Manassas Park " + government_body + '. ' + item)
     return messages
 
+"""Nelson County"""
+def nelson_county(url):
+    driver.get(url)
+    time.sleep(10)
+    messages = []
+    all_events = driver.find_elements(By.CSS_SELECTOR,'h3')[1:]
+    event_urls = []
+    for item in all_events:
+        try:
+            event_urls.append(item.find_element(By.CSS_SELECTOR,'a').get_attribute("href"))
+        except:
+            continue
+    for item in event_urls:
+        driver.get(item)
+        time.sleep(10)
+        event_description = driver.find_elements(By.CSS_SELECTOR,'div[class*="fusion-text"')
+        event_search = search_agenda_for_keywords(event_description)
+        if event_search !=[]:
+            messages.append("Keyword(s) " + ", ".join(event_search) + " found in upcoming meeting for Nelson County. " + item)
+    return messages
+
 """New Kent County Planning Commission"""
 def new_kent_county_pc(url):
     driver.get(url)
@@ -1520,13 +1513,15 @@ def prince_edward_bos(url):
     for item in meeting_links:
         driver.get(item)
         time.sleep(10)
-        for i in range(0,100):
-            webdriver.common.action_chains.ActionChains(driver).send_keys(webdriver.common.keys.Keys.PAGE_DOWN).perform()
+        pages = driver.find_elements(By.CSS_SELECTOR,"div[class*=page")
+        for page in pages:
+            driver.execute_script("arguments[0].scrollIntoView();", page)
+            time.sleep(2)
             agenda_content = driver.find_elements(By.CSS_SELECTOR,'div[class*=textLayer')
             agenda_search = search_agenda_for_keywords(agenda_content)
             if agenda_search != []:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Prince Edward County Board of Supervisors. " + item) 
-    return messages
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Prince Edward County Board of Supervisors. " + item)
+    return pd.Series(messages).unique().tolist()
 
 """Prince William County Planning Commission"""
 def prince_william_pc(url):

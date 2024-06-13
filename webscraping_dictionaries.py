@@ -161,11 +161,6 @@ escribe_dictionary = {
     "Gloucester":["https://pub-gloucesterva.escribemeetings.com/?FillWidth=1","Gloucester County"]
 }
 
-"Event List localities"
-event_list_dictionary = {
-    "Nelson County":["https://www.nelsoncounty-va.gov/events/list/","Nelson County"],
-}
-
 "Granicus localities"
 granicus_dictionary = {
 "Augusta":["https://augustava.granicus.com/ViewPublisher.php?view_id=1","Augusta County"],
@@ -312,6 +307,8 @@ county_dictionary_single_variable = {
     "Lunenberg County Board of Supervisors":[lunenburg_county,"https://www.lunenburgva.gov/government/board_of_supervisors/agendas___minutes.php"],
 
     "Lunenburg County Planning Commission":[lunenburg_county,"https://www.lunenburgva.gov/government/planning_commission/agendas___minutes.php"],
+
+    "Nelson County":[nelson_county,"https://www.nelsoncounty-va.gov/events/list/"],
 
     "New Kent County Planning Commission":[new_kent_county_pc,"https://www.co.new-kent.va.us/843/Meeting-Agendas"],
 
