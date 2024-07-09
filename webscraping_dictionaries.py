@@ -105,6 +105,7 @@ civicclerk_dictionary = {
 
 "Appomattox":["https://appomattoxcova.portal.civicclerk.com/","Appomattox County"],
 
+#duplicate Agenda Center site that actually updates the planning commission agendas, consider a replacement or at least an addition https://www.charlescityva.us/AgendaCenter
 "Charles City":["https://charlescitycova.portal.civicclerk.com/?category_id=26,27,29","Charles City County"],
 
 "Charlottesville":["https://charlottesvilleva.portal.civicclerk.com/","City of Charlottesville"],
@@ -363,7 +364,8 @@ county_dictionary_double_variable = {
 city_dictionary_single_variable = {
     "Buena Vista City Council":[buena_vista_city_council,"https://www.buenavistava.org/city-services/government/city-council/council-agenda-minutes/"],
 
-    "Clifton Forge":[clifton_forge,"https://www.cliftonforgeva.gov/council/council-agenda-and-minutes/"],
+    #skip this until website is done updating
+    #"Clifton Forge":[clifton_forge,"https://www.cliftonforgeva.gov/council/council-agenda-and-minutes/"],
 
     "Covington":[covington,"https://covington.va.us/agendas-minutes/"],
 

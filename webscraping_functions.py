@@ -980,8 +980,6 @@ def fairfax_county_pc(url):
     for item in months:
         if item.text == datetime.now().strftime("%B"):
             relevant_months.append(item.find_element(By.CSS_SELECTOR,"a").get_attribute('href'))
-        elif item.text == (datetime.now() + dateutil.relativedelta.relativedelta(months=1)).strftime('%B'):
-            relevant_months.append(item.find_element(By.CSS_SELECTOR,"a").get_attribute('href'))
     for item in relevant_months:
         driver.get(item)
         time.sleep(10)
@@ -1673,6 +1671,7 @@ def tazewell_county(url, government_body):
 """Virginia Beach"""
 def virginia_beach_cc(url):
     driver.get(url)
+    time.sleep(10)
     messages = []
     current_agenda = driver.find_element(By.CSS_SELECTOR,"a[href*=CurrentBriefAgenda")
     agenda_url = current_agenda.get_attribute("href")
@@ -1688,21 +1687,17 @@ def virginia_beach_pc(url):
     driver.get(url)
     time.sleep(10)
     messages = []
-    agendas_part_1 = driver.find_elements(By.CSS_SELECTOR,"a[title*='agenda'")
-    agendas_part_2 = driver.find_elements(By.CSS_SELECTOR,"a[title*='Agenda'")
-    all_agendas = agendas_part_1
-    for item in agendas_part_2:
-        all_agendas.append(item)
-    for item in all_agendas:
-        future_meeting = check_meeting_date(item.get_attribute("title"))
-        if future_meeting == True:
-            agenda_url = item.get_attribute("href")
-            driver.get(agenda_url)
-            time.sleep(10)
-            agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
-            agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search != []:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Virginia Beach in latest Planning Commission meeting agenda. " + agenda_url)
+    all_rows = driver.find_elements(By.CSS_SELECTOR,'li')
+    meetings = [item for item in all_rows if "Agenda" in item.text]
+    future_meetings =[item for item in meetings if check_meeting_date(item.text.split(":")[0])==True]
+    meeting_urls = [item.find_element(By.CSS_SELECTOR,"a").get_attribute("href") for item in future_meetings]
+    for item in meeting_urls:
+        driver.get(item)
+        time.sleep(10)
+        agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
+        agenda_search = search_agenda_for_keywords(agenda_content)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Virginia Beach in latest Planning Commission meeting agenda. " + item)
     return messages
 
 "Westmoreland County"
@@ -1738,16 +1733,7 @@ def williamsburg(url,governing_body):
     html_agendas = [item for item in agendas if 'Html' in item.text]
     future_meetings = get_future_meeting_links(html_agendas)
     for item in future_meetings:
-        driver.get(item)
-        time.sleep(10)
-        page_frame = driver.find_element(By.CSS_SELECTOR,"iframe")
-        driver.switch_to.frame(page_frame)
-        pdf_frame = driver.find_element(By.CSS_SELECTOR,"iframe")
-        driver.switch_to.frame(pdf_frame)
-        agenda_content = driver.find_elements(By.CSS_SELECTOR,"td")
-        agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search != []:
-            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Williamsburg " + governing_body + ". " + item)
+        messages.append("New meeting document available for Williamsburg " + governing_body + ". Document cannot be scanned for keywords. " + item)
     return messages
 
 """Wythe County"""
