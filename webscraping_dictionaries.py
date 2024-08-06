@@ -1,4 +1,26 @@
 from webscraping_functions import *
+agenda_content_types = {
+    'pdf_1':driver.find_elements(By.CSS_SELECTOR,'div[class*=textLayer'),
+
+    'pdf_2':driver.find_elements(By.CSS_SELECTOR,"svg[class*=textLayer"),
+
+    'webpage_1':driver.find_elements(By.CSS_SELECTOR, "div[id*='divInner'"),
+
+    'webpage_2':driver.find_elements(By.CSS_SELECTOR,'div[class*="fusion-text"'),
+
+    'webpage_3':driver.find_elements(By.CSS_SELECTOR,"section[class*='main-content-wrap'"),
+
+    'boarddocs':driver.find_elements(By.CSS_SELECTOR, "span[class*='title'"),
+
+    'civicweb':driver.find_elements(By.CSS_SELECTOR,"html"),
+
+    'legistar':driver.find_elements(By.CSS_SELECTOR,'tr[id*=ctl00'),
+
+    'novusagenda':driver.find_elements(By.CSS_SELECTOR, "td"),
+
+    'onbase':driver.find_elements(By.CSS_SELECTOR, "body")
+}
+
 "Dictionaries for the localities that use the same type of document organization service"
 
 "AgendaCenter localities"
@@ -277,9 +299,9 @@ county_dictionary_single_variable = {
 
     "Buchanan County":[buchanan_county,"https://buchanancountyvirginia.gov/board-of-supervisors/"],
 
-    "Clarke County Board of Supervisors":[clarke_county,"https://www.clarkecounty.gov/government/boards-commissions/board-of-supervisors/bos-agendas/-folder-1324"],
+    "Clarke County Board of Supervisors":[clarke_county,"https://www.clarkecounty.gov/government/boards-commissions/board-of-supervisors/bos-agendas/-folder-1017"],
 
-    "Clarke County Planning Commission":[clarke_county,"https://www.clarkecounty.gov/government/boards-commissions/planning-commission/pc-agendas/-folder-1352"],
+    "Clarke County Planning Commission":[clarke_county,"https://www.clarkecounty.gov/government/boards-commissions/planning-commission/pc-agendas/-folder-1031"],
 
     "Craig County":[craig_county,"https://craigcountyva.gov/government/board-of-supervisors/"],
 
@@ -364,7 +386,7 @@ county_dictionary_double_variable = {
 city_dictionary_single_variable = {
     "Buena Vista City Council":[buena_vista_city_council,"https://www.buenavistava.org/city-services/government/city-council/council-agenda-minutes/"],
 
-    #skip this until website is done updating
+    #UPDATE website is update, need new code
     #"Clifton Forge":[clifton_forge,"https://www.cliftonforgeva.gov/council/council-agenda-and-minutes/"],
 
     "Covington":[covington,"https://covington.va.us/agendas-minutes/"],
