@@ -275,7 +275,7 @@ def civicclerk(url,locality):
         for item in meeting_links:
             driver.get(item)
             time.sleep(10)   
-            pdf_viewer_frame = driver.find_elements(By.CSS_SELECTOR,"iframe[id*='file-id'")
+            pdf_viewer_frame = driver.find_elements(By.CSS_SELECTOR,"iframe[id*=pdfViewerIframe")
             if pdf_viewer_frame != []:
                 driver.switch_to.frame(pdf_viewer_frame[0])
                 agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
