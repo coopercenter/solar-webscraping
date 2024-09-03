@@ -238,7 +238,7 @@ def boarddocs(url,locality,two_pages):
         meetings_page.click()
         time.sleep(10)
         time.sleep(10)
-        messages = check_boarddocs_agendas(locality,meetings_page)
+        messages = check_boarddocs_agendas(locality,meetings_page,url)
         if two_pages==True:
             govt_tab = driver.find_element(By.CSS_SELECTOR,"a[id*=btn-board")
             govt_tab.click()
@@ -504,17 +504,14 @@ def meetings_table(url,locality):
         except:
             #throws an error of no links are posted yet, so do this and keep going to keep the indices aligned
             agenda_links.append(None)
-    for item in agenda_links:
-        if item != None:
-            item.click()
-            time.sleep(10)
-            driver.switch_to.window(driver.window_handles[1])
-            agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
-            agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search != []:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + ". " + item)
-            driver.close()
-            driver.switch_to.window(driver.window_handles[0])
+    agenda_urls = [item.get_attribute('href') for item in agenda_links if item != None]
+    for item in agenda_urls:
+        driver.get(item)
+        time.sleep(10)
+        agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
+        agenda_search = search_agenda_for_keywords(agenda_content)
+        if agenda_search != []:
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + ". " + item)
     return messages
 
 """NovusAGENDA"""
@@ -1102,7 +1099,7 @@ def city_of_franklin(url):
     latest_month = months[-1]
     latest_month.click()
     time.sleep(10)
-    agendas = driver.find_elements(By.CSS_SELECTOR, "a[href*='agenda.pdf'")
+    agendas = driver.find_elements(By.CSS_SELECTOR, "a[href*='.pdf'")
     latest_agenda = agendas[-1]
     future_meeting = check_meeting_date(latest_agenda.text)
     if future_meeting == True:
