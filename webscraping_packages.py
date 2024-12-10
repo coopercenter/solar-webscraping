@@ -14,7 +14,7 @@ import smtplib
 #import dotenv
 import os
 import ssl
-import win32com.client
+#import win32com.client
 from PyPDF2 import PdfReader
 import tempfile
 
