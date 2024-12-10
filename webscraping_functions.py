@@ -110,19 +110,23 @@ def search_pdf(meeting_links_list, locality):
     messages=[]
     for item in meeting_links_list:
         driver.get(item)
-        time.sleep(10)
+        time.sleep(60)
+        keywords = []
         pages = driver.find_elements(By.CSS_SELECTOR,"div[class*=page")
         for page in pages:
             driver.execute_script("arguments[0].scrollIntoView();", page)
-            time.sleep(2)
+            time.sleep(5)
             agenda_content = driver.find_elements(By.CSS_SELECTOR,'div[class*=textLayer')
             readable = check_readability(agenda_content)
             if readable==True:
                 agenda_search = search_agenda_for_keywords(agenda_content)
                 if agenda_search != []:
-                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + ". " + item)
+                    keywords += agenda_search
             elif readable==False:
                 messages.append("New meeting document available for " + locality + ". Part of the document cannot be scanned for keywords. " + item)
+        if keywords != []:
+            unique_keywords = pd.Series(keywords).unique().tolist()
+            messages.append("Keyword(s) " + ", ".join(unique_keywords) + " found in upcoming meeting for " + locality + ". " + item)
     return pd.Series(messages).unique().tolist()
 
 def search_agenda_for_keywords(agenda_content):
