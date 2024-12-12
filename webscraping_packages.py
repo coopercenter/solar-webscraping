@@ -5,6 +5,7 @@ import time
 import pandas as pd
 import dateutil
 from datetime import datetime
+from dateparser.search import search_dates
 from selenium import webdriver
 from selenium.webdriver.common.by import By  
 from selenium.webdriver.support.ui import WebDriverWait
@@ -14,7 +15,7 @@ import smtplib
 #import dotenv
 import os
 import ssl
-import win32com.client
+#import win32com.client
 from PyPDF2 import PdfReader
 import tempfile
 
