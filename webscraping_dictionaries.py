@@ -22,7 +22,7 @@ agenda_content_types = {
 }
 
 meetings_tags = {
-    'agendacenter':driver.find_elements(By.CSS_SELECTOR, "tr[class*=catAgendaRow"),
+    'agendacenter':"tr[class*=catAgendaRow",
 
     'boarddocs':driver.find_elements(By.CSS_SELECTOR, "a[class*='icon prevnext meeting"),
 
@@ -91,75 +91,75 @@ meetings_tags = {
 
 "AgendaCenter localities"
 agendacenter_dictionary = {
-    "Botetourt":["https://www.botetourtva.gov/AgendaCenter/Search/?term=&CIDs=3,8,6,&startDate=&endDate=&dateRange=&dateSelector=","Botetourt County"], #verified
+    "Botetourt County":["https://www.botetourtva.gov/AgendaCenter/Search/?term=&CIDs=3,8,6,&startDate=&endDate=&dateRange=&dateSelector=",'pdf'],
 
-    "Campbell":["https://www.co.campbell.va.us/AgendaCenter/Search/?term=&CIDs=5,12,6,&startDate=&endDate=&dateRange=&dateSelector=","Campbell County"],
+    "Campbell County":["https://www.co.campbell.va.us/AgendaCenter/Search/?term=&CIDs=5,12,6,&startDate=&endDate=&dateRange=&dateSelector=",'webpage'],
 
-    "Caroline":["https://co.caroline.va.us/AgendaCenter/Search/?term=&CIDs=2,3,4,&startDate=&endDate=&dateRange=&dateSelector=","Caroline County"],
+    "Caroline County":["https://co.caroline.va.us/AgendaCenter/Search/?term=&CIDs=2,3,4,&startDate=&endDate=&dateRange=&dateSelector=",'webpage'],
 
-    "Cumberland":["https://www.cumberlandcounty.virginia.gov/AgendaCenter/Search/?term=&CIDs=2,4,3,&startDate=&endDate=&dateRange=&dateSelector=", "Cumberland County"],
+    "Cumberland County":["https://www.cumberlandcounty.virginia.gov/AgendaCenter/Search/?term=&CIDs=2,4,3,&startDate=&endDate=&dateRange=&dateSelector=",'pdf'],
 
-    "Dinwiddie":["https://www.dinwiddieva.us/AgendaCenter/Search/?term=&CIDs=2,3,4,1,&startDate=&endDate=&dateRange=&dateSelector=","Dinwiddie County"],
+    "Dinwiddie County":["https://www.dinwiddieva.us/AgendaCenter/Search/?term=&CIDs=2,3,4,1,&startDate=&endDate=&dateRange=&dateSelector=",'webpage'],
 
-    "Franklin":["https://www.franklincountyva.gov/AgendaCenter/Search/?term=&CIDs=7,3,13,4,&startDate=&endDate=&dateRange=&dateSelector=", "Franklin County"],
+    "Franklin County":["https://www.franklincountyva.gov/AgendaCenter/Search/?term=&CIDs=7,3,13,4,&startDate=&endDate=&dateRange=&dateSelector=",'pdf'],
 
-    "Halifax":["https://www.halifaxcountyva.gov/AgendaCenter/Search/?term=&CIDs=2,3,4,&startDate=&endDate=&dateRange=&dateSelector=", "Halifax County"],
+    "Halifax County":["https://www.halifaxcountyva.gov/AgendaCenter/Search/?term=&CIDs=2,3,4,&startDate=&endDate=&dateRange=&dateSelector=",'pdf'],
 
-    "Henry":["https://www.henrycountyva.gov/AgendaCenter/Search/?term=&CIDs=3,9,7,8,&startDate=&endDate=&dateRange=&dateSelector=","Henry County"],
+    "Henry County":["https://www.henrycountyva.gov/AgendaCenter/Search/?term=&CIDs=3,9,7,8,&startDate=&endDate=&dateRange=&dateSelector=",'pdf'],
 
-    "King George":["https://www.kinggeorgecountyva.gov/AgendaCenter/Search/?term=&CIDs=2,3,5,&startDate=&endDate=&dateRange=&dateSelector=","King George County"],
+    "King George County":["https://www.kinggeorgecountyva.gov/AgendaCenter/Search/?term=&CIDs=2,3,5,&startDate=&endDate=&dateRange=&dateSelector=",'pdf'],
 
-    "Madison":["https://www.madisonco.virginia.gov/AgendaCenter/Search/?term=&CIDs=3,5,7,6,11,&startDate=&endDate=&dateRange=&dateSelector=","Madison County"], 
+    "Madison County":["https://www.madisonco.virginia.gov/AgendaCenter/Search/?term=&CIDs=3,5,7,6,11,&startDate=&endDate=&dateRange=&dateSelector="], 
 
-    "Mecklenburg":["https://www.mecklenburgva.com/AgendaCenter/Search/?term=&CIDs=2,5,8,&startDate=&endDate=&dateRange=&dateSelector=","Mecklenburg County"],
+    "Mecklenburg County":["https://www.mecklenburgva.com/AgendaCenter/Search/?term=&CIDs=2,5,8,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Middlesex":["https://www.co.middlesex.va.us/AgendaCenter/Search/?term=&CIDs=4,8,2,&startDate=&endDate=&dateRange=&dateSelector=","Middlesex County"],
+    "Middlesex County":["https://www.co.middlesex.va.us/AgendaCenter/Search/?term=&CIDs=4,8,2,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Page":["https://www.pagecounty.virginia.gov/AgendaCenter/Search/?term=&CIDs=2,7,5,&startDate=&endDate=&dateRange=&dateSelector=","Page County"],
+    "Page County":["https://www.pagecounty.virginia.gov/AgendaCenter/Search/?term=&CIDs=2,7,5,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Patrick":["https://www.co.patrick.va.us/AgendaCenter/Search/?term=&CIDs=3,4,&startDate=&endDate=&dateRange=&dateSelector=", "Patrick County"], #started confirming keyword search success here in addition to date checking, link verification, and adding BZA where applicable, 10/17/2024
+   "Patrick County":["https://www.co.patrick.va.us/AgendaCenter/Search/?term=&CIDs=3,4,&startDate=&endDate=&dateRange=&dateSelector="], #started confirming keyword search success here in addition to date checking, link verification, and adding BZA where applicable, 10/17/2024
     
-    "Powhatan":["https://www.powhatanva.gov/AgendaCenter/Search/?term=&CIDs=2,10,7,&startDate=&endDate=&dateRange=&dateSelector=","Powhatan County"],
+    "Powhatan County":["https://www.powhatanva.gov/AgendaCenter/Search/?term=&CIDs=2,10,7,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Rockbridge":["https://va-rockbridgecounty.civicplus.com/AgendaCenter/Search/?term=&CIDs=3,6,5,&startDate=&endDate=&dateRange=&dateSelector=","Rockbridge County"],
+   "Rockbridge County":["https://va-rockbridgecounty.civicplus.com/AgendaCenter/Search/?term=&CIDs=3,6,5,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Rockingham":["https://www.rockinghamcountyva.gov/AgendaCenter","Rockingham County"],
+    "Rockingham County":["https://www.rockinghamcountyva.gov/AgendaCenter"],
 
-    "Russell":["https://va-russellcounty.civicplus.com/AgendaCenter/Search/?term=&CIDs=5,4,3,&startDate=&endDate=&dateRange=&dateSelector=","Russell County"],
+    "Russell County":["https://va-russellcounty.civicplus.com/AgendaCenter/Search/?term=&CIDs=5,4,3,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Shenandoah":["https://shenandoahcountyva.us/AgendaCenter/Search/?term=&CIDs=4,11,3,&startDate=&endDate=&dateRange=&dateSelector=","Shenandoah County"],
+    "Shenandoah County":["https://shenandoahcountyva.us/AgendaCenter/Search/?term=&CIDs=4,11,3,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Wise":["https://www.wisecounty.org/AgendaCenter/Search/?term=&CIDs=3,6,4,&startDate=&endDate=&dateRange=&dateSelector=","Wise County"],
+    "Wise County":["https://www.wisecounty.org/AgendaCenter/Search/?term=&CIDs=3,6,4,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "York":["https://www.yorkcounty.gov/AgendaCenter/Search/?term=&CIDs=4,3,&startDate=&endDate=&dateRange=&dateSelector=","York County"],
+    "York County":["https://www.yorkcounty.gov/AgendaCenter/Search/?term=&CIDs=4,3,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Bedford":["https://www.bedfordva.gov/AgendaCenter/Search/?term=&CIDs=3,2,&startDate=&endDate=&dateRange=&dateSelector=","Town of Bedford"],
+    "Town of Bedford":["https://www.bedfordva.gov/AgendaCenter/Search/?term=&CIDs=3,2,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Colonial Heights":["https://www.colonialheightsva.gov/AgendaCenter/Search/?term=&CIDs=1,4,&startDate=&endDate=&dateRange=&dateSelector=","City of Colonial Heights"],
+    "City of Colonial Heights":["https://www.colonialheightsva.gov/AgendaCenter/Search/?term=&CIDs=1,4,6,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Emporia":["https://www.ci.emporia.va.us/AgendaCenter/Search/?term=&CIDs=all&startDate=&endDate=&dateRange=&dateSelector=","City of Emporia"],
+    "City of Emporia":["https://www.ci.emporia.va.us/AgendaCenter/Search/?term=&CIDs=2,6,8,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Fredricksburg":["https://www.fredericksburgva.gov/AgendaCenter/Search/?term=&CIDs=1,9,&startDate=&endDate=&dateRange=&dateSelector=","City of Fredericksburg"],
+    "City of Fredericksburg":["https://www.fredericksburgva.gov/AgendaCenter/Search/?term=&CIDs=6,1,9,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Hampton":["https://hampton.gov/AgendaCenter/Search/?term=&CIDs=1,6,&startDate=&endDate=&dateRange=&dateSelector=","Hampton City"],
+    "Hampton City":["https://www.hampton.gov/AgendaCenter/Search/?term=&CIDs=2,6,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Hopewell":["https://hopewellva.gov/AgendaCenter","City of Hopewell"],
+    "City of Hopewell":["https://hopewellva.gov/AgendaCenter"],
 
-    "Martinsville":["https://www.martinsville-va.gov/AgendaCenter/Search/?term=&CIDs=2,6,&startDate=&endDate=&dateRange=&dateSelector=","City of Martinsville"],
+    "City of Martinsville":["https://www.martinsville-va.gov/AgendaCenter/Search/?term=&CIDs=2,6,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Norfolk":["https://www.norfolk.gov/AgendaCenter/Search/?term=&CIDs=25,13,14,&startDate=&endDate=&dateRange=&dateSelector=","City of Norfolk"],
+    "City of Norfolk":["https://www.norfolk.gov/AgendaCenter/Search/?term=&CIDs=25,13,14,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Petersburg":["http://www.petersburg-va.org/AgendaCenter/Search/?term=&CIDs=1,3,&startDate=&endDate=&dateRange=&dateSelector=","City of Petersburg"],
+    "City of Petersburg":["http://www.petersburg-va.org/AgendaCenter/Search/?term=&CIDs=9,1,3,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Poquoson":["https://www.ci.poquoson.va.us/AgendaCenter/Search/?term=&CIDs=2,3,&startDate=&endDate=&dateRange=&dateSelector=","City of Poquoson"],
+   "City of Poquoson":["https://www.ci.poquoson.va.us/AgendaCenter/Search/?term=&CIDs=2,3,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Portsmouth":["https://www.portsmouthva.gov/AgendaCenter/Search/?term=&CIDs=7,4,&startDate=&endDate=&dateRange=&dateSelector=","City of Portsmouth"],
+    "City of Portsmouth":["https://www.portsmouthva.gov/AgendaCenter/Search/?term=&CIDs=11,7,4,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Radford":["https://www.radfordva.gov/AgendaCenter/Search/?term=&CIDs=2,4,&startDate=&endDate=&dateRange=&dateSelector=","City of Radford"],
+    "City of Radford":["https://www.radfordva.gov/AgendaCenter/Search/?term=&CIDs=2,4,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Suffolk":["https://www.suffolkva.us/AgendaCenter/Search/?term=&CIDs=11,4,12,3,&startDate=&endDate=&dateRange=&dateSelector=","City of Suffolk"],
+    "City of Suffolk":["https://www.suffolkva.us/AgendaCenter/Search/?term=&CIDs=20,21,11,4,12,3,&startDate=&endDate=&dateRange=&dateSelector="],
 
-    "Waynesboro":["https://www.waynesboro.va.us/AgendaCenter/Search/?term=&CIDs=1,4,&startDate=&endDate=&dateRange=&dateSelector=","City of Waynesboro"]
+    "City of Waynesboro":["https://www.waynesboro.va.us/AgendaCenter/Search/?term=&CIDs=7,1,4,&startDate=&endDate=&dateRange=&dateSelector="]
     }
 
 """BoardDocs localities"""
@@ -215,6 +215,8 @@ civicclerk_dictionary = {
 "Mathews":["https://mathewscova.portal.civicclerk.com/","Mathews County"],
 
 "Orange":["https://orangecova.portal.civicclerk.com/","Orange County"],
+
+"Petersburg CC":["https://petersburgva.portal.civicclerk.com/","City of Petersburg"],
 
 "Roanoke":["https://roanokeva.portal.civicclerk.com/","City of Roanoke"],
 

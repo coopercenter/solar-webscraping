@@ -5,6 +5,7 @@ import time
 import pandas as pd
 import dateutil
 from datetime import datetime
+from dateparser.search import search_dates
 from selenium import webdriver
 from selenium.webdriver.common.by import By  
 from selenium.webdriver.support.ui import WebDriverWait
