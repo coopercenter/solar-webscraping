@@ -2,5 +2,5 @@ Selenium==4.27.1
 pandas==2.2.3
 PyPDF2==3.0.1
 requests==2.32.3
-webdriver-manager==4.0.2
+webdriver_manager==4.0.2
 dateparser==1.2.0

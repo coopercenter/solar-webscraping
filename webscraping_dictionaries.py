@@ -1,26 +1,4 @@
 from webscraping_functions import *
-agenda_content_types = {
-    'pdf_1':'div[class*=textLayer',
-
-    'pdf_2':"svg[class*=textLayer",
-
-    'webpage_1':"div[id*='divInner'",
-
-    'webpage_2':'div[class*="fusion-text"',
-
-    'webpage_3':"section[class*='main-content-wrap'",
-
-    'boarddocs':"span[class*='title'",
-
-    'civicweb':"html",
-
-    'legistar':'tr[id*=ctl00',
-
-    'novusagenda':"td",
-
-    'onbase':"body"
-}
-
 meetings_tags = {
     'agendacenter':"tr[class*=catAgendaRow",
 
@@ -85,6 +63,36 @@ meetings_tags = {
     'documentlink':'a[class*="document-link"',
 
     'packagelink':"a[href*=package"
+}
+
+agenda_link_or_button_tags = {
+    'boarddocs':"a[id*='btn-view-agenda'"
+}
+
+pdf_page_tags ={
+    'agendacenter':'"div[class*=page"'
+}
+
+agenda_content_tags = {
+    'pdf_1':'div[class*=textLayer',
+
+    'pdf_2':"svg[class*=textLayer",
+
+    'webpage_1':"div[id*='divInner'",
+
+    'webpage_2':'div[class*="fusion-text"',
+
+    'webpage_3':"section[class*='main-content-wrap'",
+
+    'boarddocs':"span[class*='title'",
+
+    'civicweb':"html",
+
+    'legistar':'tr[id*=ctl00',
+
+    'novusagenda':"td",
+
+    'onbase':"body"
 }
 
 "Dictionaries for the localities that use the same type of document organization service"
@@ -196,7 +204,8 @@ agendacenter_dictionary = {
     "Russell":{
         'name':"Russell County",
         'url':"https://va-russellcounty.civicplus.com/AgendaCenter/Search/?term=&CIDs=5,4,3,&startDate=&endDate=&dateRange=&dateSelector=",
-        'agenda_type':'pdf'},
+        'agenda_type':'pdf',
+        'agenda_content':'pdf_1'},
 
     "Shenandoah":{
         'name':"Shenandoah County",
@@ -261,70 +270,109 @@ agendacenter_dictionary = {
     "Martinsville":{
         'name':"City of Martinsville",
         'url':"https://www.martinsville-va.gov/AgendaCenter/Search/?term=&CIDs=2,6,&startDate=&endDate=&dateRange=&dateSelector=",
-        'agenda_type':'pdf'},
+        'agenda_type':'pdf',
+        'agenda_content':'pdf_1'},
 
-    "Norfolk":{
+    "Norfolk CC":{
         'name':"City of Norfolk",
         'url':"https://www.norfolk.gov/AgendaCenter/Search/?term=&CIDs=25,13,14,&startDate=&endDate=&dateRange=&dateSelector=",
-        'agenda_type':'pdf'},
+        'agenda_type':'pdf',
+        'agenda_content':'pdf_1'},
 
     "Petersburg":{
         'name':"City of Petersburg",
         'url':"http://www.petersburg-va.org/AgendaCenter/Search/?term=&CIDs=9,1,3,&startDate=&endDate=&dateRange=&dateSelector=",
-        'agenda_type':'pdf'},
+        'agenda_type':'pdf',
+        'agenda_content':'pdf_1'},
 
    "Poquoson":{
        'name':"City of Poquoson",
        'url':"https://www.ci.poquoson.va.us/AgendaCenter/Search/?term=&CIDs=2,3,&startDate=&endDate=&dateRange=&dateSelector=",
-       'agenda_type':'pdf'}, #takes extra steps to arrive at agenda, maybe shouldn't be in generic agenda center code
+       'agenda_type':'pdf',
+       'agenda_content':'pdf_1'}, #takes extra steps to arrive at agenda, maybe shouldn't be in generic agenda center code
 
     "Portsmouth":{
         'name':"City of Portsmouth",
         'url':"https://www.portsmouthva.gov/AgendaCenter/Search/?term=&CIDs=11,7,4,&startDate=&endDate=&dateRange=&dateSelector=",
-        'agenda_type':'pdf'},
+        'agenda_type':'pdf',
+        'agenda_content':'pdf_1'},
 
     "Radford":{
         'name':"City of Radford",
         'url':"https://www.radfordva.gov/AgendaCenter/Search/?term=&CIDs=2,4,&startDate=&endDate=&dateRange=&dateSelector=",
-        'agenda_type':'pdf'},
+        'agenda_type':'pdf',
+        'agenda_content':'pdf_1'},
 
     "Suffolk":{
         'name':"City of Suffolk",
         'url':"https://www.suffolkva.us/AgendaCenter/Search/?term=&CIDs=20,21,11,4,12,3,&startDate=&endDate=&dateRange=&dateSelector=",
-        'agenda_type':'pdf'},
+        'agenda_type':'pdf',
+        'agenda_content':'pdf_1'},
 
     "Waynesboro BZA PC":{
         'name':"City of Waynesboro",
         'url':"https://www.waynesboro.va.us/AgendaCenter/Search/?term=&CIDs=7,4,&startDate=&endDate=&dateRange=&dateSelector=",
-        'agenda_type':'pdf'},
+        'agenda_type':'pdf',
+        'agenda_content':'pdf_1'},
 
     "Waynesboro CC":{
         'name':"City of Waynesboro",
         'url':"https://www.waynesboro.va.us/AgendaCenter/Search/?term=&CIDs=1,&startDate=&endDate=&dateRange=&dateSelector=",
-        'agenda_type':'webpage'}
+        'agenda_type':'webpage',
+        'agenda_content':'webpage_1'}
     }
 
 """BoardDocs localities"""
 boarddocs_dictionary = {
-    'Accomack':["https://go.boarddocs.com/va/coa/Board.nsf/Public","Accomack County",False],
+    'Accomack':{
+        'url':"https://go.boarddocs.com/va/coa/Board.nsf/Public",
+        'name':"Accomack County",
+        'second_page':False},
 
-    "Culpeper":["https://go.boarddocs.com/va/ccva/Board.nsf/Public","Culpeper County",False],
+    "Culpeper":{
+        'url':"https://go.boarddocs.com/va/ccva/Board.nsf/Public",
+        'name':"Culpeper County",
+        'second_page':False},
 
-    "Essex":["https://go.boarddocs.com/va/essexco/Board.nsf/Public","Essex County",False],
+    "Essex":{
+        'url':"https://go.boarddocs.com/va/essexco/Board.nsf/Public",
+        'name':"Essex County",
+        'second_page':False},
 
-    "Montgomery":["https://go.boarddocs.com/va/montva/Board.nsf/Public","Montgomery County",True],
+    "Montgomery":{
+        'url':"https://go.boarddocs.com/va/montva/Board.nsf/Public",
+        'name':"Montgomery County",
+        'second_page':True},
 
-    "Northampton":["https://go.boarddocs.com/va/northco/Board.nsf/Public","Northampton County",True],
+    "Northampton":{
+        'url':"https://go.boarddocs.com/va/northco/Board.nsf/Public",
+        'name':"Northampton County",
+        'second_page':True},
 
-    "Northumberland":["https://go.boarddocs.com/va/nuc/Board.nsf/vpublic?open","Northumberland County",False],
+    "Northumberland":{
+        'url':"https://go.boarddocs.com/va/nuc/Board.nsf/vpublic?open",
+        'name':"Northumberland County",
+        'second_page':False},
 
-    "Prince George":["https://go.boarddocs.com/va/princegeorge/Board.nsf/Public","Prince George County",False],
+    "Prince George":{
+        'url':"https://go.boarddocs.com/va/princegeorge/Board.nsf/Public",
+        'name':"Prince George County",
+        'second_page':False},
 
-    "Pulaski":["https://go.boarddocs.com/va/copva/Board.nsf/Public#","Pulaski County",True],
+    "Pulaski":{
+        'url':"https://go.boarddocs.com/va/copva/Board.nsf/Public#",
+        'name':"Pulaski County",
+        'second_page':True},
 
-    "Rappahannock":["https://go.boarddocs.com/va/corva/Board.nsf/Public","Rappahannock County",True],
+    "Rappahannock":{
+        'url':"https://go.boarddocs.com/va/corva/Board.nsf/Public",
+        'name':"Rappahannock County",
+        'second_page':True},
 
-    "Rockbridge":["https://go.boarddocs.com/va/rcva/Board.nsf/Public","Rockbridge County Board of Supervisors",False],
+    "Rockbridge":{
+        'url':"https://go.boarddocs.com/va/rcva/Board.nsf/Public",
+        'name':"Rockbridge County Board of Supervisors",
+        'second_page':False},
 }
 
 "CivicClerk localities"
@@ -596,7 +644,7 @@ county_dictionary_double_variable = {
 city_dictionary_single_variable = {
     "Buena Vista City Council":[buena_vista_city_council,"https://www.buenavistava.org/city-services/government/city-council/council-agenda-minutes/"],
 
-    #UPDATE website is update, need new code
+    #UPDATE website is updated, need new code
     #"Clifton Forge":[clifton_forge,"https://www.cliftonforgeva.gov/council/council-agenda-and-minutes/"],
 
     "Covington":[covington,"https://covington.va.us/agendas-minutes/"],

@@ -1,4 +1,5 @@
-from webscraping_driver import *
+from webscraping_packages import * 
+
 """Firefox Version"""  
 def get_webdriver():
     options = webdriver.FirefoxOptions()
@@ -106,27 +107,43 @@ def check_readability(agenda_content):
         readability = True
     return readability
 
-def search_pdf(meeting_links_list, locality):
+def search_pdf(meeting_links_list, locality_dictionary):
     messages=[]
     for item in meeting_links_list:
         driver.get(item)
         time.sleep(60)
         keywords = []
+        #add specific page tags to locality dictionaries! Likely a lot of  the same, but good to continue to remove hardcoding
         pages = driver.find_elements(By.CSS_SELECTOR,"div[class*=page")
         for page in pages:
             driver.execute_script("arguments[0].scrollIntoView();", page)
             time.sleep(5)
-            agenda_content = driver.find_elements(By.CSS_SELECTOR,'div[class*=textLayer')
+            agenda_content = driver.find_elements(By.CSS_SELECTOR,agenda_content_tags[agendacenter_dictionary[locality_dictionary]['agenda_content']])
             readable = check_readability(agenda_content)
             if readable==True:
                 agenda_search = search_agenda_for_keywords(agenda_content)
                 if agenda_search != []:
                     keywords += agenda_search
             elif readable==False:
-                messages.append("New meeting document available for " + locality + ". Part of the document cannot be scanned for keywords. " + item)
+                messages.append("New meeting document available for " + agendacenter_dictionary[locality_dictionary]['name'] + ". Part of the document cannot be scanned for keywords. " + item)
         if keywords != []:
             unique_keywords = pd.Series(keywords).unique().tolist()
-            messages.append("Keyword(s) " + ", ".join(unique_keywords) + " found in upcoming meeting for " + locality + ". " + item)
+            messages.append("Keyword(s) " + ", ".join(unique_keywords) + " found in upcoming meeting for " + agendacenter_dictionary[locality_dictionary]['name'] + ". " + item)
+    return pd.Series(messages).unique().tolist()
+
+def search_webpage(meeting_links_list,locality_dictionary):
+    messages=[]
+    for item in meeting_links_list:
+        driver.get(item)
+        time.sleep(60)
+        keywords = []
+        agenda_content = driver.find_elements(By.CSS_SELECTOR,agenda_content_tags[agendacenter_dictionary[locality_dictionary]['agenda_content']])
+        agenda_search = search_agenda_for_keywords(agenda_content)
+        if agenda_search != []:
+            keywords += agenda_search
+        elif keywords != []:
+            unique_keywords = pd.Series(keywords).unique().tolist()
+            messages.append("Keyword(s) " + ", ".join(unique_keywords) + " found in upcoming meeting for " + agendacenter_dictionary[locality_dictionary]['name'] + ". " + item)
     return pd.Series(messages).unique().tolist()
 
 def search_agenda_for_keywords(agenda_content):
@@ -164,36 +181,16 @@ def is_internet_active(timeout):
 """Webscraping Functions"""
 
 """AgendaCenter"""
-def agendacenter(url,locality):
-    driver.get(url)
-    messages = []
-    #table_rows = WebDriverWait(driver,20).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tr[class*=catAgendaRow")))
+def agendacenter(locality_dictionary):
+    driver.get(agendacenter_dictionary[locality_dictionary]['url'])
     time.sleep(5)
-    table_rows = driver.find_elements(By.CSS_SELECTOR, "tr[class*=catAgendaRow")
-    future_meetings = []
-    for item in table_rows:
-        try:
-            if check_meeting_date(item.text.split("\u2009")[0]) ==True:
-                future_meetings.append(item)
-        except:
-            if check_meeting_date(item.text.split("\n")[0])==True:
-                future_meetings.append(item)
+    table_rows = driver.find_elements(By.CSS_SELECTOR, meetings_tags['agendacenter'])
+    future_meetings = [item for item in table_rows if check_meeting_date(search_dates(item.text,languages=['en'])[0][0])==True]
     agenda_links = [item.find_elements(By.CSS_SELECTOR,"a")[1].get_attribute("href") for item in future_meetings]
-    for item in agenda_links:
-        driver.get(item)
-        time.sleep(20)
-        agenda_content = driver.find_elements(By.CSS_SELECTOR, "div[class*=textLayer")
-        #agenda_content = WebDriverWait(driver,20).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "div[class*=textLayer")))
-        if agenda_content == []:
-            agenda_content = driver.find_elements(By.CSS_SELECTOR, "div[id*='divInner'")
-            #agenda_content = WebDriverWait(driver,20).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "div[id*='divInner'")))
-        readable = check_readability(agenda_content)
-        if readable==True:
-            agenda_search = search_agenda_for_keywords(agenda_content)
-            if agenda_search != []:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + ". " + item)
-        elif readable==False:
-            messages.append("New meeting document available for " + locality + ". Document cannot be scanned for keywords. " + item)
+    if agendacenter_dictionary[locality_dictionary]['agenda_type']=='pdf':
+        messages = search_pdf(agenda_links,locality_dictionary)
+    if agendacenter_dictionary[locality_dictionary]['agenda_type']=='webpage':
+        messages = search_webpage(agenda_links,locality_dictionary)
     return messages
 
 """BoardDocs"""
