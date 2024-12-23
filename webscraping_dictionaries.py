@@ -4,7 +4,7 @@ meetings_tags = {
 
     'boarddocs':"a[class*='icon prevnext meeting",
 
-    'civicclerck':"li[class*='cpp-MuiListItem-container'",
+    'civicclerk':"li[class*='cpp-MuiListItem-container'",
 
     'civicweb':"a[class*='list-link'",
 
@@ -70,7 +70,9 @@ agenda_link_or_button_tags = {
 }
 
 pdf_page_tags ={
-    'agendacenter':'"div[class*=page"'
+    'agendacenter':'"div[class*=page"',
+
+    'civicclerk':'"div[class*=page"'
 }
 
 agenda_content_tags = {
@@ -231,6 +233,13 @@ agendacenter_dictionary = {
         'agenda_type':'pdf',
         'agenda_content':'pdf_1'},
 
+    "Charles City":{
+        'name':'Charles City County',
+        'url':'https://www.charlescityva.us/AgendaCenter/Search/?term=&CIDs=6,2,8,&startDate=&endDate=&dateRange=&dateSelector=',
+        'agenda_type':'pdf',
+        'agenda_content':'pdf_1'
+    },
+
     "Colonial Heights BZA PC":{
         'name':"City of Colonial Heights",
         'url':"https://www.colonialheightsva.gov/AgendaCenter/Search/?term=&CIDs=4,6,&startDate=&endDate=&dateRange=&dateSelector=",
@@ -377,48 +386,130 @@ boarddocs_dictionary = {
 
 "CivicClerk localities"
 civicclerk_dictionary = {
-"Amelia":["https://ameliacova.portal.civicclerk.com/?category_id=26,28","Amelia County"],
+"Amelia":{
+    'url':"https://ameliacova.portal.civicclerk.com/?category_id=26,28", #not loading, 12/19/24
+    'name':"Amelia County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Amherst":["https://amherstcova.portal.civicclerk.com/?category_id=27,29,33,32","Amherst County"],
+"Amherst":{
+    'url':"https://amherstcova.portal.civicclerk.com/?category_id=27,29,33,32",
+    'name':"Amherst County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Appomattox":["https://appomattoxcova.portal.civicclerk.com/","Appomattox County"],
+"Appomattox":{
+    'url':"https://appomattoxcova.portal.civicclerk.com/",
+    'name':"Appomattox County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-#duplicate Agenda Center site that actually updates the planning commission agendas, consider a replacement or at least an addition https://www.charlescityva.us/AgendaCenter
-"Charles City":["https://charlescitycova.portal.civicclerk.com/?category_id=26,27,29","Charles City County"],
+#More updates at the AgendaCenter site, table this entry until there is a complete switch
+#"Charles City":{
+    #'url':"https://charlescitycova.portal.civicclerk.com/?category_id=26,27,29",
+    #'name':"Charles City County"},
 
-"Charlottesville":["https://charlottesvilleva.portal.civicclerk.com/","City of Charlottesville"],
+"Charlottesville":{
+    'url':"https://charlottesvilleva.portal.civicclerk.com/",
+    'name':"City of Charlottesville",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Chesterfield":["https://chesterfieldcova.portal.civicclerk.com/","Chesterfield County"],
+"Chesterfield":{
+    'url':"https://chesterfieldcova.portal.civicclerk.com/",
+    'name':"Chesterfield County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Danville":["https://danvilleva.portal.civicclerk.com/","City of Danville"],
+"Danville":{
+    'url':"https://danvilleva.portal.civicclerk.com/",
+    'name':"City of Danville",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Hanover":["https://hanovercova.portal.civicclerk.com/?category_id=26,27","Hanover County"],
+"Hanover":{
+    'url':"https://hanovercova.portal.civicclerk.com/?category_id=26,27",
+    'name':"Hanover County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"James City":["https://jamescitycova.portal.civicclerk.com/","James City County"],
+"James City":{
+    'url':"https://jamescitycova.portal.civicclerk.com/",
+    'name':"James City County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"King William":["https://kingwilliamcova.portal.civicclerk.com/","King William County"],
+"King William":{
+    'url':"https://kingwilliamcova.portal.civicclerk.com/",
+    'name':"King William County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Louisa":["https://louisacova.portal.civicclerk.com/", "Louisa County"],
+"Louisa":{
+    'url':"https://louisacova.portal.civicclerk.com/",
+    'name':"Louisa County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Lynchburg":["https://lynchburgva.portal.civicclerk.com/","City of Lynchburg"],
+"Lynchburg":{
+    'url':"https://lynchburgva.portal.civicclerk.com/",
+    'name':"City of Lynchburg",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Mathews":["https://mathewscova.portal.civicclerk.com/","Mathews County"],
+"Mathews":{
+    'url':"https://mathewscova.portal.civicclerk.com/",
+    'name':"Mathews County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Orange":["https://orangecova.portal.civicclerk.com/","Orange County"],
+"Orange":{
+    'url':"https://orangecova.portal.civicclerk.com/",
+    'name':"Orange County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Petersburg CC":["https://petersburgva.portal.civicclerk.com/","City of Petersburg"],
+"Petersburg CC":{
+    'url':"https://petersburgva.portal.civicclerk.com/",
+    'name':"City of Petersburg",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Roanoke":["https://roanokeva.portal.civicclerk.com/","City of Roanoke"],
+"Roanoke":{
+    'url':"https://roanokeva.portal.civicclerk.com/",
+    'name':"City of Roanoke",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Scott":["https://scottcova.portal.civicclerk.com/","Scott County"],
+"Scott":{
+    'url':"https://scottcova.portal.civicclerk.com/",
+    'name':"Scott County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Spotsylvania":["https://spotsylvaniacova.portal.civicclerk.com/","Spotsylvania County"],
+"Spotsylvania":{
+    'url':"https://spotsylvaniacova.portal.civicclerk.com/",
+    'name':"Spotsylvania County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Stafford":["https://staffordcova.portal.civicclerk.com/?category_id=26,31","Stafford County"],
+"Stafford":{
+    'url':"https://staffordcova.portal.civicclerk.com/?category_id=26,31",
+    'name':"Stafford County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Surry":["https://surrycova.portal.civicclerk.com/","Surry County"],
+"Surry":{
+    'url':"https://surrycova.portal.civicclerk.com/",
+    'name':"Surry County",
+    'aagenda_type':'pdf',
+    'agenda_content':'pdf_1'},
 
-"Warren":["https://warrencountyva.portal.civicclerk.com/?category_id=26,27","Warren County"],
+"Warren":{
+    'url':"https://warrencountyva.portal.civicclerk.com/?category_id=26,27",
+    'name':"Warren County",
+    'agenda_type':'pdf',
+    'agenda_content':'pdf_1'}
 }
 
 """CivicWeb localities"""

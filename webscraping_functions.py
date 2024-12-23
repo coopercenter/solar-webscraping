@@ -1,4 +1,5 @@
 from webscraping_packages import * 
+from webscraping_driver import *
 
 """Firefox Version"""  
 def get_webdriver():
@@ -194,98 +195,84 @@ def agendacenter(locality_dictionary):
     return messages
 
 """BoardDocs"""
-def check_boarddocs_agendas(locality,meetings_page,url):
+def check_boarddocs_agendas(locality_dictionary):
+    all_tabs=driver.find_elements(By.CSS_SELECTOR,"a[id*=ui-id-")
+    meetings_tab = [item for item in all_tabs if item.text in ['MEETINGS','Meetings']]
+    meetings_tab[0].click()
+    time.sleep(10)
     #get all the meeting links
-    all_meetings = driver.find_elements(By.CSS_SELECTOR, "a[class*='icon prevnext meeting")
+    all_meetings = driver.find_elements(By.CSS_SELECTOR, meetings_tags['boarddocs'])
     update_messages = []
-    for item in all_meetings:
-        #if it's blank, skip it
-        if item.text != '':
-        #adding a fix for Culpeper that may help or break other locality websites
-            if "\n" in item.text:
-                future_meeting = check_meeting_date(item.text.split("\n")[0])
-            else:
-                future_meeting = check_meeting_date(item.text)
-            if future_meeting == True:
-                meeting_title = item.text
-                #if the meeting hasn't happened yet, check for last minute agenda edits that might contain solar until it has passed
-                item.click()
-                time.sleep(10)
-                #find the element to click to view the meeting agenda for this meeting
-                meeting_agenda = driver.find_element(By.CSS_SELECTOR, "a[id*='btn-view-agenda'")
-                #click the meeting agenda button
-                meeting_agenda.click()
-                time.sleep(10)
-                #pause, give the page time to load
-                #Now to get ALL the agenda content
-                all_agenda_topics = driver.find_elements(By.CSS_SELECTOR, "span[class*='title'")
-                #run the keyword search
-                agenda_search = search_agenda_for_keywords(all_agenda_topics)
-                if agenda_search !=[]:
-                    update_messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + " in " + meeting_title + ". " + url)
-                meetings_page.click()
-                time.sleep(10)
-            else:
-                break
+    future_meetings = [item for item in all_meetings if search_dates(item.text,languages=['en'])!=None and check_meeting_date(search_dates(item.text,languages=['en'])[0][1].strftime('%m/%d/%Y'))==True ]
+    for item in future_meetings:
+        meeting_title = item.text
+        #if the meeting hasn't happened yet, check for last minute agenda edits that might contain solar until it has passed
+        item.click()
+        time.sleep(10)
+        #find the element to click to view the meeting agenda for this meeting
+        #add a dictionary for accessing agenda links/buttons
+        meeting_agenda = driver.find_element(By.CSS_SELECTOR, agenda_link_or_button_tags['boarddocs'])
+        #click the meeting agenda button
+        meeting_agenda.click()
+        time.sleep(10)
+        #pause, give the page time to load
+        #Now to get ALL the agenda content
+        all_agenda_topics = driver.find_elements(By.CSS_SELECTOR, agenda_content_tags['boarddocs'])
+        #run the keyword search
+        agenda_search = search_agenda_for_keywords(all_agenda_topics)
+        if agenda_search !=[]:
+            update_messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality_dictionary['name'] + " in " + meeting_title + ". " + locality_dictionary['url'])
+        meetings_tab[0].click()
+        time.sleep(10)
     return update_messages
 
-def boarddocs(url,locality,two_pages):
-    url_test=verify_url(url)
-    if url_test==True:
-        driver.get(url)
+def boarddocs(locality_dictionary):
+    driver.get(boarddocs_dictionary[locality_dictionary]['url'])
+    time.sleep(10)
+    messages = check_boarddocs_agendas(locality_dictionary)
+    if boarddocs_dictionary[locality_dictionary]['second_page']==True:
+        govt_tab = driver.find_element(By.CSS_SELECTOR,"a[id*=btn-board")
+        govt_tab.click()
         time.sleep(10)
-        all_tabs=driver.find_elements(By.CSS_SELECTOR,"a[id*=ui-id-")
-        meetings_page=all_tabs[1]
-        meetings_page.click()
+        menu_options = driver.find_elements(By.CSS_SELECTOR,"a[class*=dropdown-item")
+        for item in menu_options:
+            if "Planning Commission" in item.text:
+                planning_commission=item
+        planning_commission.click()
         time.sleep(10)
-        time.sleep(10)
-        messages = check_boarddocs_agendas(locality,meetings_page,url)
-        if two_pages==True:
-            govt_tab = driver.find_element(By.CSS_SELECTOR,"a[id*=btn-board")
-            govt_tab.click()
-            time.sleep(10)
-            menu_options = driver.find_elements(By.CSS_SELECTOR,"a[class*=dropdown-item")
-            for item in menu_options:
-                if "Planning Commission" in item.text:
-                    planning_commission=item
-            planning_commission.click()
-            time.sleep(10)
-            pc_messages = check_boarddocs_agendas(locality,meetings_page,url)
-            messages = messages + pc_messages
-        return messages
-    else:
-        return url_test
+        pc_messages = check_boarddocs_agendas(locality_dictionary)
+        messages += pc_messages
+    return messages
 
 "CivicClerk"
-def civicclerk(url,locality):
-    url_test = verify_url(url)
-    if url_test==True:
-        messages=[]
-        driver.get(url)
+def civicclerk(locality_dictionary):
+    messages=[]
+    driver.get(civicclerk_dictionary[locality_dictionary]['url'])
+    time.sleep(10)
+    all_meetings = driver.find_elements(By.CSS_SELECTOR,meetings_tags['civicclerk'])
+    meetings_with_agendas = []
+    for item in all_meetings:
+        try:
+            #test if there's a download button, indicating agenda files have been posted. Lack of files to scan will throw an error, and we won't waste time checking that meeting link for keywords
+            #consider making this a dictionary of options as well
+            item.find_element(By.CSS_SELECTOR,"button[id*=downloadFilesMenu")
+            meetings_with_agendas.append(item)
+        except:
+            continue
+    meeting_links = [item.find_element(By.CSS_SELECTOR,"a").get_attribute("href") for item in meetings_with_agendas]
+    #this should be reworked and fit into the search_pdf function, with additional tag specification dictionaries
+    for item in meeting_links:
+        driver.get(item)
         time.sleep(10)
-        all_meetings = driver.find_elements(By.CSS_SELECTOR,"li[class*='cpp-MuiListItem-container'")
-        meetings_with_agendas = []
-        for item in all_meetings:
-            try:
-                #test if there's a download button, indicating agenda files have been posted. Lack of files to scan will throw an error, and we won't waste time checking that meeting link for keywords
-                item.find_element(By.CSS_SELECTOR,"button[id*=downloadFilesMenu")
-                meetings_with_agendas.append(item)
-            except:
-                continue
-        meeting_links = [item.find_element(By.CSS_SELECTOR,"a").get_attribute("href") for item in meetings_with_agendas]
-        for item in meeting_links:
-            driver.get(item)
-            time.sleep(10)   
-            pdf_viewer_frame = driver.find_elements(By.CSS_SELECTOR,"iframe[id*=pdfViewerIframe")
-            if pdf_viewer_frame != []:
-                driver.switch_to.frame(pdf_viewer_frame[0])
-                agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
-                agenda_search = search_agenda_for_keywords(agenda_content)
-                if agenda_search != []:
-                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + ". " + item)
-        return messages
-    else: 
-        return url_test
+        #don't rely on this to always be the same, turn this into a dictionary of options, even if there's only one current option. It has changed in the past, it can change again.
+        pdf_viewer_frame = driver.find_elements(By.CSS_SELECTOR,"iframe[id*=pdfViewerIframe")
+        if pdf_viewer_frame != []:
+            driver.switch_to.frame(pdf_viewer_frame[0])
+            agenda_content = driver.find_elements(By.CSS_SELECTOR,agenda_content_tags[civicclerk_dictionary[locality_dictionary]['agenda_content']])
+            agenda_search = search_agenda_for_keywords(agenda_content)
+            if agenda_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + civicclerk_dictionary[locality_dictionary['name']] + ". " + item)
+    return messages
     
 """CivicWeb"""
 def civicweb(url,locality):
