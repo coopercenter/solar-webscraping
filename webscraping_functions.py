@@ -1,5 +1,6 @@
 from webscraping_packages import * 
 from webscraping_driver import *
+from webscraping_dictionaries import *
 
 """Firefox Version"""  
 def get_webdriver():
