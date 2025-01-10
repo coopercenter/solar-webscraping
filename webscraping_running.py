@@ -3,43 +3,43 @@ from webscraping_functions import *
 New_Alerts = []
 
 "Run all the webscraping functions, single thread version"
-for item in agendacenter_dictionary:
+for locality_dictionary in agendacenter_dictionary:
     try:
-        alert = agendacenter(agendacenter_dictionary[item][0],agendacenter_dictionary[item][1])
+        alert = agendacenter(locality_dictionary)
         if alert != []:
             New_Alerts.append(", \n ".join(alert))
     except:
-        error_alert = "Error webscraping " + item + " using AgendaCenter code."
+        error_alert = "Error webscraping " + agendacenter_dictionary[locality_dictionary]['name'] + " using AgendaCenter code."
         New_Alerts.append(error_alert)
         continue
             
-for item in boarddocs_dictionary:
+for locality_dictionary in boarddocs_dictionary:
     try:
-        alert = boarddocs(boarddocs_dictionary[item][0],boarddocs_dictionary[item][1],boarddocs_dictionary[item][2])
+        alert = boarddocs(locality_dictionary)
         if alert != []:
             New_Alerts.append(", \n ".join(alert))
     except:
-        error_alert = "Error webscraping " + item + " using BoardDocs code."
+        error_alert = "Error webscraping " + boarddocs_dictionary[locality_dictionary]['name'] + " using BoardDocs code."
         New_Alerts.append("\n" + error_alert)
         continue
 
-for item in civicclerk_dictionary:
+for locality_dictionary in civicclerk_dictionary:
     try:
-        alert=civicclerk(civicclerk_dictionary[item][0],civicclerk_dictionary[item][1])
+        alert=civicclerk(locality_dictionary)
         if alert != []:
             New_Alerts.append(", \n ".join(alert))
     except:
-        error_alert="Error webscraping " + item + " using CivicClerk code"
+        error_alert="Error webscraping " + civicclerk_dictionary[locality_dictionary]['name'] + " using CivicClerk code"
         New_Alerts.append(error_alert)
         continue
         
-for item in civicweb_dictionary:
+for locality_dictionary in civicweb_dictionary:
     try:
-        alert=civicweb(civicweb_dictionary[item][0],civicweb_dictionary[item][1])
+        alert=civicweb(locality_dictionary)
         if alert != []:
             New_Alerts.append(", \n ".join(alert))
     except:
-        error_alert="Error webscraping " + item + " using CivicWeb code"
+        error_alert="Error webscraping " + civicweb_dictionary[locality_dictionary]['name'] + " using CivicWeb code"
         New_Alerts.append(error_alert)
         continue
         
@@ -195,34 +195,33 @@ for item in city_dictionary_double_variable:
 
 #empty list 
 Solar_Alerts = []
-Ordinance_Alerts = []
-Comprehensive_Plan_Alerts = []
 Error_Alerts = []
 Unreadable_File_Alerts = []
+Other_Alerts = []
 
 #loop that checks if the word in the meeting agenda is in the list of keywords...if that happens, append to empty list
 for message in New_Alerts:
-    if "Zoning Ordinance" in message:
-        Ordinance_Alerts.append(message)
-    if "Comprehensive Plan" in message:
-        Comprehensive_Plan_Alerts.append(message)
-    if "Error" in message or "Not Reachable" in message:
-        Error_Alerts.append(message)
-    if "scanned" in message:
-        Unreadable_File_Alerts.append(message)
     if "Solar" in message:
         Solar_Alerts.append(message)
+    elif "Error" in message or "Not Reachable" in message:
+        Error_Alerts.append(message)
+    elif "scanned" in message:
+        Unreadable_File_Alerts.append(message)
+    else:
+        Other_Alerts.append(message)
 
 # Convert categorized alerts to strings
 solar_alerts_str = ", \n".join(Solar_Alerts)
-ordinance_alerts_str = ", \n".join(Ordinance_Alerts)
-comprehensive_plan_alerts_str = ", \n".join(Comprehensive_Plan_Alerts)
 error_alerts_str = ", \n".join(Error_Alerts)
 unread_alerts_str = ", \n".join(Unreadable_File_Alerts)
+other_alerts_str = ", \n".join(Other_Alerts)
+
+alerts = ("Solar Alerts:\n" + solar_alerts_str + "\n\nUnreadable Alerts: \n" + unread_alerts_str + "\n\nError Alerts:\n" + error_alerts_str + "\n\nOther Alerts:\n" + other_alerts_str)
+
 
 #email results
-email_new_alerts("Solar Alerts:\n" + solar_alerts_str + 
-                 "\n\nUnreadable Alerts: \n" + unread_alerts_str +
-                 "\n\nOrdinance Alerts:\n" + ordinance_alerts_str +
-                 "\n\nComprehensive Plan Alerts:\n" + comprehensive_plan_alerts_str +
-                 "\n\nError Alerts:\n" + error_alerts_str)
+#email_new_alerts("Solar Alerts:\n" + solar_alerts_str + 
+#                "\n\nUnreadable Alerts: \n" + unread_alerts_str +
+#                "\n\nOrdinance Alerts:\n" + ordinance_alerts_str +
+#                 "\n\nComprehensive Plan Alerts:\n" + comprehensive_plan_alerts_str +
+#                 "\n\nError Alerts:\n" + error_alerts_str)

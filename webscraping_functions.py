@@ -204,7 +204,10 @@ def check_boarddocs_agendas(locality_dictionary):
     #get all the meeting links
     all_meetings = driver.find_elements(By.CSS_SELECTOR, meetings_tags['boarddocs'])
     update_messages = []
-    future_meetings = [item for item in all_meetings if search_dates(item.text,languages=['en'])!=None and check_meeting_date(search_dates(item.text,languages=['en'])[0][1].strftime('%m/%d/%Y'))==True ]
+    future_meetings = []
+    for item in all_meetings:
+        if search_dates(item.text,languages=['en'])!=None and check_meeting_date(search_dates(item.text,languages=['en'])[0][1].strftime('%m/%d/%Y'))==True:
+            future_meetings.append(item)
     for item in future_meetings:
         meeting_title = item.text
         #if the meeting hasn't happened yet, check for last minute agenda edits that might contain solar until it has passed
@@ -222,7 +225,7 @@ def check_boarddocs_agendas(locality_dictionary):
         #run the keyword search
         agenda_search = search_agenda_for_keywords(all_agenda_topics)
         if agenda_search !=[]:
-            update_messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality_dictionary['name'] + " in " + meeting_title + ". " + locality_dictionary['url'])
+            update_messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + boarddocs_dictionary[locality_dictionary]['name'] + " in " + meeting_title + ". " + boarddocs_dictionary[locality_dictionary]['url'])
         meetings_tab[0].click()
         time.sleep(10)
     return update_messages
@@ -272,27 +275,27 @@ def civicclerk(locality_dictionary):
             agenda_content = driver.find_elements(By.CSS_SELECTOR,agenda_content_tags[civicclerk_dictionary[locality_dictionary]['agenda_content']])
             agenda_search = search_agenda_for_keywords(agenda_content)
             if agenda_search != []:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + civicclerk_dictionary[locality_dictionary['name']] + ". " + item)
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + civicclerk_dictionary[locality_dictionary]['name'] + ". " + item)
     return messages
     
 """CivicWeb"""
-def civicweb(url,locality):
-    driver.get(url)
+def civicweb(locality_dictionary):
+    driver.get(civicweb_dictionary[locality_dictionary]['url'])
     time.sleep(10)  
-    messages = []
-    all_meetings = driver.find_elements(By.CSS_SELECTOR,"a[class*='list-link'")
+    all_meetings = driver.find_elements(By.CSS_SELECTOR,meetings_tags['civicweb'])
     relevant_meetings = [item for item in all_meetings if "Board of Supervisors" in item.text or "Planning Commission" in item.text or "City Council" in item.text]
-    future_meetings=get_future_meeting_links(relevant_meetings)   
+    future_meetings=[item.get_attribute("href") for item in relevant_meetings if check_meeting_date(search_dates(item.text)[0][0])==True]
+    messages = []
     for item in future_meetings:
         driver.get(item)
         time.sleep(10)
         #switch to the agenda viewer frame
         agenda_frame = driver.find_element(By.CSS_SELECTOR,"iframe")
         driver.switch_to.frame(agenda_frame)
-        agenda_content = driver.find_elements(By.CSS_SELECTOR,"html")
+        agenda_content = driver.find_elements(By.CSS_SELECTOR,agenda_content_tags['civicweb'])
         agenda_search = search_agenda_for_keywords(agenda_content)
         if agenda_search != []:
-            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality + ". " + item)
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + civicweb_dictionary[locality_dictionary]['name'] + ". " + item)
     return messages
 
 """DocumentCenter"""
@@ -314,7 +317,7 @@ def document_center(url,locality):
             break
     year_folders = driver.find_elements(By.CSS_SELECTOR,"span")
     for item in year_folders:
-        if item.text == "2024":
+        if item.text == "2025":
             item.click()
             time.sleep(10)
             break
@@ -461,7 +464,7 @@ def legistar(url,locality):
         driver.get(url)
         time.sleep(10)
         table_rows = driver.find_elements(By.CSS_SELECTOR,'tr[id*=ctl00_')
-        future_meetings = [item for item in table_rows if check_meeting_date(item.text.split("/2024")[0])==True]
+        future_meetings = [item for item in table_rows if check_meeting_date(search_dates(item.text)[0][0])==True]
         meeting_urls = [item.find_element(By.CSS_SELECTOR,"a[id*=hypMeetingDetail").get_attribute('href') for item in future_meetings]
         for item in meeting_urls:
             if item != None:
@@ -929,7 +932,8 @@ def craig_county(url):
     time.sleep(10)
     #Find the link and check the date. That's as far as we go because the PDFs are scans.
     links = driver.find_elements(By.CSS_SELECTOR,'a')
-    future_meetings = get_future_meeting_links(links)
+    agenda_links = [item for item in links if 'Agenda' in item.text]
+    future_meetings = [item.get_attribute('href') for item in agenda_links if check_meeting_date(search_dates(item.text)[0][0])==True]
     for item in future_meetings:
         messages.append("New meeting agenda available for Craig County Board of Supervisors. Document cannot be scanned for keywords. " + item)
     return messages

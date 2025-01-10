@@ -514,13 +514,21 @@ civicclerk_dictionary = {
 
 """CivicWeb localities"""
 civicweb_dictionary = {
-"Lancaster":["https://lancova.civicweb.net/Portal/MeetingTypeList.aspx","Lancaster County"],
+"Lancaster":{
+    'url':"https://lancova.civicweb.net/Portal/MeetingTypeList.aspx",
+    'name':"Lancaster County"},
 
-"Lexington":["https://lexingtonva.civicweb.net/Portal/MeetingTypeList.aspx","City of Lexington"],
+"Lexington":{
+    'url':"https://lexingtonva.civicweb.net/Portal/MeetingTypeList.aspx",
+    'name':"City of Lexington"},
 
-"Newport News":["https://nngov.civicweb.net/Portal/MeetingTypeList.aspx","City of Newport News"],
+"Newport News":{
+    'url':"https://nngov.civicweb.net/Portal/MeetingTypeList.aspx",
+    'name':"City of Newport News"},
 
-"Winchester":["https://winchesterva.civicweb.net/Portal/MeetingTypeList.aspx","City of Winchester"]
+"Winchester":{
+    'url':"https://winchesterva.civicweb.net/Portal/MeetingTypeList.aspx",
+    'name':"City of Winchester"}
 }
 
 """Document Center localities"""
@@ -682,7 +690,7 @@ county_dictionary_single_variable = {
 
     "Nelson County":[nelson_county,"https://www.nelsoncounty-va.gov/events/list/"],
 
-    "New Kent County Planning Commission":[new_kent_county_pc,"https://www.co.new-kent.va.us/843/Meeting-Agendas"],
+    "New Kent County Planning Commission":[new_kent_county_pc,"https://www.newkent-va.us/843/Meeting-Agendas"],
 
     "Pittsylvania County":[pittsylvania_county,"https://www.pittsylvaniacountyva.gov/government/agenda-center"],
 
