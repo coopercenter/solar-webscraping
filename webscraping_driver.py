@@ -4,7 +4,7 @@ from webscraping_packages import *
 #download Mozilla Firefox https://www.mozilla.org/en-US/firefox/new/
 """Firefox Version"""  
 options = webdriver.FirefoxOptions()
-options.add_argument("--headless")
+#options.add_argument("--headless")
 options.page_load_strategy = 'none' 
 firefox_path = GeckoDriverManager().install() 
 firefox_service = Service(firefox_path)
