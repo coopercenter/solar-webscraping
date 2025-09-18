@@ -824,6 +824,30 @@ def prime_gov(locality_dictionary):
 
 """Locality Specific Functions"""
 
+def scrape_platform(locality, link_extractor, content_extractor):
+    if not verify_url(locality["url"]):
+        return [f"{locality['locality']} - URL not working"]
+
+    driver = get_webdriver()
+    driver.get(locality["url"])
+
+    messages = []
+    for agenda_link, date in link_extractor(driver):
+        if not check_meeting_date(date):
+            continue
+
+        agenda_content = content_extractor(agenda_link)
+        if check_agenda_readability(agenda_content):
+            keywords = search_text_for_keywords(agenda_content)
+            if keywords:
+                messages.append(f"{locality['locality']} - Agenda {agenda_link} contains {keywords}")
+        else:
+            messages.append(f"{locality['locality']} - Agenda {agenda_link} could not be scanned")
+
+    driver.quit()
+    return messages
+
+
 """Albemarle County"""
 def albemarle_county_pc():
     from webscraping_dictionaries import locality_dictionary_single_use
@@ -1628,6 +1652,7 @@ def wythe_county():
         for link in solar_notices:
             messages.append('Keyword(s) Solar found in Public Notice for Wythe County ' + link)
     return messages
+
 #def wythe_county(url):
  #   driver.get(url)
  #   time.sleep(10)
