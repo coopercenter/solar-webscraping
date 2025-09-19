@@ -70,6 +70,7 @@ def get_webpage_content(content_tag):
         agenda_string = agenda_string + item.text
     return agenda_string
 
+# repetitive
 def read_docx_download(agenda_link):
     query_parameters = {"downloadformat": "docx"}
     headers = {'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
@@ -80,6 +81,7 @@ def read_docx_download(agenda_link):
         agenda_content = docx2txt.process(temp_agenda)
     return agenda_content
 
+# repetitive
 def read_pdf_download(agenda_link):
     query_parameters = {"downloadformat": "pdf"}
     headers = {'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
@@ -105,6 +107,7 @@ def read_pdf_download(agenda_link):
 #        readability = True
 #    return readability
 
+# repetitive
 def search_text_for_keywords(agenda_content):
     search_results = []
     if 'Solar'in agenda_content or 'solar' in agenda_content:
@@ -119,6 +122,7 @@ def search_text_for_keywords(agenda_content):
         search_results.append("Battery Storage")
     return pd.Series(search_results).unique().tolist()
 
+# repetitive
 def search_agenda_for_keywords(agenda_content):
     search_results = []
     for item in agenda_content:
@@ -156,6 +160,7 @@ def is_internet_active(timeout):
 """Webscraping Functions"""
 
 """AgendaCenter"""
+# repetitive
 def agendacenter(locality_dictionary):
     from webscraping_dictionaries import agendacenter_dictionary, meetings_tags
     driver.get(agendacenter_dictionary[locality_dictionary]['url'])
@@ -186,6 +191,7 @@ def agendacenter(locality_dictionary):
                     messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + agendacenter_dictionary[locality_dictionary]['name'] + ". " + link)
     return messages
 
+# repetitive
 def agendacenter2(locality_dictionary):
     from webscraping_dictionaries import agendacenter2_dictionary, meetings_tags
     driver.get(agendacenter2_dictionary[locality_dictionary]['url'])
@@ -403,6 +409,7 @@ def escribe(locality_dictionary):
     return messages
 
 "Folding Year" #generalized function for websites that operate on an accordioned year archive style
+# repetitive - look into why there are two versions
 def folding_year(locality_dictionary):
     from webscraping_dictionaries import folding_year_dictionary
     driver.get(folding_year_dictionary[locality_dictionary]["url"])
@@ -454,6 +461,7 @@ def folding_year(locality_dictionary):
     return messages
 
 """Folding Year Version 2"""
+# repetitive - look into why there are two versions
 def folding_year_v2(locality_dictionary): #an alternative format of Folding Year for the following localities: VA Beach PC, Manassas Park GB and PC, NOttoway BOS and PC,
     from webscraping_dictionaries import folding_year_v2_dictionary
     driver.get(folding_year_v2_dictionary[locality_dictionary]["url"])
@@ -490,6 +498,7 @@ def folding_year_v2(locality_dictionary): #an alternative format of Folding Year
     return messages
 
 """Granicus"""
+# repetitive - look into why there are two versions
 def granicus_version_2(locality_dictionary):
     from webscraping_dictionaries import granicus_2_dictionary
     driver.get(granicus_2_dictionary[locality_dictionary]['url'])
@@ -523,6 +532,7 @@ def granicus_version_2(locality_dictionary):
     return messages
 
 def granicus(locality_dictionary):
+# repetitive - look into why there are two versions
     from webscraping_dictionaries import granicus_dictionary
     driver.get(granicus_dictionary[locality_dictionary]['url'])
     time.sleep(10)
@@ -847,6 +857,7 @@ def scrape_platform(locality, link_extractor, content_extractor):
     driver.quit()
     return messages
 
+# repetitive - COUNTIES
 
 """Albemarle County"""
 def albemarle_county_pc():
