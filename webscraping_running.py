@@ -1,30 +1,33 @@
 from webscraping_functions import *
 from webscraping_dictionaries import *
 
+repeated_system_fuctions = {
+    "AgendaCenter":{"name":"AgendaCenter",
+                    "function":agendacenter,
+                    "dictionary":agendacenter2_dictionary
+                    },
+    "AgendaCenter Alternate":{agendacenter2},
+    "BoardDocs":{boarddocs},
+    "CivicClerk":{civicclerk},
+
+}
+
 locality_functions_single_use = {
     "Albemarle PC":albemarle_county_pc,
     "Alleghany BOS":alleghany_county,
     "Amelia PC":amelia_pc,
-    "Bland":bland_county,
     "Brunswick":brunswick_county,
     "Buchanan":buchanan_county,
     "Buena Vista City Council":buena_vista_city_council,
-    "Covington":covington,
     "Craig":craig_county,
     "Fairfax BOS":fairfax_county_bos,
     "Fairfax PC":fairfax_county_pc,
     "Galax":galax,
     "Giles":giles_county,
-    "Henrico BOS":henrico_county_bos,
     "Henrico PC":henrico_county_pc,
     "Highland BOS":highland_county_bos,
-    "Lee":lee_county,
-    "Lexington":lexington_pc,
     "Loudoun":loudoun_pc,
-    "Nelson":nelson_county,
     "Norton":norton_city,
-    "Richmond":richmond_county,
-    "Sussex":sussex_county,
     "Virginia Beach CC":virginia_beach_cc,
     "Wythe":wythe_county
 }
@@ -33,14 +36,6 @@ locality_functions_multi_use = {
     "Bath BOS":bath_county,
     "Bath PC":bath_county,
     "Bath BZA":bath_county,
-    "King and Queen BOS":king_and_queen_county,
-    "King and Queen PC":king_and_queen_county,
-    "Prince Edward PC":prince_edward_county,
-    "Prince Edward BOS":prince_edward_county,
-    "Staunton PC":staunton,
-    "Staunton CC":staunton,
-    "Tazewell BOS":tazewell_county,
-    "Tazewell PC":tazewell_county,
     "Wesmoreland BOS":westmoreland_county,
     "Westmoreland PC":westmoreland_county
 }
@@ -79,6 +74,17 @@ def run_webscraping():
                     New_Alerts.append(message)
         except:
             error_alert = "Error webscraping " + boarddocs_dictionary[locality_dictionary]['name'] + " using BoardDocs code"
+            New_Alerts.append(error_alert)
+            continue
+
+    for locality_dictionary in calendar_view_dictionary:
+        try:
+            alert = calendar_view(locality_dictionary)
+            if alert != []:
+                for message in alert:
+                    New_Alerts.append(message)
+        except:
+            error_alert = "Error webscraping " + calendar_view_dictionary[locality_dictionary]['name'] + " using Calendar View code"
             New_Alerts.append(error_alert)
             continue
 
@@ -244,6 +250,26 @@ def run_webscraping():
                     New_Alerts.append(message)
         except:
             error_alert="Error webscraping " + php_table_dictionary[locality_dictionary]['name'] + " using PHP Table code"
+            New_Alerts.append(error_alert)
+            continue
+    for locality_dictionary in the_lists_dictionary:
+        try:
+            alert=the_lists(locality_dictionary)
+            if alert != []:
+                for message in alert:
+                    New_Alerts.append(message)
+        except:
+            error_alert="Error webscraping " + the_lists_dictionary[locality_dictionary]['name'] + " using The Lists code"
+            New_Alerts.append(error_alert)
+            continue
+    for locality_dictionary in the_split_lists_dictionary:
+        try:
+            alert=the_split_lists(locality_dictionary)
+            if alert != []:
+                for message in alert:
+                    New_Alerts.append(message)
+        except:
+            error_alert="Error webscraping " + the_split_lists_dictionary[locality_dictionary]['name'] + " using The Lists code"
             New_Alerts.append(error_alert)
             continue
 
