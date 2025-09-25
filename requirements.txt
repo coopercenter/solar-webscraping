@@ -1,6 +1,14 @@
 Selenium==4.27.1
-pandas==2.2.3
 PyPDF2==3.0.1
 requests==2.32.3
 webdriver_manager==4.0.2
 dateparser==1.2.0
+time
+pandas==2.2.3
+dateutil==2.9.0.post0
+datetime
+smtplib
+os
+ssl
+tempfile
+docx2txt
