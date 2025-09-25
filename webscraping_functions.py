@@ -157,41 +157,43 @@ def is_internet_active(timeout):
 
 """AgendaCenter"""
 def agendacenter(locality_dictionary):
-    from webscraping_dictionaries import agendacenter_dictionary, meetings_tags
-    driver.get(agendacenter_dictionary[locality_dictionary]['url'])
+    from webscraping_dictionaries import agendacenter_dictionary
+    dictionary = agendacenter_dictionary[locality_dictionary]
+    driver.get(dictionary['url'])
     messages = []
     time.sleep(5)
-    table_rows = driver.find_elements(By.CSS_SELECTOR, meetings_tags['agendacenter'])
+    table_rows = driver.find_elements(By.CSS_SELECTOR, dictionary["meeting_rows"])
     future_meetings = [item for item in table_rows if check_meeting_date(search_dates(item.text,languages=['en'])[0][0])==True]
     agenda_links = [item.find_elements(By.CSS_SELECTOR,"a")[1].get_attribute("href") for item in future_meetings]
-    if agendacenter_dictionary[locality_dictionary]['agenda_type']=='pdf':
+    if dictionary['agenda_type']=='pdf':
         for link in agenda_links:
             driver.get(link)
             time.sleep(60)
-            agenda_content = get_pdf_content(agendacenter_dictionary[locality_dictionary]['agenda_content'])
+            agenda_content = get_pdf_content(dictionary['agenda_content'])
             readable = check_agenda_readability(agenda_content)
             if readable == True:
                 agenda_search = search_text_for_keywords(agenda_content)
                 if agenda_search != []:
-                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + agendacenter_dictionary[locality_dictionary]['name'] + ". " + link)
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + dictionary['name'] + ". " + link)
             elif readable == False:
-                messages.append("New meeting document available for "+ agendacenter_dictionary[locality_dictionary]['name'] + ". " + "Document cannot be scanned for keywords. " + link)
-    if agendacenter_dictionary[locality_dictionary]['agenda_type']=='webpage':
+                messages.append("New meeting document available for "+ dictionary['name'] + ". " + "Document cannot be scanned for keywords. " + link)
+    if dictionary['agenda_type']=='webpage':
         for link in agenda_links:
             driver.get(link)
             time.sleep(20)
-            agenda_content = get_webpage_content(agendacenter_dictionary[locality_dictionary]["agenda_content"])
+            agenda_content = get_webpage_content(dictionary["agenda_content"])
             agenda_search = search_text_for_keywords(agenda_content)
             if agenda_search != []:
-                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + agendacenter_dictionary[locality_dictionary]['name'] + ". " + link)
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + dictionary['name'] + ". " + link)
     return messages
 
 def agendacenter2(locality_dictionary):
-    from webscraping_dictionaries import agendacenter2_dictionary, meetings_tags
-    driver.get(agendacenter2_dictionary[locality_dictionary]['url'])
+    from webscraping_dictionaries import agendacenter2_dictionary
+    dictionary = agendacenter2_dictionary[locality_dictionary]
+    driver.get(dictionary['url'])
     time.sleep(5)
     messages =[]
-    table_rows = driver.find_elements(By.CSS_SELECTOR, meetings_tags['agendacenter'])
+    table_rows = driver.find_elements(By.CSS_SELECTOR, dictionary["meeting_rows"])
     future_meetings = [item for item in table_rows if check_meeting_date(search_dates(item.text,languages=['en'])[0][0])==True]
     meetings_links = [item.find_elements(By.CSS_SELECTOR,"a")[1].get_attribute("href") for item in future_meetings]
     #if agendacenter_dictionary[locality_dictionary]['agenda_type']=='pdf':
@@ -202,14 +204,14 @@ def agendacenter2(locality_dictionary):
         agendas = [pdf_link.get_attribute('href') for pdf_link in documents if 'AGENDA' in pdf_link.text]
         for agenda_link in agendas:
             driver.get(agenda_link)
-            agenda_content = get_pdf_content(agendacenter2_dictionary[locality_dictionary]['agenda_content'])
+            agenda_content = get_pdf_content(dictionary['agenda_content'])
             readable = check_agenda_readability(agenda_content)
             if readable == True:
                 agenda_search = search_text_for_keywords(agenda_content)
                 if agenda_search != []:
-                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + agendacenter2_dictionary[locality_dictionary]['name'] + ". " + link)
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + dictionary['name'] + ". " + link)
             elif readable ==False:
-                messages.append("New meeting document available for "+ agendacenter2_dictionary[locality_dictionary]['name'] + ". " + "Document cannot be scanned for keywords. " + link)
+                messages.append("New meeting document available for "+ dictionary['name'] + ". " + "Document cannot be scanned for keywords. " + link)
     #if agendacenter_dictionary[locality_dictionary]['agenda_type']=='webpage':
         #messages = search_webpage(agenda_links, agendacenter2_dictionary, locality_dictionary)
     return messages
@@ -272,13 +274,45 @@ def boarddocs(locality_dictionary):
         messages += pc_messages
     return messages
 
+"Calendar View"
+def calendar_view(locality_dictionary):
+    from webscraping_dictionaries import calendar_view_dictionary
+    dictionary = calendar_view_dictionary[locality_dictionary]
+    driver.get(dictionary['url'])
+    time.sleep(20)
+    messages = []
+    meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meetings_tag"])
+    meeting_links = [meeting.get_attribute("href") for meeting in meetings if "Board of Supervisors" in meeting.text or "Planning Commission" in meeting.text or "Board of Zoning Appeals" in meeting.text or "Solar" in meeting.text or "Battery" in meeting.text]
+    for link in meeting_links:
+        driver.get(link)
+        time.sleep(10)
+        if dictionary["agenda_type"] == "webpage":
+            agenda_content = get_webpage_content(dictionary["content_tag"])
+        elif dictionary["agenda_type"] == "pdf":
+            try:
+                agenda_link = driver.find_element(By.CSS_SELECTOR, dictionary["agenda_tag"]).get_attribute("href")
+                driver.get(agenda_link)
+                time.sleep(10)
+                agenda_content = get_pdf_content(dictionary["content_tag"])
+            except:
+                agenda_content=[]
+        readable = check_agenda_readability(agenda_content)
+        if readable == True:
+            agenda_search = search_text_for_keywords(agenda_content)
+            if agenda_search !=[]:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + dictionary["name"] + ". " + link)
+        elif readable == False:
+            messages.append("New meeting document available for " + dictionary["name"] + ". Document cannot be scanned for keywords. " + link)         
+    return messages
+
 "CivicClerk"
 def civicclerk(locality_dictionary):
-    from webscraping_dictionaries import civicclerk_dictionary,meetings_tags
+    from webscraping_dictionaries import civicclerk_dictionary
+    dictionary = civicclerk_dictionary[locality_dictionary]
     messages=[]
-    driver.get(civicclerk_dictionary[locality_dictionary]['url'])
+    driver.get(dictionary['url'])
     time.sleep(10)
-    all_meetings = driver.find_elements(By.CSS_SELECTOR,meetings_tags['civicclerk'])
+    all_meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meeting_rows"])
     meetings_with_agendas = []
     for item in all_meetings:
         try:
@@ -296,22 +330,23 @@ def civicclerk(locality_dictionary):
         pdf_viewer_frame = driver.find_elements(By.CSS_SELECTOR,"iframe[id*=pdfViewerIframe")
         if pdf_viewer_frame != []:
             driver.switch_to.frame(pdf_viewer_frame[0])
-            agenda_content = get_pdf_content(civicclerk_dictionary[locality_dictionary]['agenda_content'])
+            agenda_content = get_pdf_content(dictionary['agenda_content'])
             readable=check_agenda_readability(agenda_content)
             if readable ==True:
                 agenda_search = search_text_for_keywords(agenda_content)
                 if agenda_search != []:
-                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + civicclerk_dictionary[locality_dictionary]['name'] + ". " + item)
+                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + dictionary['name'] + ". " + item)
             elif readable ==False:
-                messages.append("New meeting document available for " + civicclerk_dictionary[locality_dictionary]['name'] + ". " + "Document cannot be scanned for keywords. " + item)
+                messages.append("New meeting document available for " + dictionary['name'] + ". " + "Document cannot be scanned for keywords. " + item)
     return messages
     
 """CivicWeb"""
 def civicweb(locality_dictionary):
-    from webscraping_dictionaries import civicweb_dictionary,meetings_tags, agenda_content_tags
-    driver.get(civicweb_dictionary[locality_dictionary]['url'])
+    from webscraping_dictionaries import civicweb_dictionary
+    dictionary=civicweb_dictionary[locality_dictionary]
+    driver.get(dictionary['url'])
     time.sleep(10)  
-    all_meetings = driver.find_elements(By.CSS_SELECTOR,meetings_tags['civicweb'])
+    all_meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meetings_tag"])
     relevant_meetings = [item for item in all_meetings if "Board of Supervisors" in item.text or "Planning Commission" in item.text or "City Council" in item.text]
     future_meetings = []
     for item in relevant_meetings:
@@ -329,10 +364,10 @@ def civicweb(locality_dictionary):
         #switch to the agenda viewer frame
         agenda_frame = driver.find_element(By.CSS_SELECTOR,"iframe")
         driver.switch_to.frame(agenda_frame)
-        agenda_content = driver.find_elements(By.CSS_SELECTOR,agenda_content_tags['civicweb'])
+        agenda_content = driver.find_elements(By.CSS_SELECTOR,dictionary["content_tag"])
         agenda_search = search_agenda_for_keywords(agenda_content)
         if agenda_search != []:
-            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + civicweb_dictionary[locality_dictionary]['name'] + ". " + item)
+            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + dictionary['name'] + ". " + item)
     return messages
 
 """DocumentCenter"""
@@ -822,6 +857,56 @@ def prime_gov(locality_dictionary):
             messages.append("New meeting document available for " + primegov_dictionary[locality_dictionary]['name'] + ". Document cannot be scanne for keywords. " + link)
     return messages
 
+"The Lists" #websites whose layout boil down to a list of links with the document link containing the name and date in the hyperlink text
+def the_lists(locality_dictionary):
+    from webscraping_dictionaries import the_lists_dictionary
+    messages = []
+    driver.get(the_lists_dictionary[locality_dictionary]["url"])
+    time.sleep(10)
+    meetings = driver.find_elements(By.CSS_SELECTOR,the_lists_dictionary[locality_dictionary]["meetings_tag"])
+    current_meetings = [item.get_attribute("href") for item in meetings if search_dates(item.text) != None and check_meeting_date(search_dates(item.text,languages=["en"])[0][0])==True]
+    for link in current_meetings:
+        driver.get(link)
+        time.sleep(10)
+        agenda_content = get_pdf_content(the_lists_dictionary[locality_dictionary]["content_tag"])
+        readable = check_agenda_readability(agenda_content)
+        if readable == True:
+            agenda_search = search_text_for_keywords(agenda_content)
+            if agenda_search != []:
+                messages.append("Keyword(s) "  + ", ".join(agenda_search) + " found in upcoming meeting for "  + the_lists_dictionary[locality_dictionary]["name"] + ". " + link)
+        elif readable == False:
+            messages.append("New meeting document available for " + the_lists_dictionary[locality_dictionary]["name"] + ". Document cannot be scanned for keywords. " + link)
+    return messages
+
+#subset of the list type websites where the agenda link is distinct from the date-containing title
+def the_split_lists(locality_dictionary):
+    from webscraping_dictionaries import the_split_lists_dictionary
+    messages = []
+    driver.get(the_split_lists_dictionary[locality_dictionary]["url"])
+    time.sleep(10)
+    meetings = driver.find_elements(By.CSS_SELECTOR,the_split_lists_dictionary[locality_dictionary]["meeting_rows"])
+    driver.execute_script("arguments[0].scrollIntoView(true);", meetings[0])
+    time.sleep(1)
+    agenda_links = []
+    for item in meetings:
+        if search_dates(item.text.title().replace("Minutes",""),languages=["en"]) != None and check_meeting_date(search_dates(item.text.title().replace("Minutes",""),languages=["en"])[0][0]) == True:
+            try:
+                agenda_links.append(item.find_element(By.CSS_SELECTOR,the_split_lists_dictionary[locality_dictionary]["agenda_tag"]).get_attribute("href"))
+            except:
+                continue
+    for link in agenda_links:
+        driver.get(link)
+        time.sleep(10)
+        agenda_content = get_pdf_content(the_split_lists_dictionary[locality_dictionary]["content_tag"])
+        readable = check_agenda_readability(agenda_content)
+        if readable == True:
+            agenda_search = search_text_for_keywords(agenda_content)
+            if agenda_search != []:
+                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + the_split_lists_dictionary[locality_dictionary]["name"] + ". " + link)
+        elif readable == False:
+            messages.append("New meeting document available for " + the_split_lists_dictionary[locality_dictionary]["name"] + ". Document cannot be scanned for keywords. " + link)
+    return messages
+
 """Locality Specific Functions"""
 
 """Albemarle County"""
@@ -831,9 +916,9 @@ def albemarle_county_pc():
     driver.get(locality_dictionary_single_use['Albemarle PC']['url'])
     time.sleep(10)
     table_rows = driver.find_elements(By.CSS_SELECTOR, "tr")
-    #page we're looking at only has upcoming meetings, so no need to check the date
+    recent_and_upcoming = [row for row in table_rows if search_dates(row.text, languages=["en"]) != None and check_meeting_date(search_dates(row.text, languages=["en"])[0][0]) == True]
     meeting_links = []
-    for item in table_rows:
+    for item in recent_and_upcoming:
         try:
             meeting_links.append(item.find_element(By.CSS_SELECTOR,"a[href*=Calendar").get_attribute("href"))
         except:
@@ -943,31 +1028,6 @@ def bath_county(locality_dictionary): #add a clause that allows it to finish wit
         messages.append("New meeting document available for "+ locality_dictionary_multi_use[locality_dictionary]['name'] + ". " + "Document cannot be scanned for keywords. " + latest_minutes)
     return messages
 
-"""Bland County"""
-def bland_county():
-    from webscraping_dictionaries import locality_dictionary_single_use
-    url_check = verify_url(locality_dictionary_single_use['Bland']['url'])
-    if url_check == True:
-        driver.get(locality_dictionary_single_use['Bland']['url'])
-        time.sleep(10)
-        messages = []
-        #get all the table rows
-        table_rows = driver.find_elements(By.CSS_SELECTOR,"tr")
-        #filter for just the ones where agendas are posted
-        posted_agendas = [item for item in table_rows if "AGENDA" in item.text]
-        #check the date for the last posted meeting
-        try: 
-            future_meeting = check_meeting_date(search_dates(posted_agendas[-1].text,languages=['en'])[0][0])
-        except:
-            future_meeting=None
-        if future_meeting == True:
-            agenda_url = future_meeting.find_element(By.CSS_SELECTOR,"a").get_attribute("href")
-            #as of 05/23/25, Bland County still posts scanned documents that are not yet readable by this webscraper
-            messages.append("New meeting agenda available for Bland County Board of Supervisors. Document cannot be scanned for keywords. " + agenda_url)
-    else:
-        messages.append(url_check)
-    return messages
-
 "Brunswick County"
 def brunswick_county():
     from webscraping_dictionaries import locality_dictionary_single_use
@@ -1031,28 +1091,6 @@ def buena_vista_city_council():
         messages.append("New agenda available for Buena Vista City Council. Document cannot be scanned for keywords. " + item)
     return messages
 
-"""Town of Covington""" #new site design, code needs an update but nothing useful is posted yet
-def covington():
-    from webscraping_dictionaries import locality_dictionary_single_use
-    driver.get(locality_dictionary_single_use["Covington"]["url"])
-    time.sleep(10)
-    messages = []
-    year_expand = driver.find_elements(By.CSS_SELECTOR, "div[class*='accordion-item'")
-    #the labels won't show up, but the latest year will be the first one
-    year_expand[0].click()
-    time.sleep(10)
-    pdfs = driver.find_elements(By.CSS_SELECTOR,"a[href*='.pdf'")
-    agendas = [item for item in pdfs if "Agenda" in item.text]
-    future_meetings = [item.get_attribute("href") for item in agendas if check_meeting_date(item.text)==True]
-    for item in future_meetings:
-        driver.get(item)
-        time.sleep(10)
-        agenda_content = driver.find_elements(By.CSS_SELECTOR,'div[class*=textLayer')
-        agenda_search = search_agenda_for_keywords(agenda_content)
-        if agenda_search != []:
-            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for the Town of Covington. " + item)
-    return messages
-
 "Craig County"
 def craig_county():
     from webscraping_dictionaries import locality_dictionary_single_use
@@ -1073,12 +1111,10 @@ def fairfax_county_bos():
     driver.get(locality_dictionary_single_use['Fairfax BOS']['url'])
     time.sleep(10)
     messages = []
-    meetings = driver.find_elements(By.CSS_SELECTOR,"div[class*='calendar-title'")
-    meeting_urls = []
-    for item in meetings:
-        meeting_urls.append(item.find_element(By.CSS_SELECTOR,"a").get_attribute("href"))
-    for item in meeting_urls:
-        driver.get(item)
+    meetings = driver.find_elements(By.CSS_SELECTOR,locality_dictionary_single_use['Fairfax BOS']["meetings_tag"])
+    meeting_links = [meeting.get_attribute("href") for meeting in meetings if search_dates(meeting.get_attribute("href").replace("-"," ").replace("/"," "),languages=["en"]) != None and check_meeting_date(search_dates(meeting.get_attribute("href").replace("-"," ").replace("/"," "),languages=["en"])[0][0])==True and search_dates(meeting.get_attribute("href").replace("-"," ").replace("/"," "),languages=["en"])[0][0] != '2025']
+    for link in meeting_links:
+        driver.get(link)
         time.sleep(10)
         try:
             agenda_link = driver.find_element(By.CSS_SELECTOR,"a[href*='.pdf'").get_attribute("href")
@@ -1103,15 +1139,27 @@ def fairfax_county_pc():
     messages = []
     latest_year = driver.find_element(By.CSS_SELECTOR,"table[align*=center")
     months = latest_year.find_elements(By.CSS_SELECTOR,"td[align*=center")
-    current_month = [item.find_element(By.CSS_SELECTOR,"a").get_attribute('href') for item in months if item.text == datetime.now().strftime("%B")]
-    driver.get(current_month[0])
-    time.sleep(10)
-    agenda_links = driver.find_elements(By.CSS_SELECTOR,"a[href*='.pdf'")
-    agenda_urls = [item.get_attribute("href") for item in agenda_links]
-    for item in agenda_urls:
-        try:
-            future = check_meeting_date(item.split('/')[-1].split('.pdf')[0])
-            if future==True:
+    current_months = [item.find_element(By.CSS_SELECTOR,"a").get_attribute('href') for item in months if item.text == datetime.now().strftime("%B") or item.text == (datetime.date(datetime.now()) - timedelta(days=8)).strftime("%B") ]
+    for month in current_months:
+        driver.get(month)
+        time.sleep(15)
+        agenda_links = driver.find_elements(By.CSS_SELECTOR,"a[href*='.pdf'")
+        agenda_urls = [item.get_attribute("href") for item in agenda_links]
+        for item in agenda_urls:
+            try:
+                future = check_meeting_date(item.split('/')[-1].split('.pdf')[0])
+                if future==True:
+                    driver.get(item)
+                    time.sleep(10)
+                    agenda_content = get_pdf_content(locality_dictionary_single_use['Fairfax PC']['content_tag'])
+                    readable = check_agenda_readability(agenda_content)
+                    if readable == True:
+                        agenda_search = search_text_for_keywords(agenda_content)
+                        if agenda_search != []:
+                            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Fairfax County Planning Commission. " + item)
+                    elif readable == False:
+                        messages.append("New agenda available for upcoming meeting in Fairfax County Planning Commission. Document cannot be scanned for keywords. " + item)
+            except:
                 driver.get(item)
                 time.sleep(10)
                 agenda_content = get_pdf_content(locality_dictionary_single_use['Fairfax PC']['content_tag'])
@@ -1121,18 +1169,7 @@ def fairfax_county_pc():
                     if agenda_search != []:
                         messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Fairfax County Planning Commission. " + item)
                 elif readable == False:
-                    messages.append("New agenda available for upcoming meeting in Fairfax County Planning Commission. Document cannot be scanned for keywords. " + item)
-        except:
-            driver.get(item)
-            time.sleep(10)
-            agenda_content = get_pdf_content(locality_dictionary_single_use['Fairfax PC']['content_tag'])
-            readable = check_agenda_readability(agenda_content)
-            if readable == True:
-                agenda_search = search_text_for_keywords(agenda_content)
-                if agenda_search != []:
-                    messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Fairfax County Planning Commission. " + item)
-            elif readable == False:
-                messages.append("New agenda available for upcoming meeting for Fairfax County Planning Commission. Document cannot be scanned for keywords. " + item)
+                    messages.append("New agenda available for upcoming meeting for Fairfax County Planning Commission. Document cannot be scanned for keywords. " + item)
     return messages
 
 """Floyd County""" #how to even get this working again, horrible new website with total lack of tag coherence
@@ -1201,31 +1238,9 @@ def giles_county():
         messages.append("New document available for upcoming meeting for Giles County. Document cannot be scanned for keywords. " + agenda_link)
     return messages
     
-"""Henrico County"""
-def henrico_county_bos():
-    from webscraping_dictionaries import locality_dictionary_single_use
-    driver.get(locality_dictionary_single_use['Henrico BOS']['url'])
-    time.sleep(10)
-    messages = []
-    #ignore the first entry in the table rows since it's just the column headers
-    table_rows = driver.find_elements(By.CSS_SELECTOR,'tr')[1:]
-    latest_meeting = table_rows[0]
-    future_meeting = check_meeting_date(latest_meeting.text)
-    if future_meeting == True:
-        meeting_url = latest_meeting.find_element(By.CSS_SELECTOR,"a").get_attribute("href")
-        driver.get(meeting_url)
-        time.sleep(10)
-        agenda_content = get_pdf_content(locality_dictionary_single_use["Henrico BOS"]["content_tag"])
-        readable = check_agenda_readability(agenda_content)
-        if readable == True:
-            agenda_search = search_text_for_keywords(agenda_content)
-            if agenda_search != []:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Henrico County Board of Supervisors. " + meeting_url)
-        elif readable == False:
-            messages.append("New document available for upcoming meeting for Henrico County. Document cannot be scanned for keywords. " + meeting_url)
-    return messages   
+"""Henrico County""" 
 
-def henrico_county_pc(): #make sure to check the BZA current agenda too
+def henrico_county_pc(): #make sure to check the BZA current agenda too, also use this new link https://henricocountyva.new.swagit.com/views/166/
     from webscraping_dictionaries import locality_dictionary_single_use
     driver.get(locality_dictionary_single_use['Henrico PC']['url'])
     time.sleep(10)
@@ -1248,8 +1263,7 @@ def henrico_county_pc(): #make sure to check the BZA current agenda too
             messages.append("New document available for upcoming meeting for Henrico County Planning Commission. Document cannot be scanned for keywords. " + item)
     return messages        
 
-"Highland County" #consider addition to Links by Year localities?
-#needs review, latest posted agenda was a docx download, also timestamp checking errors
+"Highland County"
 def highland_county_bos():
     from webscraping_dictionaries import locality_dictionary_single_use
     messages = []
@@ -1285,75 +1299,6 @@ def highland_county_bos():
                     messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Highland County Board of Supervisors. " + agenda_link)
             elif readable == False:
                 messages.append("New document available for upcoming meeting for Highland County Board of Supervisors. Document cannot be scanned for keywords. " + agenda_link)
-    return messages
-
-"""King and Queen County"""
-def king_and_queen_county(locality_dictionary):
-    from webscraping_dictionaries import locality_dictionary_multi_use
-    driver.get(locality_dictionary_multi_use[locality_dictionary]['url'])
-    time.sleep(10)
-    messages = []
-    table_rows = driver.find_elements(By.CSS_SELECTOR,"tr")
-    for item in table_rows:
-        try:
-            if check_meeting_date(item.text)==True:
-                if 'Agenda' in item.text:
-                    agenda_link = item.find_elements(By.CSS_SELECTOR,"td")[1].find_element(By.CSS_SELECTOR,'a').get_attribute('href')
-                    driver.get(agenda_link)
-                    time.sleep(10)
-                    agenda_content = get_pdf_content(locality_dictionary_multi_use[locality_dictionary]["content_tag"])
-                    readable = check_agenda_readability(agenda_content)
-                    if readable == True:
-                        agenda_search = search_text_for_keywords(agenda_content)
-                        if agenda_search != []:
-                            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality_dictionary_multi_use[locality_dictionary]['name'] + ". " + agenda_link)
-                    elif readable == False:
-                        messages.append("New document available for upcoming meeting for " + locality_dictionary_multi_use[locality_dictionary]['name'] + ". Document cannot be scanned for keywords. " + agenda_link )         
-        except:
-            continue
-    return messages
-
-"""Lee County"""
-def lee_county():
-    from webscraping_dictionaries import locality_dictionary_single_use
-    driver.get(locality_dictionary_single_use['Lee']['url'])
-    time.sleep(10)
-    messages = []
-    all_site_links = driver.find_elements(By.CSS_SELECTOR,"p[class*='font_7 wixui-rich-text'")
-    meetings = [item for item in all_site_links if "Meeting" in item.text or "Hearing" in item.text]
-    future_meetings = [item.find_element(By.CSS_SELECTOR,"a").get_attribute("href") for item in meetings if check_meeting_date(search_dates(item.text,languages=['en'])[0][0]) == True]
-    for item in future_meetings:
-        driver.get(item)
-        time.sleep(10)
-        agenda_content = get_pdf_content(locality_dictionary_single_use["Lee"]["content_tag"])
-        readable = check_agenda_readability(agenda_content)
-        if readable == True:
-            agenda_search = search_text_for_keywords(agenda_content)
-            if agenda_search != []:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Lee County Board of Supervisors. " + item)
-        elif readable ==False:
-            messages.append("New document available for upcoming meeting for Lee County Board of Supervisors. Document cannot be scanned for keywords" +  item)
-    return messages
-
-"""Lexington Planning Commission"""
-def lexington_pc():
-    from webscraping_dictionaries import locality_dictionary_single_use
-    driver.get(locality_dictionary_single_use['Lexington']['url'])
-    time.sleep(10)
-    messages = []
-    list_items = driver.find_elements(By.CSS_SELECTOR,"a[class*='content_link'")
-    future_meetings = [item.get_attribute("href") for item in list_items if check_meeting_date(item.text)==True]
-    for item in future_meetings:
-        driver.get(item)
-        time.sleep(10)
-        agenda_content = get_pdf_content(locality_dictionary_single_use["Lexington"]["content_tag"])
-        readable = check_agenda_readability(agenda_content)
-        if readable == True:
-            agenda_search = search_text_for_keywords(agenda_content)
-            if agenda_search != []:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for the City of Lexington Planning Commission. " + item)
-        elif readable == False:
-            messages.append("New document available for upcoming meeting for the City of Lexington. Document cannot be scanned for keywords. " + item)
     return messages
 
 "LaserFiche for Loudoun Planning Commission"
@@ -1397,28 +1342,6 @@ def loudoun_pc():
             continue
     return messages
 
-"""Nelson County""" #come back and evaluate get_pdf_content viability for this function. Need a version that gets webpage content across any webpage
-def nelson_county():
-    from webscraping_dictionaries import locality_dictionary_single_use
-    driver.get(locality_dictionary_single_use['Nelson']['url'])
-    time.sleep(10)
-    messages = []
-    all_events = driver.find_elements(By.CSS_SELECTOR,'h3')[1:]
-    event_urls = []
-    for item in all_events:
-        try:
-            event_urls.append(item.find_element(By.CSS_SELECTOR,'a').get_attribute("href"))
-        except:
-            continue
-    for item in event_urls:
-        driver.get(item)
-        time.sleep(10)
-        event_description = driver.find_elements(By.CSS_SELECTOR,'div[class*="fusion-text"')
-        event_search = search_agenda_for_keywords(event_description)
-        if event_search !=[]:
-            messages.append("Keyword(s) " + ", ".join(event_search) + " found in upcoming meeting for Nelson County. " + item)
-    return messages
-
 """Norton City Council"""
 def norton_city():
     from webscraping_dictionaries import locality_dictionary_single_use
@@ -1441,132 +1364,6 @@ def norton_city():
                 messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for City of Norton City Council. " + agenda_url)
         elif readable == False:
             messages.apend("New document available for upcoming meeting for City of Norton City Council. Document cannot be scanned for keywords. " + agenda_url)
-    return messages
-
-"Prince Edward County"
-def prince_edward_county(locality_dictionary):
-    from webscraping_dictionaries import locality_dictionary_multi_use
-    messages = []
-    driver.get(locality_dictionary_multi_use[locality_dictionary]["url"])
-    time.sleep(10)
-    years = driver.find_elements(By.CSS_SELECTOR,locality_dictionary_multi_use[locality_dictionary]["years_tag"])
-    current_year = [year for year in years if datetime.now().strftime("%Y") in year.text]
-    current_year[0].click()
-    time.sleep(2)
-    meetings = driver.find_elements(By.CSS_SELECTOR,locality_dictionary_multi_use[locality_dictionary]["meetings_tag"])
-    future_meetings = [item.get_attribute("href") for item in meetings if item.text != '' and search_dates(item.text) != None and check_meeting_date(search_dates(item.text, languages=['en'])[0][0])==True]
-    for agenda_link in future_meetings:
-        driver.get(agenda_link)
-        time.sleep(10)
-        agenda_content = get_pdf_content(locality_dictionary_multi_use[locality_dictionary]["content_tag"])
-        readable = check_agenda_readability(agenda_content)
-        if readable == True:
-            agenda_search = search_text_for_keywords(agenda_content)
-            if agenda_search != []:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for "+ locality_dictionary_multi_use[locality_dictionary]['name'] + ". " + agenda_link)
-        elif readable == False:
-            messages.append("New meeting document available for " + locality_dictionary_multi_use[locality_dictionary]["name"] + ". Document cannot be scanned for keywords. " + agenda_link)
-    return messages 
-
-"""Richmond County""" #assuming everything is still scanned and unreadable, revise later
-def richmond_county():
-    from webscraping_dictionaries import locality_dictionary_single_use
-    driver.get(locality_dictionary_single_use["Richmond"]["url"])
-    time.sleep(10)
-    messages = []
-    agenda_links = driver.find_elements(By.CSS_SELECTOR, "a[href*='.pdf'")
-    for item in agenda_links:
-        if item.text != "":
-            future_meeting = check_meeting_date(item.text)
-            if future_meeting == True:
-                messages.append("New Board of Supervisors Meeting Agenda posted for Richmond County. Document cannot be scanned for keywords. " + item.get_attribute("href"))
-            else:
-                break
-    return messages
-
-"""Staunton"""
-def staunton(locality_dictionary):
-    from webscraping_dictionaries import locality_dictionary_multi_use
-    driver.get(locality_dictionary_multi_use[locality_dictionary]["url"])
-    time.sleep(10)
-    messages = []
-    table_rows = driver.find_elements(By.CSS_SELECTOR,'tr[class*="meeting_widget_item"')
-    future_meetings = [item.find_element(By.CSS_SELECTOR,"a").get_attribute("href") for item in table_rows if check_meeting_date(item.text)==True]
-    for item in future_meetings:
-        driver.get(item)
-        time.sleep(10)
-        agenda_link = driver.find_element(By.CSS_SELECTOR,"a[class*='pdf_icon'").get_attribute("href")
-        driver.get(agenda_link)
-        time.sleep(10)
-        agenda_content = get_pdf_content(locality_dictionary_multi_use[locality_dictionary]["content_tag"])
-        readable = check_agenda_readability(agenda_content)
-        if readable == True:
-            agenda_search = search_text_for_keywords(agenda_content)
-            if agenda_search != []:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality_dictionary_multi_use[locality_dictionary]["name"] + ". " + agenda_link)
-        elif readable == False:
-            messages.append("New meeting document available for " + locality_dictionary_multi_use[locality_dictionary]["name"] + ". Document cannot be scanned for keywords. " + agenda_link)
-    return messages
-
-"""Sussex County"""
-def sussex_county():
-    from webscraping_dictionaries import locality_dictionary_single_use
-    driver.get(locality_dictionary_single_use["Sussex"]["url"])
-    time.sleep(10)
-    messages=[]
-    list_rows = driver.find_elements(By.CSS_SELECTOR,"li")[1:]
-    meetings = [item for item in list_rows if "Agenda" in item.text and item.text != "Agendas And Minutes"]
-    current_meetings = [item for item in meetings if "Archived" not in item.text]
-    future_meetings = [item for item in current_meetings if check_meeting_date(search_dates(item.text,languages=['en'])[0][0])==True]
-    document_links =[]
-    for item in future_meetings:
-        documents = item.find_elements(By.CSS_SELECTOR,"a")
-        for item in documents:
-            document_links.append(item.get_attribute("href")) 
-    for link in document_links:
-        driver.get(link)
-        time.sleep(10)
-        agenda_content = get_pdf_content(locality_dictionary_single_use["Sussex"]["content_tag"])
-        readable = check_agenda_readability(agenda_content)
-        if readable ==True:
-            agenda_search = search_text_for_keywords(agenda_content)
-            if agenda_search != []:
-                messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Sussex County. " + link)
-        elif readable == False:
-            messages.append("New meeting document available for Sussex County. Document cannot be scanned for keywords. " + link)
-    return messages
-
-"""Tazewell County"""
-def tazewell_county(locality_dictionary):
-    from webscraping_dictionaries import locality_dictionary_multi_use
-    driver.get(locality_dictionary_multi_use[locality_dictionary]["url"])
-    time.sleep(10)
-    messages = []
-    all_rows = driver.find_elements(By.CSS_SELECTOR,"li")
-    meeting_rows = []
-    for item in all_rows:
-        if "2024" in item.text:
-            meeting_rows.append(item)
-    for item in meeting_rows:
-        future_meeting = check_meeting_date(item.text)
-        if future_meeting == True:
-            try:
-                #agenda is listed first, so can just return the first search result
-                agenda_link = item.find_element(By.CSS_SELECTOR,"a")
-                agenda_url = agenda_link.get_attribute("href")
-                driver.get(agenda_url)
-                time.sleep(10)
-                agenda_content = get_pdf_content(locality_dictionary_multi_use[locality_dictionary]["content_tag"])
-                readable = check_agenda_readability(agenda_content)
-                if readable == True:
-                    agenda_search = search_text_for_keywords(agenda_content)
-                    if agenda_search != []:
-                        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + locality_dictionary_multi_use[locality_dictionary]["name"] + ". " + agenda_url)
-                elif readable == False:
-                    messages.append("New meeting document available for " + locality_dictionary_multi_use[locality_dictionary]["name"] + ". Document cannot be scanned for keywords. " + agenda_url)
-            except:
-                continue
-            #if there's no agenda posted yet and the initial agenda link search fails, just move on to the next meeting
     return messages
 
 """Virginia Beach"""
