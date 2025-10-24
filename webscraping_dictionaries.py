@@ -1,3 +1,23 @@
+# agendacenter_dictionary
+# agendacenter2_dictionary
+# boarddocs_dictionary
+# civicclerk_dictionary
+# civicweb_dictionary
+# document_center_dictionary
+# escribe_dictionary
+# folding_year_dictionary
+# granicus_dictionary
+# granicus_2_dictionary
+# laserfiche_dictionary
+# links_by_year_dictionary
+# meetingstable_dictionary
+# novusagenda_dictionary
+# onbase_dictionary
+# primegov_dictionary
+# php_table_dictionary
+# locality_functions_single_use
+# locality_functions_multi_use
+
 from webscraping_functions import *
 meetings_tags = {
     'agendacenter':"tr[class*=catAgendaRow",
