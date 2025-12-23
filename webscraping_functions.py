@@ -294,6 +294,7 @@ def civicclerk(locality_dictionary):
             meetings_with_agendas.append(item)
         except:
             continue
+        
     future_meetings = [item.find_element(By.CSS_SELECTOR,"a").get_attribute("href")  for item in meetings_with_agendas if check_meeting_date(search_dates(item.text,languages=['en'])[1][0])==True]
     for item in future_meetings:
         driver.get(item)
