@@ -24,7 +24,7 @@ def verify_url(url):
         raise SystemExit(f"{url}: is Not reachable \nErr: {e}")
 
 def check_meeting_date(meeting_time_string): 
-    one_week = timedelta(days=7)
+    one_week = timedelta(days=29)
     last_week = datetime.date(datetime.now()) - one_week
     #all_meetings[i].text should be set as the meeting title for boarddocs sites
     if datetime.date(datetime.now()) < datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)) or datetime.date(datetime.now()) == datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)) or last_week < datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)) or last_week == datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)) :
@@ -224,6 +224,11 @@ def check_boarddocs_agendas(locality_dictionary):
     meetings_tab[0].click()
     time.sleep(10)
     #get all the meeting links
+    #open the current year
+    years = driver.find_elements(By.CSS_SELECTOR,"section[class*='ui-accordion-header")
+    current_year = [year for year in years if year.text == datetime.now().strftime("%Y")]
+    current_year[0].click()
+    time.sleep(3)
     all_meetings = driver.find_elements(By.CSS_SELECTOR, "a[class*='icon prevnext meeting")
     update_messages = []
     future_meetings = []
@@ -347,7 +352,7 @@ def civicweb(locality_dictionary):
     driver.get(dictionary['url'])
     time.sleep(10)  
     all_meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meetings_tag"])
-    relevant_meetings = [item for item in all_meetings if "Board of Supervisors" in item.text or "Planning Commission" in item.text or "City Council" in item.text]
+    relevant_meetings = [item for item in all_meetings if "Board of Supervisors" in item.text or "Planning Commission" in item.text or "City Council" in item.text or "Board of Zoning Appeals" in item.text]
     future_meetings = []
     for item in relevant_meetings:
         if search_dates(item.text) != None:
@@ -544,17 +549,20 @@ def granicus_version_2(locality_dictionary):
                 except:
                     continue
             elif granicus_2_dictionary[locality_dictionary]["agenda_type"]=="pdf":
-                agenda_link = driver.find_element(By.CSS_SELECTOR,"a[id*=PublicAgendaFile").get_attribute("href")
-                driver.get(agenda_link)
-                time.sleep(20)
-                agenda_content=get_pdf_content(granicus_2_dictionary[locality_dictionary]["content_tag"])
-                readable=check_agenda_readability(agenda_content)
-                if readable == True:
-                    agenda_search = search_text_for_keywords(agenda_content)
-                    if agenda_search != []:
-                        messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + granicus_2_dictionary[locality_dictionary]['name'] + ". " + agenda_link)
-                elif readable==False:
-                    messages.append("New meeting document available for " + granicus_2_dictionary[locality_dictionary]["name"] + ". Document cannot be scanned for keywords. " + agenda_link)
+                try:
+                    agenda_link = driver.find_element(By.CSS_SELECTOR,"a[id*=PublicAgendaFile").get_attribute("href")
+                    driver.get(agenda_link)
+                    time.sleep(20)
+                    agenda_content=get_pdf_content(granicus_2_dictionary[locality_dictionary]["content_tag"])
+                    readable=check_agenda_readability(agenda_content)
+                    if readable == True:
+                        agenda_search = search_text_for_keywords(agenda_content)
+                        if agenda_search != []:
+                            messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + granicus_2_dictionary[locality_dictionary]['name'] + ". " + agenda_link)
+                    elif readable==False:
+                        messages.append("New meeting document available for " + granicus_2_dictionary[locality_dictionary]["name"] + ". Document cannot be scanned for keywords. " + agenda_link)
+                except:
+                    continue
     return messages
 
 def granicus(locality_dictionary):

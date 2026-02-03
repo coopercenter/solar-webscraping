@@ -36,11 +36,10 @@ locality_functions_multi_use = {
     "Bath BOS":bath_county,
     "Bath PC":bath_county,
     "Bath BZA":bath_county,
-    "Wesmoreland BOS":westmoreland_county,
-    "Westmoreland PC":westmoreland_county
 }
 
 def run_webscraping():
+    NewAlerts = pd.DataFrame([],columns=["locality","meeting_date","keyword","url"])
     New_Alerts = []
 
     "Run all the webscraping functions, single thread version"
@@ -62,7 +61,7 @@ def run_webscraping():
                 for message in alert:
                     New_Alerts.append(message)
         except:
-            error_alert = "Error webscraping " + agendacenter2_dictionary[locality_dictionary]['name'] + " using AgendaCenter Alternate code"
+            error_alert = "Error webscraping " + agendacenter2_dictionary[locality_dictionary]['name'] + " using AgendaCenter Alternate code" + ". " + agendacenter2_dictionary[locality_dictionary]["url"]
             New_Alerts.append(error_alert)
             continue
             
@@ -209,17 +208,6 @@ def run_webscraping():
             New_Alerts.append(error_alert)
             continue
 
-    for locality_dictionary in novusagenda_dictionary:
-        try:
-            alert=novusagenda(locality_dictionary)
-            if alert != []:
-                for message in alert:
-                    New_Alerts.append(message)
-        except:
-            error_alert="Error webscraping " + novusagenda_dictionary[locality_dictionary]['name'] + " using NovusAGENDA code"
-            New_Alerts.append(error_alert)
-            continue
-
     for locality_dictionary in onbase_dictionary:
         try:
             alert=onbase(locality_dictionary)
@@ -269,7 +257,7 @@ def run_webscraping():
                 for message in alert:
                     New_Alerts.append(message)
         except:
-            error_alert="Error webscraping " + the_split_lists_dictionary[locality_dictionary]['name'] + " using The Lists code"
+            error_alert="Error webscraping " + the_split_lists_dictionary[locality_dictionary]['name'] + " using The Split Lists code"
             New_Alerts.append(error_alert)
             continue
 
@@ -309,13 +297,13 @@ def run_webscraping():
     for message in New_Alerts:
         if "Solar" in message:
             Solar_Alerts.append(message)
-        elif "Battery" in message:
+        if "Battery" in message:
             Battery_Alerts.append(message)
-        elif "Error" in message or "Not Reachable" in message:
+        if "Error" in message or "Not Reachable" in message:
             Error_Alerts.append(message)
-        elif "scanned" in message:
+        if "scanned" in message:
             Unreadable_File_Alerts.append(message)
-        elif "Siting Agreement" in message:
+        if "Siting Agreement" in message:
             Siting_Alerts.append(message)
         else:
             Other_Alerts.append(message)
