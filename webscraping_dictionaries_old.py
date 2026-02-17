@@ -1,3 +1,122 @@
+# agendacenter_dictionary
+# agendacenter2_dictionary
+# boarddocs_dictionary
+# civicclerk_dictionary
+# civicweb_dictionary
+# document_center_dictionary
+# escribe_dictionary
+# folding_year_dictionary
+# granicus_dictionary
+# granicus_2_dictionary
+# laserfiche_dictionary
+# links_by_year_dictionary
+# meetingstable_dictionary
+# novusagenda_dictionary
+# onbase_dictionary
+# primegov_dictionary
+# php_table_dictionary
+# locality_dictionary_single_use
+# locality_dictionary_multi_use
+
+from webscraping_functions import *
+meetings_tags = {
+    'agendacenter':"tr[class*=catAgendaRow",
+
+    'boarddocs':"a[class*='icon prevnext meeting",
+
+    'civicclerk':"li[class*='cpp-MuiListItem-container'",
+
+    'civicweb':"a[class*='list-link'",
+
+    'documentcenter':"a[class*=pdf",
+
+    'escribe':"div[class*='upcoming-meeting-container'",
+
+    'granicus2':'div[class*=RowTop',
+
+    'granicus':"tr[class*=listingRow",
+
+    'table_rows':"tr",
+
+    'legistar':'tr[id*=ctl00_',
+
+    'primegov':'tr[role*=row',
+
+    'attachmentlink':"a[class*='attachment-link'",
+
+    'planningtitle':"a[title*='Planning'",
+
+    'pdflink':'a[href*=".pdf"',
+
+    'generallink':"a",
+
+    'contentlink':"a[class*='content_link'",
+
+    'pdflist':"li[class*=pdf",
+
+    'list':"li",
+
+    'divrows':"div[class*='views-row'",
+
+    'divcalendar':"div[class*='calendar-title'",
+
+    'pfont':"p[class*='font_7'",
+
+    'agendapdf':"a[href*='agenda.pdf'",
+
+    'pbuttonlink':"a[class*='pb_button'",
+
+    'qbuttonlink':'a[class*="qbutton"',
+
+    'brzlink':'a[class*="brz-a"',
+
+    'nextpdf':"a[href*='next.pdf'",
+
+    'header3':'h3',
+
+    'archivelink':"a[href*='Archive'",
+
+    'tablewidget':'tr[class*="meeting_widget_item"',
+
+    'currentlink':"a[href*=CurrentBriefAgenda",
+
+    'documentlink':'a[class*="document-link"',
+
+    'packagelink':"a[href*=package"
+}
+
+agenda_link_or_button_tags = {
+    'boarddocs':"a[id*='btn-view-agenda'"
+}
+
+pdf_page_tags ={
+    'agendacenter':'"div[class*=page"',
+
+    'civicclerk':'"div[class*=page"'
+}
+
+agenda_content_tags = { #table this idea for now, it's making things unnecessarily complicated, attach the actual tags to the locality dictionaries
+    'pdf_1':'div[class*=textLayer',
+
+    'pdf_2':"svg[class*=textLayer",
+
+    'webpage_1':"div[id*='divInner'",
+
+    'webpage_2':'div[class*="fusion-text"',
+
+    'webpage_3':"section[class*='main-content-wrap'",
+
+    'boarddocs':"span[class*='title'",
+
+    'civicweb':"html",
+
+    'legistar':'tr[id*=ctl00',
+
+    'novusagenda':"td",
+
+    'onbase':"body"
+}
+
 "Dictionaries for the localities that use the same type of document organization service"
 
 "AgendaCenter localities"
@@ -5,287 +124,258 @@ agendacenter_dictionary = {
     "Botetourt":{
         #new and horrible pop-up window that blocks my scraper (07/08: Seems to be gone now)
         'name':'Botetourt County',
-        'url':"https://www.botetourtva.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.botetourtva.gov/AgendaCenter/Search/?term=&CIDs=3,8,6,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Campbell":{ #went to a webpage rather than a pdf
         'name':"Campbell County",
-        'url':"https://www.co.campbell.va.us/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.co.campbell.va.us/AgendaCenter/Search/?term=&CIDs=5,12,6,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'webpage',
         'agenda_content':"div[id*='divInner'"},
 
     "Caroline":{
         'name':"Caroline County",
-        'url':"https://co.caroline.va.us/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://co.caroline.va.us/AgendaCenter/Search/?term=&CIDs=2,3,4,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'webpage',
         'agenda_content':"div[id*='divInner'"},
 
     "Cumberland":{
         'name':"Cumberland County",
-        'url':"https://www.cumberlandcounty.virginia.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.cumberlandcounty.virginia.gov/AgendaCenter/Search/?term=&CIDs=2,4,3,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Dinwiddie":{
         'name':"Dinwiddie County",
         'url':"https://www.dinwiddieva.us/AgendaCenter/Search/?term=&CIDs=2,3,4,1,&startDate=&endDate=&dateRange=&dateSelector=",
-        "meeting_rows":"tr[class*=catAgendaRow",
         'agenda_type':'webpage',
         'agenda_content':"div[id*='divInner'"},
 
     "Franklin":{
         'name':"Franklin County",
-        'url':"https://www.franklincountyva.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.franklincountyva.gov/AgendaCenter/Search/?term=&CIDs=7,3,13,4,&startDate=&endDate=&dateRange=&dateSelector=",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
+
+    "Grayson":{
+        'name':'Grayson County Board of Supervisors',
+        'url':"https://www.graysoncountyva.gov/AgendaCenter/Search/?term=&CIDs=5,2,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Halifax":{
         'name':"Halifax County",
-        'url':"https://www.halifaxcountyva.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.halifaxcountyva.gov/AgendaCenter/Search/?term=&CIDs=2,3,4,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Henry":{
         'name':"Henry County",
-        'url':"https://www.henrycountyva.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.henrycountyva.gov/AgendaCenter/Search/?term=&CIDs=3,9,7,8,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "King George":{
         'name':"King George County",
-        'url':"https://www.kinggeorgecountyva.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.kinggeorgecountyva.gov/AgendaCenter/Search/?term=&CIDs=2,3,5,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Madison":{
         'name':"Madison County",
-        'url':"https://www.madisonco.virginia.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.madisonco.virginia.gov/AgendaCenter/Search/?term=&CIDs=3,5,7,6,11,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'}, 
 
     "Mecklenburg":{
         'name':"Mecklenburg County",
-        'url':"https://www.mecklenburgva.com/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.mecklenburgva.com/AgendaCenter/Search/?term=&CIDs=2,5,8,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Middlesex":{
         'name':"Middlesex County",
-        'url':"https://www.co.middlesex.va.us/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.co.middlesex.va.us/AgendaCenter/Search/?term=&CIDs=4,8,2,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Page":{
         'name':"Page County",
-        'url':"https://www.pagecounty.virginia.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.pagecounty.virginia.gov/AgendaCenter/Search/?term=&CIDs=2,7,5,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
    "Patrick":{
        'name':"Patrick County",
-       'url':"https://www.co.patrick.va.us/AgendaCenter/Search",
-       "meeting_rows":"tr[class*=catAgendaRow",
+       'url':"https://www.co.patrick.va.us/AgendaCenter/Search/?term=&CIDs=3,4,&startDate=&endDate=&dateRange=&dateSelector=",
        'agenda_type':'pdf',
        'agenda_content':'div[class*=textLayer'},
     
     "Powhatan":{
         'name':"Powhatan County",
-        'url':"https://www.powhatanva.gov/AgendaCenter/Search",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.powhatanva.gov/AgendaCenter/Search/?term=&CIDs=2,10,7,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
    "Rockbridge":{
        'name':"Rockbridge County",
-       'url':"https://va-rockbridgecounty.civicplus.com/AgendaCenter/Search",
-       "meeting_rows":"tr[class*=catAgendaRow",
+       'url':"https://va-rockbridgecounty.civicplus.com/AgendaCenter/Search/?term=&CIDs=25,3,6,5,23,&startDate=&endDate=&dateRange=&dateSelector=",
        'agenda_type':'pdf',
        'agenda_content':'div[class*=textLayer'},
 
     "Rockingham":{
         'name':"Rockingham County",
         'url':"https://www.rockinghamcountyva.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Russell":{
         'name':"Russell County",
-        'url':"https://va-russellcounty.civicplus.com/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://va-russellcounty.civicplus.com/AgendaCenter/Search/?term=&CIDs=5,4,3,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Shenandoah":{
         'name':"Shenandoah County",
-        'url':"https://shenandoahcountyva.us/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://shenandoahcountyva.us/AgendaCenter/Search/?term=&CIDs=4,11,3,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Wise":{
         'name':"Wise County",
-        'url':"https://www.wisecounty.org/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.wisecounty.org/AgendaCenter/Search/?term=&CIDs=3,6,4,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "York":{
         'name':"York County",
-        'url':"https://www.yorkcounty.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.yorkcounty.gov/AgendaCenter/Search/?term=&CIDs=4,3,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Bedford":{
         'name':"Town of Bedford",
-        'url':"https://www.bedfordva.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.bedfordva.gov/AgendaCenter/Search/?term=&CIDs=3,2,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Charles City":{
         'name':'Charles City County',
-        'url':'https://www.charlescityva.us/AgendaCenter',
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':'https://www.charlescityva.us/AgendaCenter/Search/?term=&CIDs=6,2,8,&startDate=&endDate=&dateRange=&dateSelector=',
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'
     },
 
-    "Colonial Heights BZA PC":{
+    "City of Colonial Heights":{ # BZA PC
         'name':"City of Colonial Heights",
-        'url':"https://www.colonialheightsva.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.colonialheightsva.gov/AgendaCenter/Search/?term=&CIDs=4,6,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
-        'agenda_content':'div[class*=textLayer'},
-
+        'agenda_content':'div[class*=textLayer'
+    },
+            
     "Colonial Heights CC":{
         'name':"City of Colonial Heights",
-        'url':"https://www.colonialheightsva.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.colonialheightsva.gov/AgendaCenter/Search/?term=&CIDs=1,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'webpage',
-        'agenda_content':"div[id*='divInner'"},
+        'agenda_content':"div[id*='divInner'"
+    },
 
     "Emporia":{
         'name':"City of Emporia",
-        'url':"https://www.ci.emporia.va.us/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.ci.emporia.va.us/AgendaCenter/Search/?term=&CIDs=2,6,8,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Fredericksburg":{
         'name':"City of Fredericksburg",
-        'url':"https://www.fredericksburgva.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.fredericksburgva.gov/AgendaCenter/Search/?term=&CIDs=6,1,9,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'webpage',
         'agenda_content':"div[id*='divInner'"},
 
     "Hampton":{
         'name':"Hampton City",
-        'url':"https://www.hampton.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.hampton.gov/AgendaCenter/Search/?term=&CIDs=2,6,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Hopewell":{
         'name':"City of Hopewell",
         'url':"https://hopewellva.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Martinsville":{
         'name':"City of Martinsville",
-        'url':"https://www.martinsville-va.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.martinsville-va.gov/AgendaCenter/Search/?term=&CIDs=2,6,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
-    "Norfolk CC":{
+    "City of Norfolk":{
         'name':"City of Norfolk",
-        'url':"https://www.norfolk.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.norfolk.gov/AgendaCenter/Search/?term=&CIDs=25,13,14,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Petersburg":{
         'name':"City of Petersburg",
-        'url':"http://www.petersburg-va.org/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"http://www.petersburg-va.org/AgendaCenter/Search/?term=&CIDs=9,1,3,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Portsmouth":{
         'name':"City of Portsmouth",
-        'url':"https://www.portsmouthva.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.portsmouthva.gov/AgendaCenter/Search/?term=&CIDs=11,7,4,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Radford":{
         'name':"City of Radford",
-        'url':"https://www.radfordva.gov/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.radfordva.gov/AgendaCenter/Search/?term=&CIDs=2,4,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
     "Suffolk":{
         'name':"City of Suffolk",
-        'url':"https://www.suffolkva.us/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.suffolkva.us/AgendaCenter/Search/?term=&CIDs=20,21,11,4,12,3,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
-    "Waynesboro BZA PC":{
+    "City of Waynesboro":{ # BZA PC
         'name':"City of Waynesboro",
-        'url':"https://www.waynesboro.va.us/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.waynesboro.va.us/AgendaCenter/Search/?term=&CIDs=7,4,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'pdf',
-        'agenda_content':'div[class*=textLayer'},
-
+        'agenda_content':'div[class*=textLayer'
+    },
+            
     "Waynesboro CC":{
         'name':"City of Waynesboro",
-        'url':"https://www.waynesboro.va.us/AgendaCenter",
-        "meeting_rows":"tr[class*=catAgendaRow",
+        'url':"https://www.waynesboro.va.us/AgendaCenter/Search/?term=&CIDs=1,&startDate=&endDate=&dateRange=&dateSelector=",
         'agenda_type':'webpage',
-        'agenda_content':"div[id*='divInner'"}
+        'agenda_content':"div[id*='divInner'"
     }
+}
 
 agendacenter2_dictionary = {
     "Poquoson":{
        'name':"City of Poquoson",
-       'url':"https://www.ci.poquoson.va.us/AgendaCenter",
-       "meeting_rows":"tr[class*=catAgendaRow",
+       'url':"https://www.ci.poquoson.va.us/AgendaCenter/Search/?term=&CIDs=2,3,&startDate=&endDate=&dateRange=&dateSelector=",
        'agenda_type':'pdf',
        'agenda_content':'div[class*=textLayer'},
 
-    "Grayson":{
+    "Grayson County":{ # PC
         'name':'Grayson County Planning Commission',
         'url':"https://www.graysoncountyva.gov/AgendaCenter/Search/?term=&CIDs=3,&startDate=&endDate=&dateRange=&dateSelector=",
-        "meeting_rows":"tr[class*=catAgendaRow",
         'agenda_type':'pdf',
-        'agenda_content':'div[class*=textLayer'},
-
-    "Grayson BOS":{
+        'agenda_content':'div[class*=textLayer'
+    },
+        
+    "Grayson County BOS":{
         'name':'Grayson County Board of Supervisors',
         'url':"https://www.graysoncountyva.gov/AgendaCenter/Search/?term=&CIDs=5,2,&startDate=&endDate=&dateRange=&dateSelector=",
-        "meeting_rows":"tr[class*=catAgendaRow",
         'agenda_type':'pdf',
-        'agenda_content':'div[class*=textLayer'},
-
+        'agenda_content':'div[class*=textLayer'
+    }
 }
 
 """BoardDocs localities"""
@@ -304,6 +394,16 @@ boarddocs_dictionary = {
         'url':"https://go.boarddocs.com/va/essexco/Board.nsf/Public",
         'name':"Essex County",
         'second_page':False},
+
+    "Montgomery":{
+        'url':"https://go.boarddocs.com/va/montva/Board.nsf/Public",
+        'name':"Montgomery County",
+        'second_page':True},
+
+    "Northampton":{
+        'url':"https://go.boarddocs.com/va/northco/Board.nsf/Public",
+        'name':"Northampton County",
+        'second_page':True},
 
     "Northumberland":{
         'url':"https://go.boarddocs.com/va/nuc/Board.nsf/vpublic?open",
@@ -331,277 +431,186 @@ boarddocs_dictionary = {
         'second_page':False},
 }
 
-"""Calendar View localities"""
-calendar_view_dictionary = {
-    "Nelson":{
-        "url":"https://www.nelsoncounty-va.gov/events/month/",
-        "name":"Nelson County",
-        "agenda_type":"webpage",
-        "meetings_tag":"a[class*='event-title-link'",
-        "agenda_tag": None,
-        "content_tag":"div[class*='fusion-text'"
-    },
-
-    "Sussex":{
-        "url":"https://sussexcountyva.gov/events/month/",
-        "name":"Sussex County",
-        "agenda_type":"pdf",
-        "meetings_tag": "a[class*='event-title-link'",
-        "agenda_tag":"a[href*='.pdf'",
-        "content_tag":"div[class*=textLayer"
-    },
-
-    "Westmoreland":{ #move to civicclerk!
-        "name":"Westmoreland County",
-        "url":"https://www.westmoreland-county.org/full-calendar",
-        "agenda_type":"pdf",
-        "meetings_tag":"a[class*='fc-day-grid-event",
-        "agenda_tag":"a[href*='.pdf'",
-        "content_tag":"div[class*=textLayer"}
-}
 "CivicClerk localities"
 civicclerk_dictionary = {
-#"Amelia":{
-    #'url':"https://ameliacova.portal.civicclerk.com/?category_id=26,28", #move BOS to PHP table, new code for PC
-    #'name':"Amelia County",
-    #'agenda_type':'pdf',
-    #'agenda_content':'div[class*=textLayer'},
+    #"Amelia":{
+        #'url':"https://ameliacova.portal.civicclerk.com/?category_id=26,28", #move BOS to PHP table, new code for PC
+        #'name':"Amelia County",
+        #'agenda_type':'pdf',
+        #'agenda_content':'div[class*=textLayer'},
 
-"Amherst":{
-    'url':"https://amherstcova.portal.civicclerk.com/?category_id=27,29,33,32",
-    'name':"Amherst County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Amherst":{
+        'url':"https://amherstcova.portal.civicclerk.com/?category_id=27,29,33,32",
+        'name':"Amherst County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Appomattox":{
-    'url':"https://appomattoxcova.portal.civicclerk.com/",
-    'name':"Appomattox County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Appomattox":{
+        'url':"https://appomattoxcova.portal.civicclerk.com/",
+        'name':"Appomattox County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Augusta":{
-    'url':"https://augustacova.portal.civicclerk.com/",
-    'name':"Augusta County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Augusta":{
+        'url':"https://augustacova.portal.civicclerk.com/",
+        'name':"Augusta County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-#More updates at the AgendaCenter site, table this entry until there is a complete switch
-"Charles City":{
-    'url':"https://charlescitycova.portal.civicclerk.com/",
-    'name':"Charles City County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    "meeting_type":"pdf",
-    "agenda_content":'div[class*=textLayer'},
+    #More updates at the AgendaCenter site, table this entry until there is a complete switch
+    #"Charles City":{
+        #'url':"https://charlescitycova.portal.civicclerk.com/?category_id=26,27,29",
+        #'name':"Charles City County"},
 
-"Charlottesville":{
-    'url':"https://charlottesvilleva.portal.civicclerk.com/",
-    'name':"City of Charlottesville",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Charlottesville":{
+        'url':"https://charlottesvilleva.portal.civicclerk.com/",
+        'name':"City of Charlottesville",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Chesterfield":{
-    'url':"https://chesterfieldcova.portal.civicclerk.com/",
-    'name':"Chesterfield County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Chesterfield":{
+        'url':"https://chesterfieldcova.portal.civicclerk.com/",
+        'name':"Chesterfield County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Danville":{
-    'url':"https://danvilleva.portal.civicclerk.com/",
-    'name':"City of Danville",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Danville":{
+        'url':"https://danvilleva.portal.civicclerk.com/",
+        'name':"City of Danville",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Greene":{
-    'url':"https://greenecova.portal.civicclerk.com/", #historical archives at https://gcva.granicus.com/ViewPublisher.php?view_id=1
-    'name':"Greene County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Greene":{
+        'url':"https://greenecova.portal.civicclerk.com/", #historical archives at https://gcva.granicus.com/ViewPublisher.php?view_id=1
+        'name':"Greene County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Hanover":{
-    'url':"https://hanovercova.portal.civicclerk.com/?category_id=26,27",
-    'name':"Hanover County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Hanover":{
+        'url':"https://hanovercova.portal.civicclerk.com/?category_id=26,27",
+        'name':"Hanover County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Isle of Wight":{
-    "url":"https://isleofwightcova.portal.civicclerk.com/",
-    "name":"Isle of Wight County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'
+    "James City":{
+        'url':"https://jamescitycova.portal.civicclerk.com/",
+        'name':"James City County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-},
+    "King William":{
+        'url':"https://kingwilliamcova.portal.civicclerk.com/",
+        'name':"King William County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"James City":{
-    'url':"https://jamescitycova.portal.civicclerk.com/",
-    'name':"James City County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Louisa":{
+        'url':"https://louisacova.portal.civicclerk.com/",
+        'name':"Louisa County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"King William":{
-    'url':"https://kingwilliamcova.portal.civicclerk.com/",
-    'name':"King William County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Lynchburg":{
+        'url':"https://lynchburgva.portal.civicclerk.com/",
+        'name':"City of Lynchburg",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Louisa":{
-    'url':"https://louisacova.portal.civicclerk.com/",
-    'name':"Louisa County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Mathews":{
+        'url':"https://mathewscova.portal.civicclerk.com/",
+        'name':"Mathews County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Lynchburg":{
-    'url':"https://lynchburgva.portal.civicclerk.com/",
-    'name':"City of Lynchburg",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Orange":{
+        'url':"https://orangecova.portal.civicclerk.com/",
+        'name':"Orange County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Mathews":{
-    'url':"https://mathewscova.portal.civicclerk.com/",
-    'name':"Mathews County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Petersburg CC":{
+        'url':"https://petersburgva.portal.civicclerk.com/",
+        'name':"City of Petersburg",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Orange":{
-    'url':"https://orangecova.portal.civicclerk.com/",
-    'name':"Orange County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Pittsylvania":{
+            "url":"https://pittsylvaniacova.portal.civicclerk.com/",
+            "name":"Pittsylvania County",
+            "agenda_type":"pdf",
+            "agenda_conten":"div[class*=textLayer"
+        },
 
-"Petersburg CC":{
-    'url':"https://petersburgva.portal.civicclerk.com/",
-    'name':"City of Petersburg",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Roanoke":{
+        'url':"https://roanokeva.portal.civicclerk.com/",
+        'name':"City of Roanoke",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Pittsylvania":{
-        "url":"https://pittsylvaniacova.portal.civicclerk.com/",
-        "name":"Pittsylvania County",
-        "meeting_rows":"li[class*='MuiListItem-container'",
-        "agenda_type":"pdf",
-        "agenda_content":"div[class*=textLayer"
-    },
+    'Salem':{
+        'url':'https://salemva.portal.civicclerk.com/',
+        'name':'City of Salem',
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Roanoke":{
-    'url':"https://roanokeva.portal.civicclerk.com/",
-    'name':"City of Roanoke",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Scott":{
+        'url':"https://scottcova.portal.civicclerk.com/",
+        'name':"Scott County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-'Salem':{
-    'url':'https://salemva.portal.civicclerk.com/',
-    'name':'City of Salem',
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Spotsylvania":{
+        'url':"https://spotsylvaniacova.portal.civicclerk.com/",
+        'name':"Spotsylvania County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Scott":{
-    'url':"https://scottcova.portal.civicclerk.com/",
-    'name':"Scott County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Stafford":{
+        'url':"https://staffordcova.portal.civicclerk.com/?category_id=26,31",
+        'name':"Stafford County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Spotsylvania":{
-    'url':"https://spotsylvaniacova.portal.civicclerk.com/",
-    'name':"Spotsylvania County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
+    "Surry":{
+        'url':"https://surrycova.portal.civicclerk.com/",
+        'name':"Surry County",
+        'aagenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'},
 
-"Stafford":{
-    'url':"https://staffordcova.portal.civicclerk.com/?category_id=26,31",
-    'name':"Stafford County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
-
-"Surry":{
-    'url':"https://surrycova.portal.civicclerk.com/",
-    'name':"Surry County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'aagenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
-
-"Warren":{
-    'url':"https://warrencountyva.portal.civicclerk.com/?category_id=26,27",
-    'name':"Warren County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    'agenda_type':'pdf',
-    'agenda_content':'div[class*=textLayer'},
-
-"Westmoreland":{
-    "url":"https://westmorelandcova.portal.civicclerk.com/",
-    "name":"Westmoreland County",
-    "meeting_rows":"li[class*='MuiListItem-container'",
-    "agenda_type":"pdf",
-    'agenda_content':'div[class*=textLayer'
-}
+    "Warren":{
+        'url':"https://warrencountyva.portal.civicclerk.com/?category_id=26,27",
+        'name':"Warren County",
+        'agenda_type':'pdf',
+        'agenda_content':'div[class*=textLayer'}
 }
 
 """CivicWeb localities"""
 civicweb_dictionary = {
-"Lancaster":{
-    'url':"https://lancova.civicweb.net/Portal/MeetingTypeList.aspx",
-    'name':"Lancaster County",
-    'meetings_tag':"a[class*='list-link'",
-    "content_tag":"html"},
+    "Lancaster":{
+        'url':"https://lancova.civicweb.net/Portal/MeetingTypeList.aspx",
+        'name':"Lancaster County",
+        'meetings_tag':"a[class*='list-link'"},
 
-"Lexington":{
-    'url':"https://lexingtonva.civicweb.net/Portal/MeetingTypeList.aspx",
-    'name':"City of Lexington",
-    'meetings_tag':"a[class*='list-link'",
-    "content_tag":"html"},
+    "Lexington":{
+        'url':"https://lexingtonva.civicweb.net/Portal/MeetingTypeList.aspx",
+        'name':"City of Lexington",
+        'meetings_tag':"a[class*='list-link'"},
 
-"Montgomery":{
-    "url":"https://montva.community.highbond.com/Portal/MeetingTypeList.aspx",
-    "name":"Montgomery County",
-    "meetings_tag":"a[class*='list-link'",
-    "content_tag":"html"
-},
+    "Newport News":{
+        'url':"https://nngov.civicweb.net/Portal/MeetingTypeList.aspx",
+        'name':"City of Newport News",
+        'meetings_tag':"a[class*='list-link'"},
 
-"Northampton":{
-    "url":"https://co-northampton-va.community.highbond.com/Portal/MeetingTypeList.aspx",
-    "name":"Northampton County",
-    "meetings_tag":"a[class*='list-link'",
-    "content_tag":"html"
+    'Williamsburg':{
+        'url':'https://williamsburg.civicweb.net/Portal/Default.aspx',
+        'name':'City of Williamsburg',
+        'meetings_tag':"a[class*='list-link'"
+    },
 
-},
-
-"Newport News":{
-    'url':"https://nngov.civicweb.net/Portal/MeetingTypeList.aspx",
-    'name':"City of Newport News",
-    'meetings_tag':"a[class*='list-link'",
-    "content_tag":"html"},
-
-'Williamsburg':{
-    'url':'https://williamsburg.civicweb.net/Portal/Default.aspx',
-    'name':'City of Williamsburg',
-    'meetings_tag':"a[class*='list-link'",
-    "content_tag":"html"
-},
-
-"Winchester":{
-    'url':"https://winchesterva.civicweb.net/Portal/MeetingTypeList.aspx",
-    'name':"City of Winchester",
-    'meetings_tag':"a[class*='list-link'",
-    "content_tag":"html"}
+    "Winchester":{
+        'url':"https://winchesterva.civicweb.net/Portal/MeetingTypeList.aspx",
+        'name':"City of Winchester",
+        'meetings_tag':"a[class*='list-link'"}
 }
 
 """Document Center localities"""
@@ -619,7 +628,7 @@ escribe_dictionary = {
         'name':"Gloucester County"}
 }
 
-"Folding Year dictionaries" #broad term covering the different websites where the landing page for meeting documents is an accordion-folding folder style organized by year
+"Folding Year dictionaries" # broad term covering the different websites where the landing page for meeting documents is an accordion-folding folder style organized by year
 folding_year_dictionary = {
     "Clifton Forge":{
         "url":"https://cliftonforgeva.gov/council/council-agenda-and-minutes/",
@@ -637,7 +646,7 @@ folding_year_dictionary = {
         "url":"https://www.franklinva.gov/government/agendas_minutes.php#outer-1299",
         "name":"City of Franklin",
         "archive_type":"open",
-        "years_tag":"h3[class*='docs-toggle'",
+        "years_tag":None,
         "agenda_subfolder":False,
         "agenda_folder_tag":None,
         "month_subfolder":True,
@@ -646,7 +655,7 @@ folding_year_dictionary = {
         "content_tag":"div[class*=textLayer"
     },
 
-    "Greensville BOS":{
+    "Greensville County Board of Supervisors":{
         "name":"Greensville County Board of Supervisors",
         "url":"https://www.greensvillecountyva.gov/boards___commissions/board_of_supervisors/agendas___minutes/board_of_supervisors.php",
         "archive_type":"closed",
@@ -656,9 +665,10 @@ folding_year_dictionary = {
         "month_subfolder":False,
         "months_tag":None,
         "meetings_tag":"a[href*='.pdf'",
-        "content_tag":"div[class*=textLayer"},
-    
-    "Greensville PC":{
+        "content_tag":"div[class*=textLayer"
+    },
+
+    "Greensville County Planning Commission":{
         "name":"Greensville County Planning Commission",
         "url":"https://www.greensvillecountyva.gov/boards___commissions/board_of_supervisors/agendas___minutes/planning_commission.php",
         "archive_type":"closed",
@@ -668,9 +678,10 @@ folding_year_dictionary = {
         "month_subfolder":False,
         "months_tag":None,
         "meetings_tag":"a[href*='.pdf'",
-        "content_tag":"div[class*=textLayer"},
-
-    "Prince Edward PC":{ #basically folding year, but test method
+        "content_tag":"div[class*=textLayer"
+    },
+    
+    "Prince Edward County Planning Commission":{  # basically folding year, but test method
         "url":"https://www.co.prince-edward.va.us/Departments/Community-Development/Planning-Zoning/Planning-Commission-Meetings",
         "name":"Prince Edward County Planning Commission",
         "archive_type":"closed",
@@ -683,7 +694,7 @@ folding_year_dictionary = {
         "content_tag":"div[class*=textLayer"
     },
 
-    "Prince Edward BOS":{ #basically folding year
+    "Prince Edward County Board of Supervisors":{ # basically folding year
         "url":"https://www.co.prince-edward.va.us/Government/Board-of-Supervisors/Board-Meeting-Agendas-and-Meeting-Minutes",
         "name":"Prince Edward County Board of Supervisors",
         "archive_type":"closed",
@@ -694,15 +705,12 @@ folding_year_dictionary = {
         "months_tag":None,
         "meetings_tag":"a[href*='.pdf'",
         "content_tag":"div[class*=textLayer"
-    },
-
-    
+    }
 }
 
 """Folding Year Alternative Format"""
 folding_year_v2_dictionary = {
-
-    "Virginia Beach PC":{
+    "Virginia Beach Planning Commission":{
         "name":"Virginia Beach Planning Commission",
         "url":"https://planning.virginiabeach.gov/boards-commissions/planning-commission",
         "archive_type":"closed",
@@ -712,7 +720,7 @@ folding_year_v2_dictionary = {
         "content_tag":"div[class*=textLayer"
         },
 
-     "Manassas Park PC":{
+    "Manassas Park Planning Commission":{
         "name":"Manassas Park Planning Commission",
         "url":"https://www.manassasparkva.gov/government/governing_body/meetings_agendas___minutes/planning_commission_meeting_agendas.php",
         "archive_type":"closed",
@@ -721,7 +729,7 @@ folding_year_v2_dictionary = {
         "document_tag":"a[href*='Agenda'",
         "content_tag":"div[class*=textLayer"},
 
-    "Manassas Park GB":{
+    "Manassas Park Governing Body":{
         "name":"Manassas Park Governing Body",
         "url":"https://www.manassasparkva.gov/government/governing_body/meetings_agendas___minutes/index.php",
         "archive_type":"closed",
@@ -730,7 +738,7 @@ folding_year_v2_dictionary = {
         "document_tag":"a[href*='Agenda'",
         "content_tag":"div[class*=textLayer"},
 
-    "Nottoway BOS":{
+    "Nottoway County Board of Supervisors":{
         "name":"Nottoway County Board of Supervisors",
         "url":"https://nottoway.org/administration/boards___commissions/board_of_supervisors_(bos)/board_agendas_minutes.php",
         "archive_type":"closed",
@@ -739,7 +747,7 @@ folding_year_v2_dictionary = {
         "document_tag":"a[href*='.pdf'",
         "content_tag":"div[class*=textLayer"},
 
-    "Nottoway PC":{
+    "Nottoway Planning Commission":{
         "name":"Nottoway County Planning Commission",
         "url":"https://nottoway.org/administration/boards___commissions/agenda_packets_minutes.php",
         "archive_type":"closed",
@@ -767,7 +775,7 @@ granicus_dictionary = {
     "agenda_type":"pdf",
     "content_tag":"div[class*=textLayer"},
 
-"Prince William BOS":{
+"Prince William County Board of Supervisors":{
     'url':"https://pwcgov.granicus.com/ViewPublisher.php?view_id=23",
     'name':"Prince William County Board of Supervisors",
     "archive_type":"open",
@@ -775,7 +783,7 @@ granicus_dictionary = {
     "agenda_type":"pdf",
     "content_tag":"div[class*=textLayer"},
 
-"Prince William PC":{
+"Prince William County Planning Commission":{
     'url':"https://pwcgov.granicus.com/ViewPublisher.php?view_id=12",
     'name':' Prince William County Planning Commission',
     "archive_type":"open",
@@ -807,7 +815,7 @@ granicus_dictionary = {
     "agenda_type":"pdf",
     "content_tag":"div[class*=textLayer"},
 
-"Chesapeake CC":{
+"City of Chesapeake":{
     'url':"https://chesapeake.granicus.com/ViewPublisher.php?view_id=29",
     'name':"City of Chesapeake",
     "archive_type":"open",
@@ -839,22 +847,13 @@ granicus_dictionary = {
     "agenda_type":"webpage",
     "content_tag":"tr"},
 
-"Manassas":{
+"Manassas City":{
     'url':"https://manassascity.granicus.com/ViewPublisher.php?view_id=1",
     'name':"Manassas City",
     "archive_type":"open",
     "meeting_rows":"tr",
     "agenda_type":"pdf",
-    "content_tag":"div[class*=textLayer"},
-
-    "New Kent BOS":{
-    'url':"https://newkentcounty.granicus.com/ViewPublisher.php?view_id=1", 
-    'name':"New Kent County Board of Supervisors",
-    "archive_type":"open",
-    "meeting_rows":"tr",
-    "agenda_type":"pdf",
-    "content_tag":"div[class*=textLayer"
-    }
+    "content_tag":"div[class*=textLayer"}
 }
 
 """Granicus version 2 localities"""
@@ -880,7 +879,7 @@ granicus_2_dictionary = {
 
 "LaserFiche localities"
 laserfiche_dictionary = {
-    "Loudoun BOS":{
+    "Loudoun County Board of Supervisors":{
         'url':"https://www.loudoun.gov/3426/Board-of-Supervisors-Meetings-Packets",
         'name':"Loudoun County Board of Supervisors"}
 }
@@ -891,7 +890,7 @@ legistar_dictionary = {
         'url':"https://albemarle.legistar.com/Calendar.aspx",
         'name':"Albemarle County"},
 
-    "Hampton CC":{
+    "Hampton City":{
         'url':"https://hampton.legistar.com/Calendar.aspx",
         'name':"Hampton City"}, 
 
@@ -899,20 +898,21 @@ legistar_dictionary = {
         'url':"https://harrisonburg-va.legistar.com/Calendar.aspx",
         'name':"City of Harrisonburg"},
 
-    'City of Richmond':{'url':'https://richmondva.legistar.com/Calendar.aspx',
-                        'name':'City of Richmond'}
+    'City of Richmond':{
+        'url':'https://richmondva.legistar.com/Calendar.aspx',
+        'name':'City of Richmond'}
 }
 
 "Links by Year localities" #not a precise document sharing system, but localities with similar enough page structure that the same broad steps can apply to multiple websites, the common theme being starting with an agendas homepage where you first navigate to the page for the current year then check individual agendas. Each locality dictionary contains the CSS tags unique to each website to navigate to the equivalent content.
 links_by_year_dictionary = {
-    'Clarke BOS':{
+    'Clarke County Board of Supervisors':{
         'url':'https://www.clarkecounty.gov/government/boards-commissions/board-of-supervisors/bos-agendas/-folder-1017',
         'name':'Clarke County Board of Supervisors',
         "agenda_link_tag":"a[target*='_blank'",
         'agenda_content_tag':"div[class*=textLayer"
     },
 
-    'Clarke PC':{
+    'Clarke County Planning Commission':{
         'url':"https://www.clarkecounty.gov/government/boards-commissions/planning-commission/pc-agendas/-folder-1031",
         'name':'Clarke County Planning Commission',
         "agenda_link_tag":"a[target*='_blank'",
@@ -921,21 +921,21 @@ links_by_year_dictionary = {
 
     #add Hurt, they've had solar in the past https://www.townofhurtva.gov/node/471/agenda
 
-     'New Kent PC':{
+    'New Kent County Planning Commission':{
         "url":"https://www.newkent-va.us/843/Meeting-Agendas",
         'name':'New Kent County Planning Commission',
         "agenda_link_tag":"a[href*='Archive'",
         "agenda_content_tag":"div[class*=textLayer"
     },
 
-    'Southampton BOS':{
+    'Southampton County Board of Supervisors':{
         'url':"https://www.southamptoncounty.org/departments/board_of_supervisors/bos_meeting_agendas.php",
         'name':'Southampton County Board of Supervisors',
         "agenda_link_tag":"a[target*='_blank'",
         'agenda_content_tag':"section[class*='main-content-wrap'"
     },
 
-    'Southampton PC':{
+    'Southampton County Planning Commission':{
         'url':"https://www.southamptoncounty.org/departments/planning/archived_planning_agendas.php",
         'name':'Southampton County Planning Commission',
         "agenda_link_tag":"a[target*='_blank'",
@@ -947,7 +947,7 @@ links_by_year_dictionary = {
 meetingstable_dictionary = {
 #Chatham https://www.chatham-va.gov/meetings?page=0
 
-'Essex PC':{
+'Essex County Planning Commission':{
         'url':"https://www.essex-virginia.org/meetings?date_filter%5Bvalue%5D%5Bmonth%5D=1&date_filter%5Bvalue%5D%5Bday%5D=1&date_filter%5Bvalue%5D%5Byear%5D=2023&date_filter_1%5Bvalue%5D%5Bmonth%5D=12&date_filter_1%5Bvalue%5D%5Bday%5D=31&date_filter_1%5Bvalue%5D%5Byear%5D=2023&field_microsite_tid=All&field_microsite_tid_1=28",
         'name':'Essex County Planning Commission',
         'meetings_tag':"div[class*='views-row'",
@@ -961,13 +961,13 @@ meetingstable_dictionary = {
         'agenda_content_tag':"div[class*=textLayer"
     },
 
-"Fluvanna PC":{
+"Fluvanna County Planning Commission":{
     'url':"https://www.fluvannacounty.org/meetings?field_microsite_tid_1=28",
     'name':"Fluvanna County Planning Commission",
     'meetings_tag':'tr',
     'agenda_content_tag':"div[class*=textLayer"},
 
-"Fluvanna BOS":{
+"Fluvanna County Board of Supervisors":{
     'url':"https://www.fluvannacounty.org/meetings?field_microsite_tid_1=27",
     'name':"Fluvanna County Board of Supervisors",
     'meetings_tag':'tr',
@@ -981,7 +981,19 @@ meetingstable_dictionary = {
 }
 
 """NovusAGENDA localities"""
-#novusagenda_dictionary = {}
+novusagenda_dictionary = {
+    "Isle of Wight County Planning Commission":{
+        'url':"https://isleofwight.novusagenda.com/agendapublic/meetingsgeneral.aspx?MeetingType=2",
+        'name':"Isle of Wight County Planning Commission"},
+
+    "Isle of Wight County Board of Supervisors":{
+        'url':"https://isleofwight.novusagenda.com/agendapublic/meetingsgeneral.aspx?MeetingType=1",
+        'name':"Isle of Wight County Board of Supervisors"},
+
+    "New Kent BOS":{ #double check the code works for this
+        'url':"https://newkent.novusagenda.com/agendapublic/meetingsgeneral.aspx",
+        'name':"New Kent County"}
+}
 
 """OnBase localities"""
 onbase_dictionary = {
@@ -989,24 +1001,24 @@ onbase_dictionary = {
         'url':"https://meetings.arlingtonva.us/CountyBoard",
         'name':"Arlington County Board"},
     
-    "Arlington County PC":{
+    "Arlington County Planning Commission":{
         'url':"https://meetings.arlingtonva.us/Planning",
         'name':"Arlington County Planning Commission"}
 }
 
 "php table localities"
 php_table_dictionary = {
-    'Amelia BOS':{
+    'Amelia County Board of Supervisors':{
         'url':'https://www.ameliacova.com/departments/boards_and_commissions/agendas_and_minutes.php',
         'name':'Amelia County Board of Supervisors',
         'web_document':'Packet'},
 
-    "Buckingham BOS":{
+    "Buckingham County Board of Supervisors":{
         'url':"https://www.buckinghamcountyva.org/administration/boards___commissions/board_of_supervisors/board_agenda_minutes_youtube.php",
         'name':"Buckingham County Board of Supervisors",
         'web_document':"Agenda"},
 
-    "Buckingham PC":{
+    "Buckingham County Planning Commission":{
         'url':"https://www.buckinghamcountyva.org/administration/boards___commissions/planning_commission.php",
         'name':"Buckingham County Planning Commission",
         'web_document':'Agenda'},
@@ -1016,43 +1028,43 @@ php_table_dictionary = {
         'name':"Carroll County Board of Supervisors",
         'web_document':'Agenda'}, #new link, confirm process still valid
 
-    "Charlotte BOS":{
+    "Charlotte County Board of Supervisors":{
         'url':"https://www.charlottecountyva.gov/government/board_of_supervisors/agendas___minutes.php",
         'name':"Charlotte County Board of Supervisors",
         'web_document':'Agenda'},
 
-    "Charlotte PC":{
+    "Charlotte County Planning Commission":{
         'url':"https://www.charlottecountyva.gov/departments/planning___zoning/agendas___minutes.php",
         'name':"Charlotte County Planning Commission",
         'web_document':'Agenda'}, 
 
-     #add town of Gordonsville https://www.townofgordonsville.org/government/mayor_and_town_council/agendas_and_minutes.php   
-     #gordonsville PC https://www.townofgordonsville.org/government/boards_&_commissions/planning_commission/planning_commission_agendas_&_minutes.php
+    #add town of Gordonsville https://www.townofgordonsville.org/government/mayor_and_town_council/agendas_and_minutes.php   
+    #gordonsville PC https://www.townofgordonsville.org/government/boards_&_commissions/planning_commission/planning_commission_agendas_&_minutes.php
 
     #add Town of Louisa https://louisatown.org/government/meeting-minutes-agenda/ and the option to handle document downloads to code + dictionary
 
-    "Lunenburg BOS":{
+    "Lunenburg County Board of Supervisors":{
         'url':"https://www.lunenburgva.gov/government/board_of_supervisors/agendas___minutes.php",
         'name':'Lunenburg County Board of Supervisors',
         'web_document':'Agenda'},
 
-    'Lunenburg PC':{
+    'Lunenburg County Planning Commission':{
         'url':"https://www.lunenburgva.gov/government/planning_commission/agendas___minutes.php",
         'name':'Lunenburg County Planning Commission',
         'web_document':'Agenda'
     },
 
-    "Smyth BOS":{
+    "Smyth County Board of Supervisors":{
         'url':"https://smythcounty.org/government/agendas___minutes_/board_of_supervisors_agendas___minutes.php",
         'name':"Smyth County Board of Supervisors",
         'web_document':'Agenda'},
 
-    "Smyth PC":{
+    "Smyth County Planning Commission":{
         'url':"https://smythcounty.org/government/agendas___minutes_/planning_commission_agendas___minutes.php",
         'name':"Smyth County Planning Commission",
         'web_document':'Agenda'},
 
-    "South Boston CC":{
+    "South Boston City Council":{
         "url":"https://www.southboston.com/departments/council/council_minutes_of_meetings.php",
         "name":"South Boston City Council",
         "web_document":"Agenda"}
@@ -1065,121 +1077,29 @@ primegov_dictionary = {
         'name':"Bedford County"}
 }
 
-"The Lists" #Localities whose files are just in a list of hyperlinked titles
-the_lists_dictionary = {
-     "Covington":{
-        "url":"https://covington.va.us/about-covington/agenda-and-minutes.html",
-        "meetings_tag":"a[href*='agenda'",
-        "content_tag":"div[class*=textLayer",
-        "name":"City of Covington"},
-
-    "Lexington":{
-        "name":"City of Lexington Planning Commission",
-        "url":"https://www.lexingtonva.gov/government/boards-and-commissions/planning-commission",
-        "meetings_tag":"a[class*='content_link'",
-        "content_tag":"div[class*=textLayer"},
-
-    "Richmond":{
-        "url":"https://co.richmond.va.us/board-of-supervisors-agenda-packets",
-        "meetings_tag":"a[href*='.pdf'",
-        "content_tag":"div[class*=textLayer",
-        "name":"Richmond County"},
-    
-     "Lee":{
-        "url":"https://www.leecova.com/meeting-minutes",
-        "name":"Lee County",
-        "meetings_tag":"a[href*='.pdf'",
-        "content_tag":"div[class*=textLayer"
-    },
-
-}
-
-"The Split Lists" #localities where it's a list or table, but the agenda link is separated from the date-containing title
-
-the_split_lists_dictionary = {
-    "Bland":{
-        "url":"https://www.blandcountyva.gov/page/agendas-and-minutes/",
-        "name":"Bland County",
-        "meeting_rows":"tr",
-        "agenda_tag":"a[href*='.pdf'",
-        "content_tag":"div[class*=textLayer"
-    },
-
-    "Henrico BOS":{ #gets a 403 forbidden error when run on VPN
-        "url":"https://henrico.us/supervisors/supervisors-agenda-o-gram/",
-        "name":"Henrico County Board of Supervisors",
-        "meeting_rows":"tr",
-        "agenda_tag":"a[href*='.pdf'",
-        "content_tag":"div[class*=textLayer"
-    },
-
-    "King and Queen BOS":{
-        "name":"King and Queen County Board of Supervisors",
-        "url":"https://kingandqueenco.net/board-of-supervisors-meetings/",
-        "meeting_rows":"tr",
-        "agenda_tag":"a[href*='.pdf'",
-        "content_tag":"div[class*=textLayer"}, 
-
-    "King and Queen PC":{
-        "name":"King and Queen County Planning Commission",
-        "url":"https://kingandqueenco.net/planning-commission-meetings/",
-        "meeting_rows":"tr",
-        "agenda_tag":"a[href*='.pdf'",
-        "content_tag":"div[class*=textLayer"},
-
-    "Staunton PC":{
-        "name":"Staunton Planning Commission",
-        "url":"https://www.ci.staunton.va.us/government/city-council-/board-commissions/agendas-minutes-for-boards-commissions/-selmt-1078",
-        "meeting_rows":"tr",
-        "agenda_tag":"a[href*='MeetingAgenda/ShowPrimaryDocument'",
-        "content_tag":"div[class*=textLayer"},
-
-    "Staunton CC":{
-        "name":"Staunton City Council",
-        "url":"https://www.ci.staunton.va.us/agendas-minutes",
-        "meeting_rows":"tr",
-        "agenda_tag":"a[href*='MeetingAgenda/ShowPrimaryDocument'",
-        "content_tag":"div[class*=textLayer"},
-
-    "Tazewell BOS":{
-        "name":"Tazewell County Board of Supervisors",
-        "url":"https://tazewellcountyva.org/government/boards-and-commissions/board-of-supervisors/",
-        "meeting_rows":"li",
-        "agenda_tag":"a[href*='Packet.pdf'",
-        "content_tag":"div[class*=textLayer"},
-
-    "Tazewell PC":{
-        "name":"Tazewell County Planning Commission",
-        "url":"https://tazewellcountyva.org/government/boards-and-commissions/planning-commission/",
-        "meeting_rows":"li",
-        "agenda_tag":"a[href*='-Agenda.pdf'",
-        "content_tag":"div[class*=textLayer"}
-
-    
-     #'Floyd':{ #unworkable right now with the new website coding, but theoretically a list
-    #    'url':"https://www.floydcova.gov/agendas-minutes",
-    #    'name':'Floyd County'
-    #},
-}
-
 "Dictionaries for localities that need individual code"
 locality_dictionary_single_use = {
-    "Albemarle PC":{
-        "url":"https://www.albemarle.org/government/community-development/boards-and-commissions/planning-commission/-toggle-all-3491",
+    "Albemarle County Planning Commission":{ #revise code for checking past dates
+        "url":"https://www.albemarle.org/government/community-development/boards-and-commissions/planning-commission/-toggle-next30days",
         "name":"Albemarle County Planning Commission",
         "content_tag":"div[class*=textLayer"
     },
 
-    "Alleghany BOS":{
+    "Alleghany County Board of Supervisors":{
         "url":"https://www.co.alleghany.va.us/board-of-supervisors/agendas/",
         "name":"Alleghany County Board of Supervisors",
         "content_tag":"div[class*=textLayer"
     },
 
-    "Amelia PC":{
+    "Amelia County Planning Commission":{
         "url":"https://www.ameliacova.com/departments/boards_and_commissions/planning_commission.php#outer-116sub-117",
         "name":"Amelia County Planning Commission",
         'content_tag':'div[class*=textLayer'
+    },
+
+    "Bland":{
+        "url":"https://www.blandcountyva.gov/page/agendas-and-minutes/",
+        "name":"Bland County"
     },
 
     "Brunswick":{
@@ -1198,23 +1118,31 @@ locality_dictionary_single_use = {
         "url":"https://www.buenavistava.org/city-services/government/city-council/council-agenda-minutes/",
         "name":"Buena Vista City Council"},
 
+    "Covington":{
+        "url":"https://covington.va.us/about-covington/agenda-and-minutes.html",
+        "name":"Town of Covington"}, #new url, new site design, redo
+
     "Craig":{
         "url":"https://craigcountyva.gov/government/board-of-supervisors/",
         "name":'Craig County Board of Supervisors'
     },
 
-    "Fairfax BOS":{
-        "url":"https://www.fairfaxcounty.gov/boardofsupervisors/2025-board-meetings",
+    "Fairfax County Board of Supervisors":{
+        "url":"https://www.fairfaxcounty.gov/boardofsupervisors/",
         "name":"Fairfax County Board of Supervisors",
-        "meetings_tag":"a[href*='boardofsupervisors'",
         "content_tag":"div[class*=textLayer"
     },
 
-    "Fairfax PC":{
+    "Fairfax County Planning Commission":{
         "url":"https://www.fairfaxcounty.gov/planningcommission/meetingcalendar",
         "name":"Fairfax County Planning Commission",
         "content_tag":"div[class*=textLayer"
     },
+
+    #'Floyd':{ #unworkable right now with the new website coding
+    #    'url':"https://www.floydcova.gov/agendas-minutes",
+    #    'name':'Floyd County'
+    #},
 
     "Galax":{
         "name":"City of Galax",
@@ -1229,21 +1157,43 @@ locality_dictionary_single_use = {
 
     #Gretna minutes https://townofgretna.org/government/council-minutes
 
-    "Henrico PC":{
-        "url":"https://henrico.us/planning/meetings/", #new and familiar to things like NovusAgenda or Granicus https://henricocountyva.new.swagit.com/views/166/
+    "Henrico County Board of Supervisors":{
+        "url":"https://henrico.us/supervisors/supervisors-agenda-o-gram/",
+        "name":"Henrico County Board of Supervisors",
+        "content_tag":"div[class*=textLayer"
+    },
+
+    "Henrico County Planning Commission":{
+        "url":"https://henrico.us/planning/meetings/",
         "name":"Henrico County Planning Commission",
         "content_tag":"div[class*=textLayer"
     },
 
-    "Highland BOS":{
+    "Highland County Board of Supervisors":{
         "url":"https://www.highlandcova.org/node/666/agenda", #document download
         "name":"Highland County Board of Supervisors",
         "content_tag":"div[class*=textLayer"
     },
 
+    "Lee":{
+        "url":"https://www.leecova.com/meeting-minutes",
+        "name":"Lee County",
+        "content_tag":"div[class*=textLayer"
+    },
+
+    "Lexington":{
+        "name":"City of Lexington Planning Commission",
+        "url":"https://www.lexingtonva.gov/government/boards-and-commissions/planning-commission",
+        "content_tag":"div[class*=textLayer"},
+
     "Loudoun":{
         "url":"https://lfportal.loudoun.gov/LFPortalInternet/Browse.aspx?startid=305808&row=1&dbid=0",
         "name":"Loudoun County Planning Commission"
+    },
+
+    "Nelson":{
+        "url":"https://www.nelsoncounty-va.gov/events/list/",
+        "name":"Nelson County"
     },
 
     "Norton":{ #this should be comparable to other sites that are just lists, like Lexington, Lee, Henrico BOS, Bland, Richmond Co., etc.
@@ -1251,7 +1201,18 @@ locality_dictionary_single_use = {
         "url":"https://www.nortonva.gov/Archive.aspx?AMID=37",
         "content_tag":"div[class*=textLayer"},
 
-    "Virginia Beach CC":{
+    "Richmond":{
+        "url":"https://co.richmond.va.us/board-of-supervisors-agenda-packets",
+        "name":"Richmond County"
+    },
+
+    "Sussex":{
+        "url":"https://www.sussexcountyva.gov/page/agendas-and-minutes/",
+        "name":"Sussex County",
+        "content_tag":"div[class*=textLayer"
+    },
+
+    "Virginia Beach City Council":{
         "name":"Virginia Beach City Council",
         "url":"https://clerk.virginiabeach.gov/city-council",
         "content_tag":"div[class*=textLayer"},
@@ -1259,7 +1220,7 @@ locality_dictionary_single_use = {
     "Wythe":{
         "url":"http://www.wytheco.org/index.php/resources/public-notices",
         "name":"Wythe County Public Notices"
-    }
+    },
 
     #"Wythe County Board of Supervisors":[wythe_county,"http://www.wytheco.org/index.php/resources/meeting-minutes/packages/bos-packages"],
 
@@ -1269,21 +1230,77 @@ locality_dictionary_single_use = {
 
 locality_dictionary_multi_use = {
 
-    "Bath BOS":{
+    "Bath County Board of Supervisors":{
         "name":"Bath County Board of Supervisors",
         "url":"https://www.bathcountyva.gov/public_information/minutes_audios/board_of_supervisors",
         "content_tag":"div[class*=textLayer"
     },
 
-    "Bath PC":{
+    "Bath County Planning Commission":{
         "name":"Bath County Planning Commission",
         "url":"https://www.bathcountyva.gov/public_information/minutes_audios/planning_commission",
         "content_tag":"div[class*=textLayer"
     },
 
-    "Bath BZA":{
+    "Bath County Board of Zoning Appeals":{
         "name":"Bath County Board of Zoning Appeals",
         "url":"https://www.bathcountyva.gov/public_information/minutes_audios/board_of_zoning_appeals",
         "content_tag":"div[class*=textLayer"
     },
+
+    "King and Queen County Board of Supervisors":{ #also just a list, why can't there be a list format? Are they really all so different?
+        "name":"King and Queen County Board of Supervisors",
+        "url":"https://kingandqueenco.net/board-of-supervisors-meetings/",
+        "content_tag":"div[class*=textLayer"}, #have seen similar county website structure
+
+    "King and Queen County Planning Commission":{
+        "name":"King and Queen County Planning Commission",
+        "url":"https://kingandqueenco.net/planning-commission-meetings/",
+        "content_tag":"div[class*=textLayer"},
+
+    "Prince Edward County Planning Commission":{ # basically folding year
+        "url":"https://www.co.prince-edward.va.us/Departments/Community-Development/Planning-Zoning/Planning-Commission-Meetings",
+        "name":"Prince Edward County Planning Commission",
+        "years_tag":"div[class*='accordion-item-header",
+        "meetings_tag":"a[href*='.pdf'",
+        "content_tag":"div[class*=textLayer"
+    },
+
+    "Prince Edward County Board of Supervisors":{ # basically folding year
+        "url":"https://www.co.prince-edward.va.us/Government/Board-of-Supervisors/Board-Meeting-Agendas-and-Meeting-Minutes",
+        "name":"Prince Edward County Board of Supervisors",
+        "years_tag":"div[class*='accordion-item-header",
+        "meetings_tag":"a[href*='.pdf'",
+        "content_tag":"div[class*=textLayer"
+    },
+
+    "Staunton Planning Commission":{ #again, just a list. THids hsouldn't be hard
+        "name":"Staunton Planning Commission",
+        "url":"https://www.ci.staunton.va.us/government/city-council-/board-commissions/agendas-minutes-for-boards-commissions/-selmt-1078",
+        "content_tag":"div[class*=textLayer"},
+
+    "Staunton City Council":{ #liiiiiiist
+        "name":"Staunton City Council",
+        "url":"https://www.ci.staunton.va.us/agendas-minutes",
+        "content_tag":"div[class*=textLayer"},
+
+    "Tazewell County Board of Supervisors":{ #LIIIIIIIIIST
+        "name":"Tazewell County Board of Supervisors",
+        "url":"https://tazewellcountyva.org/government/boards-and-commissions/board-of-supervisors/",
+        "content_tag":"div[class*=textLayer"},
+
+    "Tazewell County Planning Commission":{ #LIIIIIIIIIIIIST
+        "name":"Tazewell County Planning Commission",
+        "url":"https://tazewellcountyva.org/government/boards-and-commissions/planning-commission/",
+        "content_tag":"div[class*=textLayer"},
+
+    "Wesmoreland County Board of Supervisors":{ #revise, they're being cagey
+        "name":"Westmoreland County Board of Supervisors",
+        "url":"https://www.westmoreland-county.org/bos",
+        "content_tag":"div[class*=textLayer"},
+
+    "Westmoreland County Planning Commission":{ #revise
+        "name":"Westmoreland County Planning Commission",
+        "url":"https://www.westmoreland-county.org/pc",
+        "content_tag":"div[class*=textLayer"}
 }

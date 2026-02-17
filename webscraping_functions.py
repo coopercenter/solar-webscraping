@@ -24,7 +24,7 @@ def verify_url(url):
         raise SystemExit(f"{url}: is Not reachable \nErr: {e}")
 
 def check_meeting_date(meeting_time_string): 
-    one_week = timedelta(days=7)
+    one_week = timedelta(days=0)
     last_week = datetime.date(datetime.now()) - one_week
     #all_meetings[i].text should be set as the meeting title for boarddocs sites
     if datetime.date(datetime.now()) < datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)) or datetime.date(datetime.now()) == datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)) or last_week < datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)) or last_week == datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)) :
@@ -294,7 +294,7 @@ def civicclerk(locality_dictionary):
             meetings_with_agendas.append(item)
         except:
             continue
-        
+
     future_meetings = [item.find_element(By.CSS_SELECTOR,"a").get_attribute("href")  for item in meetings_with_agendas if check_meeting_date(search_dates(item.text,languages=['en'])[1][0])==True]
     for item in future_meetings:
         driver.get(item)
