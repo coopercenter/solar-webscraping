@@ -1,7 +1,7 @@
 "Dictionaries for the localities that use the same type of document organization service"
 
 "AgendaCenter localities"
-agendacenter_dictionary = {
+agendacenter1_dictionary = {
     "Botetourt":{
         #new and horrible pop-up window that blocks my scraper (07/08: Seems to be gone now)
         'name':'Botetourt County',

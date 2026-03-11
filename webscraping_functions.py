@@ -834,30 +834,6 @@ def prime_gov(locality_dictionary):
     return messages
 
 """Locality Specific Functions"""
-
-def scrape_platform(locality, link_extractor, content_extractor):
-    if not verify_url(locality["url"]):
-        return [f"{locality['locality']} - URL not working"]
-
-    driver = get_webdriver()
-    driver.get(locality["url"])
-
-    messages = []
-    for agenda_link, date in link_extractor(driver):
-        if not check_meeting_date(date):
-            continue
-
-        agenda_content = content_extractor(agenda_link)
-        if check_agenda_readability(agenda_content):
-            keywords = search_text_for_keywords(agenda_content)
-            if keywords:
-                messages.append(f"{locality['locality']} - Agenda {agenda_link} contains {keywords}")
-        else:
-            messages.append(f"{locality['locality']} - Agenda {agenda_link} could not be scanned")
-
-    driver.quit()
-    return messages
-
 # repetitive - COUNTIES
 
 """Albemarle County"""
