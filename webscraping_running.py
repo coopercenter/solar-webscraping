@@ -1,33 +1,52 @@
 from webscraping_functions import *
 from webscraping_dictionaries import *
 
-repeated_system_fuctions = {
-    "AgendaCenter":{"name":"AgendaCenter",
-                    "function":agendacenter,
-                    "dictionary":agendacenter2_dictionary
-                    },
-    "AgendaCenter Alternate":{agendacenter2},
-    "BoardDocs":{boarddocs},
-    "CivicClerk":{civicclerk},
+repeated_system_functions = {
+    "AgendaCenter":{"function":agendacenter,
+                    "dictionary":agendacenter_dictionary},
+    "AgendaCenter Alternate":{"function":agendacenter2,
+                              "dictionary":agendacenter2_dictionary},
+    "BoardDocs":{"function":boarddocs,
+                 "dictionary":boarddocs_dictionary},
+    "Calendar View":{"function":calendar_view,
+                     "dictionary":calendar_view_dictionary},
+    "CivicClerk":{"function":civicclerk,
+                  "dictionary":civicclerk_dictionary},
+    "CivicWeb":{"function":civicweb,
+                "dictionary":civicweb_dictionary},
+    "Document Center":{"function":document_center,
+                       "dictionary":document_center_dictionary},
+    "EScribe":{"function":escribe,
+               "dictionary":escribe_dictionary},
+    "Folding Year":{"function":folding_year,
+                    "dictionary":folding_year_dictionary},
+    "Folding Year Alternate":{"function":folding_year_v2,
+                              "dictionary":folding_year_v2_dictionary},
+    "Granicus":{"function":granicus,
+                "dictionary":granicus_dictionary},
+    "Granicus Alternate":{"functiion":granicus_version_2,
+                          "dictionary":granicus_2_dictionary},
+    "LaserFiche":{"function":laserfiche,
+                  "dictionary":laserfiche_dictionary},
+    "Legistar":{"function":legistar,
+                "dictionary":legistar_dictionary},
+    "Links by Year":{"function":links_by_year,
+                     "dictionary":links_by_year_dictionary},
+    "MeetingsTable":{"function":meetings_table,
+                     "dictionary":meetingstable_dictionary},
+    
+    
 
 }
 
 locality_functions_single_use = {
     "Albemarle PC":albemarle_county_pc,
-    "Alleghany BOS":alleghany_county,
-    "Amelia PC":amelia_pc,
-    "Brunswick":brunswick_county,
     "Buchanan":buchanan_county,
-    "Buena Vista City Council":buena_vista_city_council,
-    "Craig":craig_county,
     "Fairfax BOS":fairfax_county_bos,
     "Fairfax PC":fairfax_county_pc,
-    "Galax":galax,
     "Giles":giles_county,
-    "Henrico PC":henrico_county_pc,
     "Highland BOS":highland_county_bos,
     "Loudoun":loudoun_pc,
-    "Norton":norton_city,
     "Virginia Beach CC":virginia_beach_cc,
     "Wythe":wythe_county
 }
@@ -139,6 +158,17 @@ def run_webscraping():
                     New_Alerts.append(message)
         except:
             error_alert="Error webscraping " + folding_year_dictionary[locality_dictionary]['name'] + " using Folding Year code"
+            New_Alerts.append(error_alert)
+            continue
+
+    for locality_dictionary in folding_year_v2_dictionary:
+        try:
+            alert=folding_year_v2(locality_dictionary)
+            if alert != []:
+                for message in alert:
+                    New_Alerts.append(message)
+        except:
+            error_alert="Error webscraping " + folding_year_v2_dictionary[locality_dictionary]['name'] + " using Folding Year V2 code"
             New_Alerts.append(error_alert)
             continue
 
