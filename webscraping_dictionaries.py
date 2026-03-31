@@ -1133,14 +1133,14 @@ the_lists_dictionary = {
     "Amelia PC":{
         "url":"https://www.ameliacova.com/departments/boards_and_commissions/planning_commission.php#outer-116sub-117",
         "name":"Amelia County Planning Commission",
-        "meetings_tag":'a[href*="Packet.pdf"',
+        "meetings_tag":'a[href*="Packet.pdf"', # TODO WHY IS IT DOUBLE QUOTE
         'content_tag':'div[class*=textLayer'
     },
 
     "Brunswick":{
         "url":"https://www.brunswickco.com/government/board_of_supervisors/agendas___minutes",
         "name":"Brunswick County",
-        "meetings_tag":'a[href*=".pdf"',
+        "meetings_tag":'a[href*=".pdf"', # TODO WHY IS IT DOUBLE QUOTE
         'content_tag':"div[class*=textLayer"
     },
 
@@ -1296,7 +1296,7 @@ locality_dictionary_single_use = {
     "Giles":{
         "url":"https://virginiasmtnplayground.com/bos/",
         "name":"Giles County Board of Supervisors",
-        "buttons_tag":'div[class*="vc_btn3-container"',
+        "buttons_tag":'div[class*="vc_btn3-container"', # TODO WHY IS IT DOUBLE QUOTE
         "agendas_tag":"a",
         "content_tag":"div[class*=textLayer"
     },
@@ -1331,7 +1331,7 @@ locality_dictionary_single_use = {
 
     "Wythe":{
         "url":"http://www.wytheco.org/index.php/resources/public-notices",
-        "notice_tags":'a[href*="public-notices"',
+        "notice_tags":'a[href*="public-notices"', # TODO WHY IS IT DOUBLE QUOTE
         "name":"Wythe County Public Notices"
     }
 
@@ -1346,30 +1346,30 @@ locality_dictionary_multi_use = {
     "Bath BOS":{
         "name":"Bath County Board of Supervisors",
         "url":"https://www.bathcountyva.gov/public_information/minutes_audios/board_of_supervisors",
-        "archive_page_tag":'a[class*="pageButton number"',
-        "years_tag":"div[class*='item docTitle",
-        "minutes_page_tag":'a[class*="pageButton number"',
-        "minutes_tag":"a[class*='docItemTitle",
+        "archive_page_tag":'a[class*="pageButton number"', # TODO WHY IS IT DOUBLE QUOTE
+        "years_tag":"div[class*='item docTitle'", # TODO IS THIS QUOTE GOOD
+        "minutes_page_tag":'a[class*="pageButton number"', # TODO WHY IS IT DOUBLE QUOTE
+        "minutes_tag":"a[class*='docItemTitle'", # TODO IS THIS QUOTE GOOD
         "content_tag":"div[class*=textLayer"
     },
 
     "Bath PC":{
         "name":"Bath County Planning Commission",
         "url":"https://www.bathcountyva.gov/public_information/minutes_audios/planning_commission",
-        "archive_page_tag":'a[class*="pageButton number"',
-        "years_tag":"div[class*='item docTitle",
-        "minutes_page_tag":'a[class*="pageButton number"',
-        "minutes_tag":"a[class*='docItemTitle",
+        "archive_page_tag":'a[class*="pageButton number"', # TODO WHY IS IT DOUBLE QUOTE
+        "years_tag":"div[class*='item docTitle'", # TODO IS THIS QUOTE GOOD
+        "minutes_page_tag":'a[class*="pageButton number"', # TODO WHY IS IT DOUBLE QUOTE
+        "minutes_tag":"a[class*='docItemTitle'", # TODO IS THIS QUOTE GOOD
         "content_tag":"div[class*=textLayer"
     },
 
     "Bath BZA":{
         "name":"Bath County Board of Zoning Appeals",
         "url":"https://www.bathcountyva.gov/public_information/minutes_audios/board_of_zoning_appeals",
-        "archive_page_tag":'a[class*="pageButton number"',
-        "years_tag":"div[class*='item docTitle",
-        "minutes_page_tag":'a[class*="pageButton number"',
-        "minutes_tag":"a[class*='docItemTitle",
+        "archive_page_tag":'a[class*="pageButton number"', # TODO WHY IS IT DOUBLE QUOTE
+        "years_tag":"div[class*='item docTitle'", # TODO IS THIS QUOTE GOOD
+        "minutes_page_tag":'a[class*="pageButton number"', # TODO WHY IS IT DOUBLE QUOTE
+        "minutes_tag":"a[class*='docItemTitle'", # TODO IS THIS QUOTE GOOD
         "content_tag":"div[class*=textLayer"
     },
 }
