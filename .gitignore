@@ -158,3 +158,7 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+websccraping_functions_new.py
+march_26_webcraping_results.xlsx
+new_alerts.txt
+march_12_webcraping_results.xlsx

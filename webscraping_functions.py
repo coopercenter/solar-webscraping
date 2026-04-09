@@ -24,7 +24,7 @@ def verify_url(url):
         raise SystemExit(f"{url}: is Not reachable \nErr: {e}")
 
 def check_meeting_date(meeting_time_string): 
-    one_week = timedelta(days=29)
+    one_week = timedelta(days=14)
     last_week = datetime.date(datetime.now()) - one_week
     #all_meetings[i].text should be set as the meeting title for boarddocs sites
     if datetime.date(datetime.now()) < datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)) or datetime.date(datetime.now()) == datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)) or last_week < datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)) or last_week == datetime.date(dateutil.parser.parse(meeting_time_string, fuzzy=True)) :
@@ -51,7 +51,7 @@ def get_pdf_content(content_tag):
 
 #very simple version, maybe the ideal if every function uses get_pdf_content first
 def check_agenda_readability(agenda_content):
-    if agenda_content != "":
+    if agenda_content != "" or agenda_content != '':
         return True
     else:
         return False
@@ -160,8 +160,8 @@ def agendacenter(locality_dictionary):
             agenda_search = search_text_for_keywords(agenda_content)
             if agenda_search != []:
                 messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + dictionary['name'] + ". " + link)
-            elif readable == False:
-                messages.append("New meeting document available for "+ dictionary['name'] + ". " + "Document cannot be scanned for keywords. " + link)
+        elif readable == False:
+            messages.append("New meeting document available for "+ dictionary['name'] + ". " + "Document cannot be scanned for keywords. " + link)
     return messages
 
 def agendacenter2(locality_dictionary):
@@ -296,7 +296,7 @@ def calendar_view(locality_dictionary):
             messages.append("New meeting document available for " + dictionary["name"] + ". Document cannot be scanned for keywords. " + link)         
     return messages
 
-"CivicClerk"
+"CivicClerk" #add an option to the code and dictionary to read the meeting summary if available or the meeting files
 def civicclerk(locality_dictionary):
     from webscraping_dictionaries import civicclerk_dictionary
     dictionary = civicclerk_dictionary[locality_dictionary]
@@ -319,6 +319,9 @@ def civicclerk(locality_dictionary):
     for item in future_meetings:
         driver.get(item)
         time.sleep(10)
+        meeting_files = driver.find_element(By.CSS_SELECTOR, "button[id*=MeetingFiles")
+        meeting_files.click()
+        time.sleep(10)
         #don't rely on this to always be the same, turn this into a dictionary of options, even if there's only one current option. It has changed in the past, it can change again.
         pdf_viewer_frame = driver.find_elements(By.CSS_SELECTOR,"iframe[id*=pdfViewerIframe")
         if pdf_viewer_frame != []:
@@ -338,7 +341,7 @@ def civicweb(locality_dictionary):
     from webscraping_dictionaries import civicweb_dictionary
     dictionary=civicweb_dictionary[locality_dictionary]
     driver.get(dictionary['url'])
-    time.sleep(10) 
+    time.sleep(10)
     messages = [] 
     all_meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meetings_tag"])
     if all_meetings == []:
@@ -593,7 +596,10 @@ def granicus(locality_dictionary):
     if table_rows == []:
         messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
     #narrowing down to just future dates
-    future_meetings = [item for item in table_rows if search_dates(item.text) != None and search_dates(item.text)[0][0] != 'Minutes' and check_meeting_date(search_dates(item.text,languages=['en'])[0][0])==True]
+    try:
+        future_meetings = [item for item in table_rows if search_dates(item.text,languages=["en"]) != None and search_dates(item.text,languages=["en"])[0][0] != 'Minutes' and check_meeting_date(search_dates(item.text,languages=['en'])[0][0])==True]
+    except:
+        future_meetings = [item for item in table_rows if search_dates(item.text,languages=["en"]) != None and search_dates(item.text,languages=["en"])[0][0] != 'Minutes' and check_meeting_date(search_dates(item.find_element(By.CSS_SELECTOR,"td").text,languages=['en'])[0][0])==True]
     agendas = []
     for item in future_meetings:
         try:
@@ -1296,34 +1302,17 @@ def virginia_beach_cc():
 
 """Wythe County"""
 #check public notices for now until agenda links work again
-def wythe_county():
-    from webscraping_dictionaries import locality_dictionary_single_use
-    dictionary = locality_dictionary_single_use['Wythe']
-    driver.get(dictionary["url"])
-    time.sleep(10)
-    messages = []
-    public_notice_links = driver.find_elements(By.CSS_SELECTOR,dictionary["notice_tags"])
-    if public_notice_links == []:
-        messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
-    solar_notices = [item.get_attribute('href') for item in public_notice_links if 'Solar' in item.text]
-    if solar_notices != []:
-        for link in solar_notices:
-            messages.append('Keyword(s) Solar found in Public Notice for Wythe County ' + link)
-    return messages
-#def wythe_county(url):
- #   driver.get(url)
- #   time.sleep(10)
- #   messages = []
- #   agenda_links = driver.find_elements(By.CSS_SELECTOR,"a[href*=package")
- #   active_links = [item for item in agenda_links if item.text !='']
- #   future_meetings = [item.get_attribute('href') for item in active_links if check_meeting_date(search_dates(item.text)[0][0])==True]
- #   for item in future_meetings:
- #       driver.get(item)
- #       time.sleep(10)
- #       agenda_content = driver.find_elements(By.CSS_SELECTOR,"svg[class*=textLayer")
- #       if agenda_content == []:
- #           agenda_content = driver.find_elements(By.CSS_SELECTOR,"div[class*=textLayer")
- #       agenda_search = search_agenda_for_keywords(agenda_content)
- #       if agenda_search != []:
- #           messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Wythe County. " + item)
- #   return messages
+#def wythe_county():
+#    from webscraping_dictionaries import locality_dictionary_single_use
+#    dictionary = locality_dictionary_single_use['Wythe']
+#    driver.get(dictionary["url"])
+#    time.sleep(10)
+#    messages = []
+#    public_notice_links = driver.find_elements(By.CSS_SELECTOR,dictionary["notice_tags"])
+#    if public_notice_links == []:
+#        messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
+#    solar_notices = [item.get_attribute('href') for item in public_notice_links if 'Solar' in item.text]
+#    if solar_notices != []:
+#        for link in solar_notices:
+#            messages.append('Keyword(s) Solar found in Public Notice for Wythe County ' + link)
+#    return messages
