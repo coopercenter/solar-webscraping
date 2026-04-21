@@ -10,7 +10,7 @@ agendacenter_dictionary = {
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
-    "Campbell":{ #went to a webpage rather than a pdf
+    "Campbell":{
         'name':"Campbell County",
         'url':"https://www.co.campbell.va.us/AgendaCenter/Search/?term=&CIDs=5,12,6,&startDate=&endDate=&dateRange",
         "meeting_rows":"tr[class*=catAgendaRow",
@@ -352,7 +352,7 @@ boarddocs_dictionary = {
     "Rockbridge":{
         'url':"https://go.boarddocs.com/va/rcva/Board.nsf/Public",
         'name':"Rockbridge County Board of Supervisors",
-        'featured':False,
+        'featured':True,
         'second_page':False},
 }
 
@@ -415,7 +415,7 @@ civicclerk_dictionary = {
     "agenda_content":'div[class*=textLayer'},
 
 "Charlottesville":{
-    'url':"https://charlottesvilleva.portal.civicclerk.com/",
+    'url':"https://charlottesvilleva.portal.civicclerk.com/?category_id=26,27,29,40",
     'name':"City of Charlottesville",
     "meeting_rows":"li[class*='MuiListItem-container'",
     'agenda_type':'pdf',

@@ -5,7 +5,7 @@ from webscraping_packages import *
 """Firefox Version"""  
 options = webdriver.FirefoxOptions()
 #options.add_argument("--headless")
-options.page_load_strategy = 'none' 
+options.page_load_strategy = 'normal' 
 firefox_path = GeckoDriverManager().install() 
 firefox_service = Service(firefox_path)
 driver = Firefox(options=options, service=firefox_service)

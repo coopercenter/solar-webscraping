@@ -1,4 +1,5 @@
-from webscraping_functions import *
+#from webscraping_functions import *
+from webscraping_functions_new import *
 from webscraping_dictionaries import *
 
 repeated_system_functions = {
