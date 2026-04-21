@@ -10,7 +10,7 @@ agendacenter_dictionary = {
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
 
-    "Campbell":{ #went to a webpage rather than a pdf
+    "Campbell":{
         'name':"Campbell County",
         'url':"https://www.co.campbell.va.us/AgendaCenter/Search/?term=&CIDs=5,12,6,&startDate=&endDate=&dateRange",
         "meeting_rows":"tr[class*=catAgendaRow",
@@ -31,6 +31,14 @@ agendacenter_dictionary = {
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'
     },
+
+    "Craig":{
+        "url":"https://www.craigcountyva.gov/AgendaCenter",
+        "name":'Craig County Board of Supervisors',
+        "meeting_rows":"tr[class*=catAgendaRow",
+        "agenda_type":"pdf",
+        "agenda_content":"div[class*=textLayer"
+        },
 
     "Cumberland":{
         'name':"Cumberland County",
@@ -158,6 +166,14 @@ agendacenter_dictionary = {
         "meeting_rows":"tr[class*=catAgendaRow",
         'agenda_type':'pdf',
         'agenda_content':'div[class*=textLayer'},
+
+    "Wythe":{
+        "name":"Wythe County",
+        "url":"https://www.wytheco.org/AgendaCenter/Search/?term=&CIDs=6,7,4,&startDate=&endDate=&dateRange=&dateSelector=",
+        "meeting_rows":"tr[class*=catAgendaRow",
+        "agenda_type":"pdf",
+        "agenda_content":"div[class*=textLayer"
+    },
 
     "York":{
         'name':"York County",
@@ -336,7 +352,7 @@ boarddocs_dictionary = {
     "Rockbridge":{
         'url':"https://go.boarddocs.com/va/rcva/Board.nsf/Public",
         'name':"Rockbridge County Board of Supervisors",
-        'featured':False,
+        'featured':True,
         'second_page':False},
 }
 
@@ -399,7 +415,7 @@ civicclerk_dictionary = {
     "agenda_content":'div[class*=textLayer'},
 
 "Charlottesville":{
-    'url':"https://charlottesvilleva.portal.civicclerk.com/",
+    'url':"https://charlottesvilleva.portal.civicclerk.com/?category_id=26,27,29,40",
     'name':"City of Charlottesville",
     "meeting_rows":"li[class*='MuiListItem-container'",
     'agenda_type':'pdf',
@@ -807,13 +823,13 @@ granicus_dictionary = {
     "archive_type":"open",
     "archive_tag":None,
     "meeting_rows":"tr",
-    "agenda_type":"pdf",
+    "agenda_type":"webpage",
     "agendas_tag":"a[href*='AgendaViewer.php'",
-    "content_tag":"div[class*=textLayer"},
+    "content_tag":"body"},
 
 "Prince William PC":{
     'url':"https://pwcgov.granicus.com/ViewPublisher.php?view_id=12",
-    'name':' Prince William County Planning Commission',
+    'name':'Prince William County Planning Commission',
     "archive_type":"open",
     "archive_tag":None,
     "meeting_rows":"tr",
@@ -822,7 +838,7 @@ granicus_dictionary = {
     "content_tag":"div[class*=textLayer"},
 
 "Washington":{
-    'url':"https://www.washcova.com/PUBLIC-MEETINGS/",
+    'url':"https://washcova.granicus.com/ViewPublisher.php?view_id=2",
     'name':"Washington County",
     "archive_type":"closed",
     "archive_tag":"div[class*='CollapsiblePanelClosed'",
@@ -853,7 +869,7 @@ granicus_dictionary = {
 
 "Chesapeake CC":{
     'url':"https://chesapeake.granicus.com/ViewPublisher.php?view_id=29",
-    'name':"City of Chesapeake",
+    'name':"City of Chesapeake City Council",
     "archive_type":"open",
     "archive_tag":None,
     "meeting_rows":"tr",
@@ -863,7 +879,7 @@ granicus_dictionary = {
 
 "Chesapeake PC":{
     'url':"https://chesapeake.granicus.com/ViewPublisher.php?view_id=35",
-    'name':"City of Chesapeake",
+    'name':"City of Chesapeake Planning Commission",
     "archive_type":"none",
     "archive_tag":None,
     "meeting_rows":"tr",
@@ -946,7 +962,7 @@ legistar_dictionary = {
     "Albemarle":{
         'url':"https://albemarle.legistar.com/Calendar.aspx",
         'name':"Albemarle County",
-        "ccontent_tag":'tr[id*=ctl00'},
+        "content_tag":'tr[id*=ctl00'},
 
     "Hampton CC":{
         'url':"https://hampton.legistar.com/Calendar.aspx",
@@ -1157,13 +1173,6 @@ the_lists_dictionary = {
         "content_tag":"div[class*=textLayer",
         "name":"City of Covington"},
 
-    "Craig":{
-        "url":"https://craigcountyva.gov/government/board-of-supervisors/",
-        "name":'Craig County Board of Supervisors',
-        "meetings_tag":"a[href*='.pdf'",
-        "content_tag":"div[class*=textLayer"
-        },
-
     "Galax":{
         "name":"City of Galax",
         "url":"https://galaxva.com/2025-city-council-agendas/", #still on 2025, no 2026 agendas or minutes yet posted
@@ -1329,11 +1338,11 @@ locality_dictionary_single_use = {
         "agendas_tag":"a[href*='Brief-Agenda'",
         "content_tag":"div[class*=textLayer"},
 
-    "Wythe":{
-        "url":"http://www.wytheco.org/index.php/resources/public-notices",
-        "notice_tags":'a[href*="public-notices"',
-        "name":"Wythe County Public Notices"
-    }
+    #"Wythe":{
+    #    "url":"http://www.wytheco.org/index.php/resources/public-notices",
+    #    "notice_tags":'a[href*="public-notices"',
+    #    "name":"Wythe County Public Notices"
+    #}
 
     #"Wythe County Board of Supervisors":[wythe_county,"http://www.wytheco.org/index.php/resources/meeting-minutes/packages/bos-packages"],
 
