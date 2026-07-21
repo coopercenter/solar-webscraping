@@ -1,12 +1,12 @@
-from webscraping_packages import * 
+from webscraping_packages import *
 from webscraping_driver import *
 
 """General Functions"""
 def get_webdriver():
     options = webdriver.FirefoxOptions()
-    options.headless = True #it's more scalable to work in headless mode (this means a simulation window won't appear) 
-    options.page_load_strategy = 'none' 
-    firefox_path = GeckoDriverManager().install() 
+    options.headless = True #it's more scalable to work in headless mode (this means a simulation window won't appear)
+    options.page_load_strategy = 'none'
+    firefox_path = GeckoDriverManager().install()
     firefox_service = Service(firefox_path)
     return webdriver.Firefox(options=options, service=firefox_service)
 
@@ -23,7 +23,7 @@ def verify_url(url):
         # print URL with Errs
         raise SystemExit(f"{url}: is Not reachable \nErr: {e}")
 
-def check_meeting_date(meeting_time_string): 
+def check_meeting_date(meeting_time_string):
     one_week = timedelta(days=14)
     last_week = datetime.date(datetime.now()) - one_week
     #all_meetings[i].text should be set as the meeting title for boarddocs sites
@@ -35,18 +35,24 @@ def check_meeting_date(meeting_time_string):
 def get_pdf_content(content_tag):
     pages = driver.find_elements(By.CSS_SELECTOR,"div[class*=page")
     text_layers = driver.find_elements(By.CSS_SELECTOR,content_tag)
-    agenda_string = ""
     if len(pages) > len(text_layers):
+        agenda_string = ""
         for page in pages:
             driver.execute_script("arguments[0].scrollIntoView();", page)
             WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, content_tag)))
             agenda_content = driver.find_elements(By.CSS_SELECTOR,content_tag)
-            for item in agenda_content:
-                agenda_string = agenda_string + item.text
-    elif len(pages)==len(text_layers):
+            try:
+                for item in agenda_content:
+                    agenda_string += item.text
+            except:
+                agenda_content = driver.find_elements(By.CSS_SELECTOR,content_tag)
+                for item in agenda_content:
+                    agenda_string += item.text
+    elif len(pages)==len(text_layers) or len(pages)<len(text_layers):
         agenda_content = driver.find_elements(By.CSS_SELECTOR,content_tag)
+        agenda_string = ""
         for item in agenda_content:
-                agenda_string = agenda_string + item.text
+            agenda_string += item.text
     return agenda_string
 
 #very simple version, maybe the ideal if every function uses get_pdf_content first
@@ -55,7 +61,7 @@ def check_agenda_readability(agenda_content):
         return True
     else:
         return False
-    
+   
 def get_webpage_content(content_tag):
     agenda_string =""
     agenda_content = driver.find_elements(By.CSS_SELECTOR,content_tag)
@@ -181,7 +187,7 @@ def agendacenter2(locality_dictionary):
 
     future_meetings = [item for item in table_rows if check_meeting_date(search_dates(item.text,languages=['en'])[0][0])==True]
     meetings_links = [item.find_elements(By.CSS_SELECTOR,"a")[1].get_attribute("href") for item in future_meetings]
-    
+   
     #if agendacenter_dictionary[locality_dictionary]['agenda_type']=='pdf':
     for link in meetings_links:
         driver.get(link)
@@ -213,7 +219,7 @@ def check_boarddocs_agendas(locality_dictionary):
 
     time.sleep(30)
 
-    all_tabs = driver.find_elements(By.CSS_SELECTOR, "a[id*='ui-id-'")
+    all_tabs = driver.find_elements(By.CSS_SELECTOR, dictionary['all_tabs'])
 
     meetings_tab = [item for item in all_tabs if item.text in ['MEETINGS','Meetings']]
 
@@ -224,14 +230,14 @@ def check_boarddocs_agendas(locality_dictionary):
     #get all the meeting links
     #open the current year
     if dictionary['featured']==True:
-        years = driver.find_elements(By.CSS_SELECTOR,"section[class*='ui-accordion-header'")
+        years = driver.find_elements(By.CSS_SELECTOR, dictionary['years'])
         current_year = [year for year in years if year.text == datetime.now().strftime("%Y")]
         current_year[0].click()
-    #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "a[class*='icon prevnext meeting'"))) 
+    #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "a[class*='icon prevnext meeting'")))
     time.sleep(1)
     update_messages = []
     future_meetings = []
-    all_meetings = driver.find_elements(By.CSS_SELECTOR, "a[class*='icon prevnext meeting'")
+    all_meetings = driver.find_elements(By.CSS_SELECTOR, dictionary['all_meetings'])
     if all_meetings == []:
         update_messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
     for item in all_meetings:
@@ -245,14 +251,14 @@ def check_boarddocs_agendas(locality_dictionary):
 
         #find the element to click to view the meeting agenda for this meeting
         #add a dictionary for accessing agenda links/buttons
-        meeting_agenda = driver.find_element(By.CSS_SELECTOR, "a[id*='btn-view-agenda'")
+        meeting_agenda = driver.find_element(By.CSS_SELECTOR, dictionary['meeting_agenda'])
         #click the meeting agenda button
         meeting_agenda.click()
         time.sleep(1)
 
         #pause, give the page time to load
         #Now to get ALL the agenda content
-        all_agenda_topics = driver.find_elements(By.CSS_SELECTOR, "span[class*='title'")
+        all_agenda_topics = driver.find_elements(By.CSS_SELECTOR, dictionary['all_agenda_topics'])
         agenda_content = ""
         for item in all_agenda_topics:
             agenda_content += item.text
@@ -267,7 +273,7 @@ def check_boarddocs_agendas(locality_dictionary):
 
 def boarddocs(locality_dictionary):
     from webscraping_dictionaries import boarddocs_dictionary
-    
+   
     dictionary = boarddocs_dictionary[locality_dictionary]
 
     driver.get(dictionary['url'])
@@ -275,11 +281,11 @@ def boarddocs(locality_dictionary):
     messages = check_boarddocs_agendas(locality_dictionary)
 
     if dictionary['second_page']==True:
-        govt_tab = driver.find_element(By.CSS_SELECTOR, "a[id*='btn-board'")
+        govt_tab = driver.find_element(By.CSS_SELECTOR, dictionary['govt_tab'])
         govt_tab.click()
         time.sleep(1)
 
-        menu_options = driver.find_elements(By.CSS_SELECTOR,"a[class*='dropdown-item'")
+        menu_options = driver.find_elements(By.CSS_SELECTOR, dictionary['menu_options'])
         for item in menu_options:
             if "Planning Commission" in item.text:
                 planning_commission=item
@@ -297,7 +303,7 @@ def calendar_view(locality_dictionary):
     dictionary = calendar_view_dictionary[locality_dictionary]
 
     driver.get(dictionary['url'])
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meetings_tag"]))) 
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meetings_tag"])))
 
     messages = []
     meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meetings_tag"])
@@ -318,7 +324,7 @@ def calendar_view(locality_dictionary):
                 WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_tag"])))
                 agenda_link = driver.find_element(By.CSS_SELECTOR, dictionary["agenda_tag"]).get_attribute("href")
                 driver.get(agenda_link)
-                WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+                WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
                 agenda_content = get_pdf_content(dictionary["content_tag"])
             except:
                 agenda_content=[]
@@ -328,21 +334,22 @@ def calendar_view(locality_dictionary):
             if agenda_search !=[]:
                 messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + dictionary["name"] + ". " + link)
         elif readable == False:
-            messages.append("New meeting document available for " + dictionary["name"] + ". Document cannot be scanned for keywords. " + link)         
+            messages.append("New meeting document available for " + dictionary["name"] + ". Document cannot be scanned for keywords. " + link)        
 
     return messages
 
 """CivicClerk"""
 def civicclerk(locality_dictionary):
     from webscraping_dictionaries import civicclerk_dictionary
-
+    messages=[]
     dictionary = civicclerk_dictionary[locality_dictionary]
 
     driver.get(civicclerk_dictionary[locality_dictionary]['url'])
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meeting_rows"])))
-
-    messages=[]
-    
+    try:
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR,dictionary["download_button"])))
+    except:
+        messages.append("No current meeting agendas posted for " + dictionary["name"])
+   
     all_meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meeting_rows"])
     
     if all_meetings == []:
@@ -352,20 +359,22 @@ def civicclerk(locality_dictionary):
     for item in all_meetings:
         try:
             #test if there's a download button, indicating agenda files have been posted. Lack of files to scan will throw an error, and we won't waste time checking that meeting link for keywords
-            #consider making this a dictionary of options as well
-            item.find_element(By.CSS_SELECTOR,"button[id*=downloadFilesMenu")
+            item.find_element(By.CSS_SELECTOR,dictionary["download_button"])
             meetings_with_agendas.append(item)
         except:
             continue
     future_meetings = [item.find_element(By.CSS_SELECTOR,"a").get_attribute("href")  for item in meetings_with_agendas if check_meeting_date(search_dates(item.text,languages=['en'])[1][0])==True]
     for item in future_meetings:
         driver.get(item)
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "iframe[id*=pdfViewerIframe")))
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meeting_files"])))
+        files_button = driver.find_element(By.CSS_SELECTOR,dictionary["meeting_files"]).click()
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["pdf_viewer_frame"])))
 
         #don't rely on this to always be the same, turn this into a dictionary of options, even if there's only one current option. It has changed in the past, it can change again.
-        pdf_viewer_frame = driver.find_elements(By.CSS_SELECTOR,"iframe[id*=pdfViewerIframe")
+        pdf_viewer_frame = driver.find_elements(By.CSS_SELECTOR,dictionary["pdf_viewer_frame"])
         if pdf_viewer_frame != []:
             driver.switch_to.frame(pdf_viewer_frame[0])
+            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary['agenda_content'])))
             agenda_content = get_pdf_content(dictionary['agenda_content'])
             readable=check_agenda_readability(agenda_content)
             if readable ==True:
@@ -378,17 +387,11 @@ def civicclerk(locality_dictionary):
 
 def civicweb(locality_dictionary):
     from webscraping_dictionaries import civicweb_dictionary
-
     dictionary=civicweb_dictionary[locality_dictionary]
-
+    messages = []
     driver.get(civicweb_dictionary[locality_dictionary]['url'])
     WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meetings_tag"])))
-
-    messages = []
-
-    # all_meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meetings_tag"])
-    all_meetings = driver.find_elements(By.CSS_SELECTOR, dictionary["meeting_rows"])
-
+    all_meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meetings_tag"])
     if all_meetings == []:
         messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
     relevant_meetings = [item for item in all_meetings if "Board of Supervisors" in item.text or "Planning Commission" in item.text or "City Council" in item.text or "Board of Zoning Appeals" in item.text]
@@ -408,7 +411,7 @@ def civicweb(locality_dictionary):
         #switch to the agenda viewer frame
         agenda_frame = driver.find_element(By.CSS_SELECTOR,"iframe")
         driver.switch_to.frame(agenda_frame)
-        agenda_content = get_pdf_content(dictionary['content_tag'])
+        agenda_content = get_webpage_content(dictionary['content_tag'])
         readable = check_agenda_readability(agenda_content)
         if readable ==True:
             agenda_search = search_text_for_keywords(agenda_content)
@@ -423,30 +426,31 @@ def document_center(locality_dictionary):
 
     dictionary = document_center_dictionary[locality_dictionary]
 
-    driver.get(document_center_dictionary[locality_dictionary]['url'])
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div[class*='ant-tree-treenode'")))
-
     messages = []
 
-    folders = driver.find_elements(By.CSS_SELECTOR,"div[class*='ant-tree-treenode'")
+    driver.get(dictionary['url'])
+    #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["tree_id"])))
+    time.sleep(2)
+   
+    #bos_folder = [item for item in folders if 'Board of Supervisors' in item.text]
+    #bos_folder[0].click()
+    #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["tree_id"])))
     
-    if folders == []:
+    bos_doc_folders = driver.find_elements(By.CSS_SELECTOR,dictionary["tree_id"])
+    if bos_doc_folders == []:
         messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
-    bos_folder = [item for item in folders if 'Board of Supervisors' in item.text]
-    bos_folder[0].click()
-
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div[class*='ant-tree-treenode'")))
-    bos_doc_folders = driver.find_elements(By.CSS_SELECTOR,"div[class*='ant-tree-treenode'")
     agenda_folder = [item for item in bos_doc_folders if item.text=='Agenda']
     agenda_folder[0].click()
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div[class*='ant-tree-treenode'")))
-    year_folders = driver.find_elements(By.CSS_SELECTOR,"div[class*='ant-tree-treenode'")
+    #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["tree_id"])))
+    time.sleep(2)
+    year_folders = driver.find_elements(By.CSS_SELECTOR,dictionary["tree_id"])
     current_year = [item for item in year_folders if item.text == datetime.now().strftime("%Y")]
     current_year[0].click()
-    
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "a[class*=pdf")))
-    agenda_links = driver.find_elements(By.CSS_SELECTOR,"a[class*=pdf")
+   
+    #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["pdf_id"])))
+    time.sleep(2)
+    agenda_links = driver.find_elements(By.CSS_SELECTOR,dictionary["pdf_id"])
     latest_agenda = agenda_links[-1].get_attribute("href")
     driver.get(latest_agenda)
 
@@ -467,29 +471,30 @@ def escribe(locality_dictionary):
 
     dictionary = escribe_dictionary[locality_dictionary]
 
-    driver.get(escribe_dictionary[locality_dictionary]['url'])
+    driver.get(dictionary['url'])
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "a[id*='ctl00_MainContent'")))
+    #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary['main_content'])))
+    time.sleep(2)
 
     messages = []
 
-    archive_tabs = driver.find_elements(By.CSS_SELECTOR,"a[id*='ctl00_MainContent'")
+    archive_tabs = driver.find_elements(By.CSS_SELECTOR, dictionary['main_content'])
 
     relevant_tabs = []
-    
+   
     for item in archive_tabs:
         if "Board of Supervisors" in item.text or "Board of Zoning Appeals" in item.text or "Planning Commission" in item.text:
             relevant_tabs.append(item)
     document_links = []
     for item in relevant_tabs:
         item.click()
-
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div[class*='calendar-item'")))
-        archive_meetings = driver.find_elements(By.CSS_SELECTOR,"div[class*='calendar-item'")
+        #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div[class*='calendar-item")))
+        time.sleep(5)
+        archive_meetings = driver.find_elements(By.CSS_SELECTOR, dictionary["archive_meetings"])
         relevant_meetings = [meeting for meeting in archive_meetings if "Board of Supervisors" in meeting.text or "Board of Zoning Appeals" in meeting.text or "Planning Commission" in item.text]
         current_meetings = [meeting for meeting in relevant_meetings if search_dates(meeting.text) != None and check_meeting_date(search_dates(meeting.text,languages=['en'])[0][0])==True]
         for meeting in current_meetings:
-            links = meeting.find_elements(By.CSS_SELECTOR,"a[href*='DocumentId'")
+            links = meeting.find_elements(By.CSS_SELECTOR, dictionary["agenda_link"])
             for link in links:
                 document_links.append(link.get_attribute("href"))
     if document_links == []:
@@ -497,8 +502,8 @@ def escribe(locality_dictionary):
     for link in document_links:
         driver.get(link)
 
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div[class*=textLayer")))
-        agenda_content = get_pdf_content("div[class*=textLayer")
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
+        agenda_content = get_pdf_content(dictionary["content_tag"])
         readable = check_agenda_readability(agenda_content)
         if readable == True:
             agenda_search = search_text_for_keywords(agenda_content)
@@ -514,27 +519,32 @@ def folding_year(locality_dictionary):
     dictionary = folding_year_dictionary[locality_dictionary]
 
     driver.get(folding_year_dictionary[locality_dictionary]['url'])
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["years_tag"])))
 
     messages = []
 
     if folding_year_dictionary[locality_dictionary]["archive_type"] == "closed":
+        #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["years_tag"])))
+        time.sleep(5)
         years = driver.find_elements(By.CSS_SELECTOR,dictionary["years_tag"])
         current_year = [year for year in years if datetime.now().strftime("%Y") in year.text]
         current_year[0].click()
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_folder_tag"])))
 
     if dictionary["agenda_subfolder"]==True:
+        #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_folder_tag"])))
+        time.sleep(1)
         content_tabs = driver.find_elements(By.CSS_SELECTOR, dictionary["agenda_folder_tag"])
         agenda_tab = [item for item in content_tabs if "Agenda" in item.text]
         agenda_tab[0].click()
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["months_tag"])))
 
     if dictionary["month_subfolder"]==True:
+        #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["months_tag"])))
+        time.sleep(1)
         months = driver.find_elements(By.CSS_SELECTOR, dictionary["months_tag"])
         relevant_months = [month for month in months if datetime.now().strftime("%B") in month.text.title() or (datetime.date(datetime.now()) - timedelta(days=8)).strftime("%B") in month.text.title()]
         for month in relevant_months:
-            month.click() # TODO keep an eye out for errors
+            month.click()
+            #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meetings_tag"])))
+            time.sleep(1)
             meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meetings_tag"])
             if meetings == []:
                 messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
@@ -552,6 +562,8 @@ def folding_year(locality_dictionary):
                 elif readable ==False:
                     messages.append("New meeting document available for "+ dictionary['name'] + ". " + "Document cannot be scanned for keywords. " + agenda_link)
     elif folding_year_dictionary[locality_dictionary]["month_subfolder"]==False:
+        #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meetings_tag"])))
+        time.sleep(1)
         meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meetings_tag"])
         if meetings == []:
             messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
@@ -567,7 +579,7 @@ def folding_year(locality_dictionary):
                 if agenda_search != []:
                     messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + dictionary['name'] + ". " + agenda_link)
             elif readable ==False:
-                messages.append("New meeting document available for "+ dictionary['name'] + ". " + "Document cannot be scanned for keywords. " + agenda_link)   
+                messages.append("New meeting document available for "+ dictionary['name'] + ". " + "Document cannot be scanned for keywords. " + agenda_link)  
     return messages
 
 def folding_year_v2(locality_dictionary):
@@ -575,8 +587,8 @@ def folding_year_v2(locality_dictionary):
 
     dictionary = folding_year_v2_dictionary[locality_dictionary]
 
-    driver.get(folding_year_v2_dictionary[locality_dictionary]['url']) 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["years_tag"]))) 
+    driver.get(folding_year_v2_dictionary[locality_dictionary]['url'])
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["years_tag"])))
 
     messages = []
 
@@ -586,11 +598,12 @@ def folding_year_v2(locality_dictionary):
         if locality_dictionary=="Virginia Beach PC":
             driver.execute_script("arguments[0].scrollIntoView(true);", current_year[0])
             current_year[1].click()
-            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["row_tag"]))) 
+            #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["row_tag"])))
+            time.sleep(2)
 
         else:
             current_year[0].click()
-            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["row_tag"]))) 
+            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["row_tag"])))
 
         meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["row_tag"])
         if meetings == []:
@@ -603,11 +616,11 @@ def folding_year_v2(locality_dictionary):
                     try:
                         future_meetings.append(item.find_element(By.CSS_SELECTOR,dictionary["document_tag"]).get_attribute("href"))
                     except:
-                        continue 
+                        continue
         for agenda_link in future_meetings:
             driver.get(agenda_link)
-            
-            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+           
+            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
             agenda_content = get_pdf_content(dictionary["content_tag"])
             readable = check_agenda_readability(agenda_content)
             if readable == True:
@@ -615,7 +628,7 @@ def folding_year_v2(locality_dictionary):
                 if agenda_search != []:
                     messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for " + dictionary['name'] + ". " + agenda_link)
             elif readable ==False:
-                messages.append("New meeting document available for "+ dictionary['name'] + ". " + "Document cannot be scanned for keywords. " + agenda_link)   
+                messages.append("New meeting document available for "+ dictionary['name'] + ". " + "Document cannot be scanned for keywords. " + agenda_link)  
     return messages
 
 def granicus(locality_dictionary):
@@ -624,7 +637,10 @@ def granicus(locality_dictionary):
     dictionary = granicus_dictionary[locality_dictionary]
 
     driver.get(granicus_dictionary[locality_dictionary]['url'])
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["archive_tag"]))) 
+    if dictionary["archive_tag"] == None:
+        time.sleep(5)
+    else:
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["archive_tag"])))
 
     messages=[]
 
@@ -654,8 +670,8 @@ def granicus(locality_dictionary):
         messages.append("No agendas found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
     for agenda_url in agendas:
         driver.get(agenda_url)
-        
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+       
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
         if dictionary["agenda_type"]=="pdf":
             agenda_content = get_pdf_content(dictionary["content_tag"])
         elif dictionary["agenda_type"]=="webpage":
@@ -674,28 +690,28 @@ def granicus_version_2(locality_dictionary):
 
     dictionary = granicus_2_dictionary[locality_dictionary]
 
-    driver.get(granicus_2_dictionary[locality_dictionary]['url']) 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div[class*=RowTop'))) 
+    driver.get(granicus_2_dictionary[locality_dictionary]['url'])
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["row_top"])))
 
     messages = []
 
-    table_rows = driver.find_elements(By.CSS_SELECTOR, 'div[class*=RowTop')
-    
+    table_rows = driver.find_elements(By.CSS_SELECTOR, dictionary["row_top"])
+   
     if table_rows == []:
         messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
     future_meetings = [item.find_element(By.CSS_SELECTOR,"a[href*='Citizens/Detail_Meeting'").get_attribute("href") for item in table_rows if check_meeting_date(item.text)==True]
     for item in future_meetings:
             driver.get(item)
 
-            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
             try:
                 if dictionary["agenda_type"]=="webpage":
                     agenda_content = get_webpage_content(dictionary["content_tag"])
                 elif dictionary["agenda_type"]=="pdf":
-                    agenda_link = driver.find_element(By.CSS_SELECTOR,"a[id*=PublicAgendaFile").get_attribute("href")
+                    agenda_link = driver.find_element(By.CSS_SELECTOR, dictionary["agenda_link"]).get_attribute("href")
                     driver.get(agenda_link)
 
-                    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+                    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
                     agenda_content=get_pdf_content(dictionary["content_tag"])
                 agenda_search = search_text_for_keywords(agenda_content)
                 readable=check_agenda_readability(agenda_content)
@@ -714,12 +730,12 @@ def laserfiche(locality_dictionary):
 
     dictionary = laserfiche_dictionary[locality_dictionary]
 
-    driver.get(laserfiche_dictionary[locality_dictionary]['url']) 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "iframe[name=frame1"))) 
+    driver.get(laserfiche_dictionary[locality_dictionary]['url'])
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["iframe"])))
 
     messages=[]
 
-    frame = driver.find_element(By.CSS_SELECTOR,"iframe[name=frame1")
+    frame = driver.find_element(By.CSS_SELECTOR, dictionary["iframe"])
 
     driver.switch_to.frame(frame)
     year_folders = driver.find_elements(By.CSS_SELECTOR,"td")
@@ -728,7 +744,7 @@ def laserfiche(locality_dictionary):
     current_folder_link = current_folder[0].find_element(By.CSS_SELECTOR,"a").get_attribute('href')
     driver.get(current_folder_link)
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "tr"))) 
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "tr")))
     meeting_folders = driver.find_elements(By.CSS_SELECTOR,"tr")
     if meeting_folders == []:
         messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
@@ -738,16 +754,17 @@ def laserfiche(locality_dictionary):
             if check_meeting_date(item.text)==True:
                 future_meetings.append(item.find_element(By.CSS_SELECTOR,"a").get_attribute('href'))
         except:
-            continue 
+            continue
     for item in future_meetings:
         driver.get(item)
-        
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "a[href*='Agenda.pdf'")))
+       
+        #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_link1"])))
+        time.sleep(2)
 
         try:
-            agenda_link = driver.find_element(By.CSS_SELECTOR,"a[href*='Agenda.pdf'").get_attribute('href')
+            agenda_link = driver.find_element(By.CSS_SELECTOR, dictionary["agenda_link1"]).get_attribute('href')
         except:
-            agenda_link = driver.find_element(By.CSS_SELECTOR,"a[href*='Agenda-REVISED.pdf'").get_attribute('href')
+            agenda_link = driver.find_element(By.CSS_SELECTOR, dictionary["agenda_link2"]).get_attribute('href')
         #turn this into a replicable method for whenever downloads come up
         agenda_content = read_pdf_download(agenda_link)
         readable = check_agenda_readability(agenda_content)
@@ -757,7 +774,7 @@ def laserfiche(locality_dictionary):
                 messages.append('Keyword(s) ' + ", ".join(agenda_search)+' found in upcoming meeting for ' + dictionary['name'] + '. ' + agenda_link)
         elif readable == False:
             messages.append('New agenda available for upcoming meeting in ' + dictionary['name'] + ". Document cannot be scanned for keywords. " + item)
-    return messages  
+    return messages 
 
 def legistar(locality_dictionary):
     from webscraping_dictionaries import legistar_dictionary
@@ -765,21 +782,27 @@ def legistar(locality_dictionary):
     dictionary = legistar_dictionary[locality_dictionary]
 
     driver.get(legistar_dictionary[locality_dictionary]['url'])
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'tr[id*="ctl00_"')))
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary['content_tag'])))
 
     messages = []
-    
-    table_rows = driver.find_elements(By.CSS_SELECTOR,'tr[id*="ctl00_"')
+   
+    table_rows = driver.find_elements(By.CSS_SELECTOR, dictionary['content_tag'])
 
     if table_rows == []:
         messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
     future_meetings = [item for item in table_rows if check_meeting_date(search_dates(item.text,languages=['en'])[0][0])==True]
-    meeting_urls = [item.find_element(By.CSS_SELECTOR,"a[id*=hypMeetingDetail").get_attribute('href') for item in future_meetings]
+    meeting_urls = []
+    for item in future_meetings:
+        try:
+            meeting_urls.append(item.find_element(By.CSS_SELECTOR, dictionary["meeting_urls"]).get_attribute('href'))
+        except:
+            continue
+
     for item in meeting_urls:
         if item != None:
             driver.get(item)
 
-            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
             agenda_content = get_webpage_content(dictionary["content_tag"])
             readable = check_agenda_readability(agenda_content)
             if readable == True:
@@ -795,8 +818,11 @@ def links_by_year(locality_dictionary):
 
     dictionary = links_by_year_dictionary[locality_dictionary]
 
-    driver.get(links_by_year_dictionary[locality_dictionary]['url']) 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["year_list_tag"]))) 
+    driver.get(links_by_year_dictionary[locality_dictionary]['url'])
+    try:
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["year_list_tag"])))
+    except:
+        time.sleep(2)
 
     messages = []
 
@@ -807,8 +833,10 @@ def links_by_year(locality_dictionary):
     current_year = [item for item in list_items if str(datetime.date(datetime.now()).year) in item.text]
     #now navigate to the agenda page for the current year
     driver.get(current_year[0].get_attribute("href"))
-
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_link_tag"]))) 
+    try:
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_link_tag"])))
+    except:
+        time.sleep(2)
 
     #find all the agenda document links
     links = driver.find_elements(By.CSS_SELECTOR,dictionary['agenda_link_tag'])
@@ -824,8 +852,11 @@ def links_by_year(locality_dictionary):
             continue
     for link in future_meetings:
         driver.get(link)
-        
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_content_tag"]))) 
+       
+        try:
+            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_content_tag"])))
+        except:
+            time.sleep(2)
         if dictionary["agenda_type"] == "pdf":
             agenda_content = get_pdf_content(dictionary['agenda_content_tag'])
         if dictionary["agenda_type"] == "webpage":
@@ -844,8 +875,8 @@ def meetings_table(locality_dictionary):
 
     dictionary = meetingstable_dictionary[locality_dictionary]
 
-    driver.get(meetingstable_dictionary[locality_dictionary]['url']) 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meeting_rows"])))[1:]
+    driver.get(dictionary['url'])
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meetings_tag"])))
 
     messages = []
 
@@ -862,13 +893,15 @@ def meetings_table(locality_dictionary):
     agenda_links = []
     for item in future_meetings:
         try:
-            agenda_links.append(item.find_element(By.CSS_SELECTOR,"a[title*=Agenda").get_attribute('href'))
+            agenda_links.append(item.find_element(By.CSS_SELECTOR, dictionary["agenda_links"]).get_attribute('href'))
         except:
             continue
+    if agenda_links == []:
+        messages.append("No meeting documents found for " + dictionary["name"] + ". Tags may have changed or content may have moved")
     for item in agenda_links:
             driver.get(item)
 
-            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_content_tag"]))) 
+            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_content_tag"])))
             agenda_content = get_pdf_content(dictionary['agenda_content_tag'])
             readable = check_agenda_readability(agenda_content)
             if readable == True:
@@ -883,37 +916,29 @@ def onbase(locality_dictionary):
     from webscraping_dictionaries import onbase_dictionary
 
     dictionary = onbase_dictionary[locality_dictionary]
-    
-    driver.get(onbase_dictionary[locality_dictionary]['url'])
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["tr"]))) 
+   
+    driver.get(dictionary['url'])
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meeting_rows"])))
 
     messages=[]
 
-    table_rows = driver.find_elements(By.CSS_SELECTOR, dictionary["tr"]) 
+    table_rows = driver.find_elements(By.CSS_SELECTOR, dictionary["meeting_rows"])
 
     if table_rows == []:
         messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
-    future_meetings = []
-    for item in table_rows:
-        try:
-            future=check_meeting_date(item.text)
-            if future==True:
-                future_meetings.append(item)
-        except:
-            continue
+    future_meetings = [item for item in table_rows if search_dates(item.text) != None and check_meeting_date(search_dates(item.text,languages=["en"])[0][0])==True]
     agenda_links = []
     for item in future_meetings:
         try:
-            agenda = item.find_element(By.CSS_SELECTOR,"a[id*='MeetingAgenda'")
-            agenda_links.append(agenda.get_attribute("href"))
+            agenda_links.append(item.find_element(By.CSS_SELECTOR, dictionary["agenda"]).get_attribute("href"))
         except:
             continue
     for item in agenda_links:
         driver.get(item)
-        
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "body"))) 
+       
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
 
-        agenda_content=get_webpage_content("body")
+        agenda_content=get_webpage_content(dictionary["content_tag"])
         readable = check_agenda_readability(agenda_content)
         if readable == True:
             agenda_search=search_text_for_keywords(agenda_content)
@@ -928,12 +953,12 @@ def php_table(locality_dictionary):
 
     dictionary = php_table_dictionary[locality_dictionary]
 
-    driver.get(php_table_dictionary[locality_dictionary]['url']) 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "tr"))) 
+    driver.get(php_table_dictionary[locality_dictionary]['url'])
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meeting_rows"])))
 
     messages = []
 
-    table_rows = driver.find_elements(By.CSS_SELECTOR, dictionary["meeting_rows"]) 
+    table_rows = driver.find_elements(By.CSS_SELECTOR, dictionary["meeting_rows"])
 
     if table_rows == []:
         messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
@@ -945,13 +970,14 @@ def php_table(locality_dictionary):
                 future_meetings.append(item)
         except:
             continue
-    future_agendas = [item.find_element(By.CSS_SELECTOR, "a[href*='.pdf'").get_attribute('href') for item in future_meetings if dictionary['web_document'] in item.text]
+    future_agendas = [item.find_element(By.CSS_SELECTOR, dictionary["future_agendas"]).get_attribute('href') for item in future_meetings if dictionary['web_document'] in item.text]
     if future_agendas !=[]:
         for agenda_link in future_agendas:
             driver.get(agenda_link)
 
-            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div[class*=textLayer"))) 
-            agenda_content = get_pdf_content("div[class*=textLayer")
+            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_content"])))
+            time.sleep(1)
+            agenda_content = get_pdf_content(dictionary["agenda_content"])
             readable = check_agenda_readability(agenda_content)
             if readable == True:
                 agenda_search = search_text_for_keywords(agenda_content)
@@ -966,18 +992,18 @@ def prime_gov(locality_dictionary):
 
     dictionary = primegov_dictionary[locality_dictionary]
 
-    driver.get(primegov_dictionary[locality_dictionary]['url']) 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'tr[role*=row'))) 
+    driver.get(primegov_dictionary[locality_dictionary]['url'])
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["table_row"])))
 
     messages=[]
 
     #find all the table rows
-    table_rows = driver.find_elements(By.CSS_SELECTOR, dictionary["meeting_rows"])
+    table_rows = driver.find_elements(By.CSS_SELECTOR, dictionary["table_row"])
 
     if table_rows == []:
         messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
     #filter for upcoming meetings
-    current_meetings = [row.find_element(By.CSS_SELECTOR,"a[class*='document'").get_attribute("href") for row in table_rows if search_dates(row.text,languages=["en"]) != None and check_meeting_date(search_dates(row.text,languages=["en"])[0][0]) == True]
+    current_meetings = [row.find_element(By.CSS_SELECTOR, dictionary["current_meetings"]).get_attribute("href") for row in table_rows if search_dates(row.text,languages=["en"]) != None and check_meeting_date(search_dates(row.text,languages=["en"])[0][0]) == True]
     for link in current_meetings:
         try:
             agenda_content = read_pdf_download(link)
@@ -999,7 +1025,10 @@ def the_lists(locality_dictionary):
     messages = []
 
     driver.get(dictionary["url"])
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meetings_tag"]))) 
+    try:
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meetings_tag"])))
+    except:
+        time.sleep(5)
 
     meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meetings_tag"])
 
@@ -1009,7 +1038,7 @@ def the_lists(locality_dictionary):
     for link in current_meetings:
         driver.get(link)
 
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
         agenda_content = get_pdf_content(dictionary["content_tag"])
         readable = check_agenda_readability(agenda_content)
         if readable == True:
@@ -1027,12 +1056,16 @@ def the_split_lists(locality_dictionary):
     messages = []
 
     driver.get(dictionary["url"])
-
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meeting_rows"]))) 
+    try:
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meeting_rows"])))
+    except:
+        time.sleep(5)
     meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meeting_rows"])
     driver.execute_script("arguments[0].scrollIntoView(true);", meetings[0])
-
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_tag"])))
+    try:
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_tag"])))
+    except:
+        time.sleep(1)
     if meetings == []:
         messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
     agenda_links = []
@@ -1044,8 +1077,8 @@ def the_split_lists(locality_dictionary):
                 continue
     for link in agenda_links:
         driver.get(link)
-        
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+       
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
         agenda_content = get_pdf_content(dictionary["content_tag"])
         readable = check_agenda_readability(agenda_content)
         if readable == True:
@@ -1056,17 +1089,19 @@ def the_split_lists(locality_dictionary):
             messages.append("New meeting document available for " + dictionary["name"] + ". Document cannot be scanned for keywords. " + link)
     return messages
 
+
+"""Locality Specific Functions"""
 def albemarle_county_pc():
     from webscraping_dictionaries import locality_dictionary_single_use
 
     dictionary = locality_dictionary_single_use['Albemarle PC']
 
-    driver.get(locality_dictionary_single_use[locality_dictionary]['url']) 
-
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["rows_tag"]))) 
+    driver.get(dictionary['url'])
+    
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["rows_tag"])))
     messages=[]
 
-    table_rows = driver.find_elements(By.CSS_SELECTOR, dictionary["rows_tag"]) 
+    table_rows = driver.find_elements(By.CSS_SELECTOR, dictionary["rows_tag"])
 
     if table_rows == []:
         messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
@@ -1079,15 +1114,18 @@ def albemarle_county_pc():
             continue
     for item in meeting_links:
         driver.get(item)
-
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["documents_tag"]))) 
+        try:
+            WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["documents_tag"])))
+        except:
+            messages.append("No documents available for " + item + ". Documents may not have been posted or tags may have changed")
+            continue
 
         try:
             document_links = driver.find_elements(By.CSS_SELECTOR,dictionary["documents_tag"])
             agenda_link = [item.get_attribute("href") for item in document_links if "Agenda" in item.text]
             driver.get(agenda_link[0])
-            
-            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+           
+            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
             agenda_content = get_pdf_content(dictionary['content_tag'])
             readable = check_agenda_readability(agenda_content)
             if readable == True:
@@ -1106,7 +1144,8 @@ def buchanan_county():
     dictionary = locality_dictionary_single_use['Buchanan']
     driver.get(dictionary['url'])
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["pdfs_tag"]))) 
+    #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["pdfs_tag"])))
+    time.sleep(2)
 
     messages = []
     pdfs = driver.find_elements(By.CSS_SELECTOR,dictionary["pdfs_tag"])
@@ -1116,8 +1155,8 @@ def buchanan_county():
     #since they're only posting minutes not agendas, and minutes are posted long after the fact, we'll skip the date checking
     minutes_url = latest_minutes.get_attribute("href")
     driver.get(minutes_url)
-    
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+   
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
     agenda_content = get_pdf_content(dictionary['content_tag'])
     readable = check_agenda_readability(agenda_content)
     if readable == True:
@@ -1134,8 +1173,8 @@ def fairfax_county_bos():
     dictionary = locality_dictionary_single_use['Fairfax BOS']
     driver.get(dictionary['url'])
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meetings_tag"]))) 
-
+    #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meetings_tag"])))
+    time.sleep(2)
     messages = []
     meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meetings_tag"])
     if meetings == []:
@@ -1144,7 +1183,8 @@ def fairfax_county_bos():
     for link in meeting_links:
         driver.get(link)
 
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agendas_tag"])))
+        #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agendas_tag"])))
+        time.sleep(2)
 
         try:
             agenda_link = driver.find_element(By.CSS_SELECTOR,dictionary["agendas_tag"]).get_attribute("href")
@@ -1161,6 +1201,7 @@ def fairfax_county_bos():
             elif readable == False:
                 messages.append('New agenda available for upcoming meeting in Fairfax Count Board of Supervisors. Document cannot be scanned for keywords. ' + agenda_link)
         except:
+            messages.append("No meeting documents available for " + link + ". Document may not be posted or tags may have changed")
             continue
     return messages
 
@@ -1169,8 +1210,8 @@ def fairfax_county_pc():
 
     dictionary = locality_dictionary_single_use['Fairfax PC']
     driver.get(dictionary['url'])
-    
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["years_tag"]))) 
+   
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["years_tag"])))
 
     messages = []
     latest_year = driver.find_element(By.CSS_SELECTOR,dictionary["years_tag"])
@@ -1183,7 +1224,7 @@ def fairfax_county_pc():
     for month in current_months:
         driver.get(month)
 
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agendas_tag"]))) 
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agendas_tag"])))
         agendas = driver.find_elements(By.CSS_SELECTOR,dictionary["agendas_tag"])
         if agendas == []:
             messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
@@ -1199,7 +1240,7 @@ def fairfax_county_pc():
         for item in current_meetings:
             driver.get(item)
 
-            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
             agenda_content = get_pdf_content(dictionary['content_tag'])
             readable = check_agenda_readability(agenda_content)
             if readable == True:
@@ -1216,17 +1257,16 @@ def giles_county():
     dictionary = locality_dictionary_single_use['Giles']
     driver.get(dictionary['url'])
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["buttons_tag"]))) 
-
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["buttons_tag"])))
     messages = []
-    buttons = driver.find_elements(By.CSS_SELECTOR,dictionary["buttons_tag"])
-    if buttons == []:
+    next_agenda = driver.find_elements(By.CSS_SELECTOR,dictionary["buttons_tag"])
+    if next_agenda == []:
         messages.append("No site buttons found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
     #follow the link to the latest agenda. Third button is the NEXT AGENDA button
-    agenda_link = buttons[2].find_element(By.CSS_SELECTOR,dictionary["agendas_tag"]).get_attribute("href")
+    agenda_link = next_agenda[0].get_attribute("href")
     driver.get(agenda_link)
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
 
     agenda_content = get_pdf_content(dictionary["content_tag"])
     readable = check_agenda_readability(agenda_content)
@@ -1236,7 +1276,7 @@ def giles_county():
             messages.append("Keyword(s) " + ", ".join(agenda_search) + " found in upcoming meeting for Giles County in next agenda. " + agenda_link)
     elif readable == False:
         messages.append("New document available for upcoming meeting for Giles County. Document cannot be scanned for keywords. " + agenda_link)
-    return messages 
+    return messages
 
 def highland_county_bos():
     from webscraping_dictionaries import locality_dictionary_single_use
@@ -1245,15 +1285,15 @@ def highland_county_bos():
     messages = []
     driver.get(dictionary['url'])
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["folders_tag"]))) 
-
+    #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["folders_tag"])))
+    time.sleep(5)
     folders = driver.find_elements(By.CSS_SELECTOR,dictionary["folders_tag"])
     if folders == []:
         messages.append("No folders found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
     current_year = [item for item in folders if item.text==str(datetime.now().year)]
     driver.get(current_year[0].get_attribute('href'))
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meetings_tag"]))) 
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["meetings_tag"])))
 
     meetings = driver.find_elements(By.CSS_SELECTOR,dictionary["meetings_tag"])
     if meetings == []:
@@ -1267,7 +1307,7 @@ def highland_county_bos():
         if ".pdf" in agenda_link:
             driver.get(agenda_link)
 
-            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
             agenda_content = get_pdf_content(dictionary["content_tag"])
             readable = check_agenda_readability(agenda_content)
             if readable == True:
@@ -1293,14 +1333,14 @@ def loudoun_pc():
     dictionary = locality_dictionary_single_use['Loudoun']
     driver.get(dictionary['url'])
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["links_tag"]))) 
-    
+    #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["links_tag"])))
+    time.sleep(5)
     messages=[]
     all_links = driver.find_elements(By.CSS_SELECTOR,dictionary["links_tag"])
     meeting_doc_folder = [item for item in all_links if item.text == 'Public Hearings & Work Sessions']
     driver.get(meeting_doc_folder[0].get_attribute('href'))
-    
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["years_tag"]))) 
+   
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["years_tag"])))
     #find the folder for the current year
     year_folders = driver.find_elements(By.CSS_SELECTOR,dictionary["years_tag"])
     current_folder = [item for item in year_folders if item.text==str(datetime.today().year)]
@@ -1317,14 +1357,17 @@ def loudoun_pc():
             if check_meeting_date(item.text)==True:
                 future_meetings.append(item.find_element(By.CSS_SELECTOR,dictionary["meetings_tag"]).get_attribute('href'))
         except:
-            continue 
+            continue
     for item in future_meetings:
         driver.get(item)
 
         WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agendas_tag"])))
         try:
             agenda_link = driver.find_element(By.CSS_SELECTOR,dictionary["agendas_tag"]).get_attribute('href')
-            agenda_content = read_pdf_download(agenda_link)
+            driver.get(agenda_link)
+            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agenda_content"])))
+            #agenda_content = read_pdf_download(agenda_link)
+            agenda_content = get_pdf_content(dictioonary["agenda_content"])
             readable = check_agenda_readability(agenda_content)
             if readable == True:
                 agenda_search = search_text_for_keywords(agenda_content)
@@ -1342,17 +1385,17 @@ def virginia_beach_cc():
     dictionary = locality_dictionary_single_use['Virginia Beach CC']
     driver.get(dictionary["url"])
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agendas_tag"]))) 
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["agendas_tag"])))
 
     messages = []
     current_agenda = driver.find_element(By.CSS_SELECTOR,dictionary["agendas_tag"])
-    
+   
     if current_agenda == []:
         messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
     agenda_url = current_agenda.get_attribute("href")
     driver.get(agenda_url)
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
     agenda_content = get_pdf_content(dictionary["content_tag"])
     readable = check_agenda_readability(agenda_content)
     if readable == True:
@@ -1369,22 +1412,22 @@ def bath_county(locality_dictionary): #add a clause that allows it to finish wit
     dictionary = locality_dictionary_multi_use[locality_dictionary]
     driver.get(dictionary['url'])
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["archive_page_tag"]))) 
-    
+    #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["archive_page_tag"])))
+    time.sleep(5)
     messages = []
     archive_pages = driver.find_elements(By.CSS_SELECTOR,dictionary["archive_page_tag"])
     valid_pages = [item for item in archive_pages if item.text !='']
     valid_pages[-1].click()
-    
+   
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["years_tag"]))) 
-
+    #WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["years_tag"])))
+    time.sleep(2)
     years = driver.find_elements(By.CSS_SELECTOR,dictionary["years_tag"])
     try:
         current_year = [item for item in years if str(datetime.date(datetime.now()).year) in item.text]
         current_year[0].click()
 
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["minutes_page_tag"]))) 
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["minutes_page_tag"])))
     except:
         return messages
     minutes_pages = driver.find_elements(By.CSS_SELECTOR,dictionary["minutes_page_tag"])
@@ -1392,14 +1435,14 @@ def bath_county(locality_dictionary): #add a clause that allows it to finish wit
     if valid_minutes_pages[-1].text != '1':
         valid_minutes_pages[-1].click()
 
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["minutes_tag"]))) 
+        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["minutes_tag"])))
     minutes = driver.find_elements(By.CSS_SELECTOR,dictionary["minutes_tag"])
     if minutes == []:
         messages.append("No meetings found for " + dictionary["name"] + ". Tags may have changed or content may have moved.")
     latest_minutes = minutes[-1].get_attribute('href')
     driver.get(latest_minutes)
 
-    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"]))) 
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.CSS_SELECTOR, dictionary["content_tag"])))
     agenda_content = get_pdf_content(dictionary['content_tag'])
     readable = check_agenda_readability(agenda_content)
     if readable == True:
